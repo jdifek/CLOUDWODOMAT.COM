@@ -71,7 +71,7 @@ function App() {
             <Route path="/user-management/card-transfer" element={<CardTransfer />} />
             <Route path="/user-management/recharge-regular" element={<RechargeRegular />} />
             <Route path="/user-management/recharge-batch" element={<RechargeBatch />} />
-            <Route path="/user-management//user-management/bulk-recharge" element={<BulkRecharge />} />
+            <Route path="/user-management/bulk-recharge" element={<BulkRecharge />} />
             <Route path="/user-management/recharge-import-regular" element={<RechargeImportRegular />} />
             <Route path="/user-management/card-opening" element={<CardOpening />} />
             <Route path="/data-center/consumption-log" element={<ConsumptionLog />} />
