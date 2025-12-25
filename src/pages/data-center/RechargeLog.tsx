@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Search, X, Download } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 export default function RechargeLog() {
+  const { t } = useLanguage();
   const [activeYear, setActiveYear] = useState('2025');
   const [filters, setFilters] = useState({
     cardNumber: '',
@@ -21,7 +23,7 @@ export default function RechargeLog() {
     note: ''
   });
 
-  const years = ['2025', '2024', '2023', '2022', '2021', '2019 lub wcześniej'];
+  const years = ['2025', '2024', '2023', '2022', '2021', `2019 ${t('rechargeLog.orEarlier')}`];
 
   const handleSearch = () => {
     console.log('Searching...', filters);
@@ -51,17 +53,17 @@ export default function RechargeLog() {
     {
       id: 1,
       number: '60651281939',
-      holder: 'Nie wypełniono',
+      holder: t('rechargeLog.notFilled'),
       phone: '',
-      channel: 'Backoffice',
-      payment: 'Mini-program',
+      channel: t('rechargeLog.backoffice'),
+      payment: t('rechargeLog.miniProgram'),
       operator: '18625799572',
       place: '',
       deviceId: '',
       income: '1.00',
       recharge: '5000',
       balanceAfter: '5000',
-      status: 'Opłacone',
+      status: 'paid',
       time: '2025-12-18 09:47:27'
     },
     {
@@ -69,7 +71,7 @@ export default function RechargeLog() {
       number: '60650898006',
       holder: '',
       phone: '15137386333',
-      channel: 'Mini-program',
+      channel: t('rechargeLog.miniProgram'),
       payment: '',
       operator: '',
       place: 'Sun Bo',
@@ -77,14 +79,14 @@ export default function RechargeLog() {
       income: '0',
       recharge: '5000',
       balanceAfter: '6661.75',
-      status: 'Opłacone',
+      status: 'paid',
       time: '2025-12-18 08:30:15'
     }
   ];
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-gray-900">Dziennik doładowania</h1>
+      <h1 className="text-2xl font-bold text-gray-900">{t('rechargeLog.title')}</h1>
 
       <div className="bg-white rounded-lg shadow-sm">
         <div className="border-b border-gray-200">
@@ -108,7 +110,7 @@ export default function RechargeLog() {
         <div className="p-4">
           <div className="grid grid-cols-3 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Numer karty</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('userManagement.cardNumber')}</label>
               <input
                 type="text"
                 value={filters.cardNumber}
@@ -117,34 +119,34 @@ export default function RechargeLog() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Kanał</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('rechargeLog.channel')}</label>
               <select
                 value={filters.channel}
                 onChange={(e) => setFilters({ ...filters, channel: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="all">Wszystkie</option>
-                <option value="backoffice">Backoffice</option>
-                <option value="miniprogram">Mini-program</option>
+                <option value="all">{t('common.all')}</option>
+                <option value="backoffice">{t('rechargeLog.backoffice')}</option>
+                <option value="miniprogram">{t('rechargeLog.miniProgram')}</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Płatność</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('rechargeLog.payment')}</label>
               <select
                 value={filters.payment}
                 onChange={(e) => setFilters({ ...filters, payment: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="all">Wszystkie</option>
-                <option value="yes">Tak</option>
-                <option value="no">Nie</option>
+                <option value="all">{t('common.all')}</option>
+                <option value="yes">{t('rechargeLog.yes')}</option>
+                <option value="no">{t('rechargeLog.no')}</option>
               </select>
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Operator</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('cardTransfer.operator')}</label>
               <input
                 type="text"
                 value={filters.operator}
@@ -153,7 +155,7 @@ export default function RechargeLog() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Numer zamówienia</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('rechargeLog.orderNumber')}</label>
               <input
                 type="text"
                 value={filters.orderNumber}
@@ -163,7 +165,7 @@ export default function RechargeLog() {
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Kwota od</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('userManagement.amountFrom')}</label>
                 <input
                   type="number"
                   value={filters.amountFrom}
@@ -172,7 +174,7 @@ export default function RechargeLog() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Do</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('userManagement.amountTo')}</label>
                 <input
                   type="number"
                   value={filters.amountTo}
@@ -185,7 +187,7 @@ export default function RechargeLog() {
 
           <div className="grid grid-cols-3 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Adres</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('rechargeLog.address')}</label>
               <input
                 type="text"
                 value={filters.address}
@@ -194,7 +196,7 @@ export default function RechargeLog() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">ID urządzenia</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('userManagement.deviceId')}</label>
               <input
                 type="text"
                 value={filters.deviceId}
@@ -203,33 +205,33 @@ export default function RechargeLog() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Region</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('userManagement.region')}</label>
               <select
                 value={filters.region}
                 onChange={(e) => setFilters({ ...filters, region: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="all">Wszystkie</option>
+                <option value="all">{t('common.all')}</option>
               </select>
             </div>
           </div>
 
           <div className="grid grid-cols-4 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('common.status')}</label>
               <select
                 value={filters.status}
                 onChange={(e) => setFilters({ ...filters, status: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="all">Wszystkie</option>
-                <option value="paid">Opłacone</option>
-                <option value="pending">Oczekujące</option>
+                <option value="all">{t('common.all')}</option>
+                <option value="paid">{t('rechargeLog.paid')}</option>
+                <option value="pending">{t('rechargeLog.pending')}</option>
               </select>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Data od</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('consumptionLog.dateFrom')}</label>
                 <input
                   type="date"
                   value={filters.dateFrom}
@@ -238,7 +240,7 @@ export default function RechargeLog() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Do</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('common.to')}</label>
                 <input
                   type="date"
                   value={filters.dateTo}
@@ -248,17 +250,17 @@ export default function RechargeLog() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Pakiet</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('userManagement.package')}</label>
               <select
                 value={filters.package}
                 onChange={(e) => setFilters({ ...filters, package: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">Wybierz</option>
+                <option value="">{t('common.select')}</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Uwaga</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('recharge.note')}</label>
               <input
                 type="text"
                 value={filters.note}
@@ -275,14 +277,14 @@ export default function RechargeLog() {
                 className="px-4 py-2 bg-[#4A90E2] text-white rounded hover:bg-[#3A7BC8] transition-colors flex items-center gap-2"
               >
                 <Search className="w-4 h-4" />
-                Szukaj
+                {t('common.search')}
               </button>
               <button
                 onClick={handleClear}
                 className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors flex items-center gap-2"
               >
                 <X className="w-4 h-4" />
-                Wyczyść
+                {t('common.clear')}
               </button>
             </div>
           </div>
@@ -290,22 +292,22 @@ export default function RechargeLog() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex gap-4">
               <div className="text-sm">
-                Doładowanie: <span className="text-[#FFD700] font-bold text-lg">60499.6</span>
+                {t('rechargeLog.recharge')}: <span className="text-[#FFD700] font-bold text-lg">60499.6</span>
               </div>
               <div className="text-sm">
-                Dochód: <span className="text-[#FFD700] font-bold text-lg">25001</span>
+                {t('consumptionLog.income')}: <span className="text-[#FFD700] font-bold text-lg">25001</span>
               </div>
               <div className="text-sm">
-                Zwrot: <span className="text-[#FFD700] font-bold text-lg">0</span>
+                {t('rechargeLog.refund')}: <span className="text-[#FFD700] font-bold text-lg">0</span>
               </div>
             </div>
             <button className="px-4 py-2 bg-[#5CB85C] text-white rounded hover:bg-[#4CA64C] transition-colors flex items-center gap-2">
               <Download className="w-4 h-4" />
-              Eksport
+              {t('common.export')}
             </button>
           </div>
 
-          <div className="text-sm text-gray-600 mb-2">1-20 z 21</div>
+          <div className="text-sm text-gray-600 mb-2">1-20 {t('common.from')} 21</div>
         </div>
       </div>
 
@@ -315,20 +317,20 @@ export default function RechargeLog() {
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">№</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Numer</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Posiadacz</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Telefon</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kanał</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Płatność</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Operator</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Miejsce</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID urządzenia</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Dochód</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Doładowanie</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Saldo po</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Czas</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Akcje</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('userManagement.number')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('rechargeLog.holder')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('userManagement.phone')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('rechargeLog.channel')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('rechargeLog.payment')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('cardTransfer.operator')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('consumptionLog.place')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('userManagement.deviceId')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('consumptionLog.income')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('rechargeLog.recharge')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('consumptionLog.balanceAfter')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('common.status')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('cardTransfer.time')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('common.operations')}</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -350,12 +352,12 @@ export default function RechargeLog() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{row.balanceAfter}₽</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <span className="px-2 py-1 bg-[#5CB85C] text-white rounded text-xs">
-                      {row.status}
+                      {t(`rechargeLog.${row.status}`)}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{row.time}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <button className="text-[#4A90E2] hover:underline text-xs">Szczegóły</button>
+                    <button className="text-[#4A90E2] hover:underline text-xs">{t('common.details')}</button>
                   </td>
                 </tr>
               ))}

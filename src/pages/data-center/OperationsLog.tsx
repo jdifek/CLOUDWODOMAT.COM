@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Search, X } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 export default function OperationsLog() {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('system');
   const [filters, setFilters] = useState({
     content: '',
@@ -16,13 +18,13 @@ export default function OperationsLog() {
   });
 
   const tabs = [
-    { key: 'system', label: 'Systemowy' },
-    { key: 'cards', label: 'Karty' },
-    { key: 'devices', label: 'Urządzenia' },
-    { key: 'users', label: 'Użytkownicy' },
-    { key: 'recharges', label: 'Doładowania' },
-    { key: 'partners', label: 'Partnerzy' },
-    { key: 'earlier', label: 'Wcześniej' }
+    { key: 'system', label: t('operationsLog.system') },
+    { key: 'cards', label: t('operationsLog.cards') },
+    { key: 'devices', label: t('operationsLog.devices') },
+    { key: 'users', label: t('operationsLog.users') },
+    { key: 'recharges', label: t('operationsLog.recharges') },
+    { key: 'partners', label: t('operationsLog.partners') },
+    { key: 'earlier', label: t('operationsLog.earlier') }
   ];
 
   const handleSearch = () => {
@@ -46,25 +48,25 @@ export default function OperationsLog() {
   const sampleData = [
     {
       id: 1,
-      type: 'Logowanie',
-      content: 'Logowanie do backoffice',
+      type: t('operationsLog.login'),
+      content: t('operationsLog.loginToBackoffice'),
       operator: '15137386333',
-      source: 'PC',
+      source: t('operationsLog.pc'),
       time: '2025-12-19 19:29:55'
     },
     {
       id: 2,
-      type: 'Logowanie',
-      content: 'Logowanie do mini-programu',
+      type: t('operationsLog.login'),
+      content: t('operationsLog.loginToMiniProgram'),
       operator: '18625799572',
-      source: 'Mini-program',
+      source: t('rechargeLog.miniProgram'),
       time: '2025-12-19 08:32:12'
     }
   ];
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-gray-900">Dziennik operacji</h1>
+      <h1 className="text-2xl font-bold text-gray-900">{t('operationsLog.title')}</h1>
 
       <div className="bg-white rounded-lg shadow-sm">
         <div className="border-b border-gray-200">
@@ -88,7 +90,7 @@ export default function OperationsLog() {
         <div className="p-4">
           <div className="grid grid-cols-4 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Zawartość</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('operationsLog.content')}</label>
               <input
                 type="text"
                 value={filters.content}
@@ -97,19 +99,19 @@ export default function OperationsLog() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Źródło</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('operationsLog.source')}</label>
               <select
                 value={filters.source}
                 onChange={(e) => setFilters({ ...filters, source: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="all">Wszystkie</option>
-                <option value="pc">PC</option>
-                <option value="miniprogram">Mini-program</option>
+                <option value="all">{t('common.all')}</option>
+                <option value="pc">{t('operationsLog.pc')}</option>
+                <option value="miniprogram">{t('rechargeLog.miniProgram')}</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Operator</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('cardTransfer.operator')}</label>
               <input
                 type="text"
                 value={filters.operator}
@@ -118,22 +120,22 @@ export default function OperationsLog() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Typ</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('operationsLog.type')}</label>
               <select
                 value={filters.type}
                 onChange={(e) => setFilters({ ...filters, type: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="all">Wszystkie</option>
-                <option value="login">Logowanie</option>
-                <option value="operation">Operacja</option>
+                <option value="all">{t('common.all')}</option>
+                <option value="login">{t('operationsLog.login')}</option>
+                <option value="operation">{t('operationsLog.operation')}</option>
               </select>
             </div>
           </div>
 
           <div className="grid grid-cols-4 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Rok</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('consumptionLog.year')}</label>
               <select
                 value={filters.year}
                 onChange={(e) => setFilters({ ...filters, year: e.target.value })}
@@ -146,7 +148,7 @@ export default function OperationsLog() {
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Data od</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('consumptionLog.dateFrom')}</label>
                 <input
                   type="date"
                   value={filters.dateFrom}
@@ -155,7 +157,7 @@ export default function OperationsLog() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Do</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('common.to')}</label>
                 <input
                   type="date"
                   value={filters.dateTo}
@@ -166,7 +168,7 @@ export default function OperationsLog() {
             </div>
             {activeTab === 'cards' && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Numer karty</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('userManagement.cardNumber')}</label>
                 <input
                   type="text"
                   value={filters.cardNumber}
@@ -177,7 +179,7 @@ export default function OperationsLog() {
             )}
             {activeTab === 'devices' && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">ID urządzenia</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('userManagement.deviceId')}</label>
                 <input
                   type="text"
                   value={filters.deviceId}
@@ -194,18 +196,18 @@ export default function OperationsLog() {
               className="px-4 py-2 bg-[#4A90E2] text-white rounded hover:bg-[#3A7BC8] transition-colors flex items-center gap-2"
             >
               <Search className="w-4 h-4" />
-              Szukaj
+              {t('common.search')}
             </button>
             <button
               onClick={handleClear}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors flex items-center gap-2"
             >
               <X className="w-4 h-4" />
-              Wyczyść
+              {t('common.clear')}
             </button>
           </div>
 
-          <div className="text-sm text-gray-600 mb-2">1-20 z 1,233</div>
+          <div className="text-sm text-gray-600 mb-2">1-20 {t('common.from')} 1,233</div>
         </div>
       </div>
 
@@ -215,12 +217,12 @@ export default function OperationsLog() {
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">№</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Typ</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Zawartość</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Operator</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Źródło</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Czas</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Akcje</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('operationsLog.type')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('operationsLog.content')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('cardTransfer.operator')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('operationsLog.source')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('cardTransfer.time')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('common.operations')}</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -234,20 +236,20 @@ export default function OperationsLog() {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{row.source}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{row.time}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <button className="text-[#4A90E2] hover:underline text-xs">Szczegóły</button>
+                      <button className="text-[#4A90E2] hover:underline text-xs">{t('common.details')}</button>
                     </td>
                   </tr>
                 ))
               ) : activeTab === 'recharges' || activeTab === 'partners' ? (
                 <tr>
                   <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
-                    Brak danych
+                    {t('common.noData')}
                   </td>
                 </tr>
               ) : (
                 <tr>
                   <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
-                    Zawartość zakładki {tabs.find(t => t.key === activeTab)?.label}
+                    {tabs.find(tab => tab.key === activeTab)?.label} - {t('operationsLog.tabContent')}
                   </td>
                 </tr>
               )}

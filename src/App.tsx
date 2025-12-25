@@ -64,9 +64,6 @@ function App() {
             <Route path="/filters/all" element={<AllFilters />} />
             <Route path="/sim/list" element={<SimCardList />} />
             <Route path="/sim/orders" element={<SimCardOrders />} />
-
-
-
             <Route path="/user-management/member-cards" element={<MemberCardsList />} />
             <Route path="/user-management/card-transfer" element={<CardTransfer />} />
             <Route path="/user-management/recharge-regular" element={<RechargeRegular />} />
@@ -76,6 +73,8 @@ function App() {
             <Route path="/user-management/card-opening" element={<CardOpening />} />
             <Route path="/data-center/consumption-log" element={<ConsumptionLog />} />
             <Route path="/data-center/recharge-log" element={<RechargeLog />} />
+
+
             <Route path="/data-center/operations-log" element={<OperationsLog />} />
             <Route path="/data-center/download-center" element={<DownloadCenter />} />
             <Route path="/online-sales/three-level-config" element={<ThreeLevelConfig />} />
