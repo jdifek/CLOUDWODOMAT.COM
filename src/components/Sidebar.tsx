@@ -156,11 +156,11 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
         className={`
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-50
-        w-64 bg-[#008dd4] text-white h-screen overflow-y-auto flex flex-col
+        w-72 bg-[#008dd4] text-white h-screen overflow-y-auto custom-scrollbar flex flex-col
         transition-transform duration-300 ease-in-out
       `}
       >
-        <div className="p-4 border-b border-gray-700">
+        <div className=" border-b border-gray-700">
           <img src="/image.png" alt="image.png" />
         </div>
 
