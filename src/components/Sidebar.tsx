@@ -214,10 +214,6 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-gray-700 text-center text-xs text-gray-400">
-          <p>© Happy-ti 2025</p>
-          <p>powered by Happy-ti</p>
-        </div>
       </div>
     </>
   );

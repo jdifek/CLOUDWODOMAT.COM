@@ -1,5 +1,202 @@
 export const translations = {
   en: {
+    employeeManagement: {
+      employeeList: 'Employee List',
+      accountName: 'Account Name',
+      surname: 'Surname',
+      minBalance: 'Minimum Balance',
+      maxBalance: 'Maximum Balance',
+      addEmployee: 'Add Employee',
+      bulkRecharge: 'Bulk Recharge',
+      employeeAccountName: 'Employee Account Name',
+      password: 'Password',
+      createTime: 'Create Time',
+      balance: 'Balance',
+      operationTime: 'Operation Time',
+      notSet: 'Not Set',
+      result: 'Result',
+      enterAccountName: 'Enter account name',
+      enterSurname: 'Enter surname',
+      min: 'Min',
+      max: 'Max',
+      dateFrom: 'Date From',
+      dateTo: 'Date To'
+    },
+    
+    authorizationDetails: {
+      title: 'Authorization Amount Details',
+      employee: 'Employee',
+      rechargeAmount: 'Recharge Amount',
+      amountAfterRecharge: 'Amount After Recharge',
+      enterEmployee: 'Enter employee',
+      enterOperator: 'Enter operator',
+      savedFromWorkLogin: 'Saved from work login'
+    },
+    
+    performanceRecords: {
+      title: 'Employee Performance Records',
+      employeeAccountNumber: 'Employee Account Number',
+      resultYear: 'Result Year',
+      enterAccountNumber: 'Enter account number',
+      enterYear: 'e.g. 2025',
+      merchant: 'Merchant',
+      actualAmount: 'Actual Amount',
+      amountInResultTime: 'Amount in Result Time',
+      rechargeCount: 'Recharge Count',
+      resultPeriod: 'Result Period'
+    },
+    
+    roleConfig: {
+      title: 'Role Configuration',
+      searchTitle: 'Search',
+      roleName: 'Role Name',
+      enterRoleName: 'Enter role name',
+      createNewRole: 'Create New Role',
+      description: 'Description'
+    },
+    qrProducts: {
+      title: 'QR Code Products List',
+      addNewProduct: 'Add New Product',
+      sort: 'Sort'
+    },
+    
+    rechargeZones: {
+      title: 'Recharge Zones List',
+      addRechargeZone: 'Add Recharge Zone',
+      rechargeZone: 'Recharge Zone'
+    },
+    
+    qrGroups: {
+      title: 'QR Code Strategy',
+      addNewStrategy: 'Add New Strategy',
+      qrZone: 'QR Zone'
+    },
+    
+    promoActivities: {
+      title: 'Promotional Activities Configuration',
+      createActivity: 'Create Activity',
+      activityName: 'Activity Name',
+      devices1DayFreeAmount: 'Devices with 1 day free amount',
+      qrFreeAmount: 'QR with free amount',
+      realWaterNoFreeAmount: 'Real water with card no free amount',
+      eWaterNoFreeAmount: 'E-water with card no free amount',
+      deviceCount: 'Device Count',
+      validityPeriod: 'Validity Period'
+    },
+    
+    coupons: {
+      title: 'Coupons Configuration',
+      addCoupon: 'Add Coupon',
+      totalQuantity: 'Total Quantity',
+      remaining: 'Remaining',
+      availableTime: 'Available Time'
+    },
+    packageManagement: {
+      title: 'Package Management',
+      createPackage: 'Create Package',
+      recommendByEfficiency: 'Recommend packages by efficiency',
+      modifyByEfficiency: 'Modify packages by efficiency',
+      on: 'On',
+      off: 'Off',
+      seeExample: 'See Example',
+      packageName: 'Package Name',
+      salePrice: 'Sale Price',
+      giftAmount: 'Gift Amount',
+      freeGifts: 'Free Gifts',
+      packageType: 'Package Type',
+      userLimit: 'User Limit',
+      channels: 'Channels',
+      giftPeriod: 'Gift Period (days)',
+      redemptionPeriod: 'Redemption Period (days)',
+      createTime: 'Create Time',
+      name: 'Name'
+    },
+    
+    rechargePackages: {
+      title: 'Package List',
+      addNewPackage: 'Add New Recharge Packages',
+      actualDiscount: 'Actual Discount',
+      usageCount: 'Usage Count',
+      published: 'Published',
+      draft: 'Draft',
+      unlimited: 'Unlimited',
+      limited: 'Limited',
+      online: 'Online',
+      offline: 'Offline',
+      recharge500get500: 'Recharge 500 get 500',
+      recharge300get300: 'Recharge 300 get 300',
+      recharge200get200: 'Recharge 200 get 200',
+      recharge100get100: 'Recharge 100 get 100',
+      recharge50get50: 'Recharge 50 get 50',
+      recharge20get20: 'Recharge 20 get 20'
+    },
+    
+    coinPaymentConfig: {
+      title: 'Coin Payment Configuration',
+      warningTitle: 'Warning:',
+      warningText1: 'If the payment amount is greater than the coin amount, mandatory registration is required, coin removal cannot be charged to the e-card, can be used multiple times. If coins are less, can only be used once, for example 9 yuan only supports one payment, water is automatically deducted 9 yuan.',
+      exampleTitle: 'Example:',
+      exampleText: 'If coins are set to 10 yuan, payment above 10 yuan requires registration, the amount is recharged to the card, can be used multiple times; if less than 10 yuan, for example 9 yuan, registration is not required, only one-time use, user gets water automatically deducts 9 yuan.',
+      machineSalesCoins: 'Machine Sales - Gold Coins',
+      liquidSalesCoins: 'Liquid Sales - Gold Coins',
+      randomMachineCoins: 'Random Machine - Gold Coins'
+    },
+    
+    salesPackageZones: {
+      title: 'Package Zones List',
+      addPackageZone: 'Add Package Zone',
+      packageZone: 'Package Zone'
+    },
+    downloadCenter: {
+      title: 'Download Center',
+      module: 'Module',
+      operation: 'Operation',
+      description: 'Description',
+      progress: 'Progress (approximate)',
+      created: 'Created',
+      completed: 'Completed',
+      cards: 'Cards',
+      recharges: 'Recharges',
+      consumption: 'Consumption',
+      processing: 'Processing',
+      failed: 'Failed',
+      expiresAt: 'Expires At'
+    },
+    
+    threeLevelConfig: {
+      title: 'Three-Level System Configuration',
+      relationshipDiagram: 'Relationship Diagram',
+      userA: 'User A',
+      firstLevelOfA: 'B is first level of A',
+      secondLevelOfA: 'C is second level of A',
+      partner: 'Partner',
+      officialAccountName: 'Official Account Name',
+      activityHotline: 'Activity Hotline',
+      enterAccountName: 'Enter account name',
+      foreignNumberNote: 'For foreign use phone number with binding',
+      firstLevelReturnPercent: 'First Level Return Percent (%)',
+      limitFirstLevelReturns: 'Limit First Level Returns',
+      firstLevelReturnLimit: 'First Level Return Limit',
+      secondLevelReturnPercent: 'Second Level Return Percent (%)',
+      limitSecondLevelReturns: 'Limit Second Level Returns',
+      secondLevelReturnLimit: 'Second Level Return Limit',
+      noLimit: 'No Limit',
+      limit: 'Limit',
+      marketingText: 'Marketing Advertisement Text',
+      promoText: 'Promotion Text',
+      enterMarketingText: 'Enter marketing text',
+      enterPromoText: 'Enter promotion text',
+      save: 'Save'
+    },
+    
+    giftConfig: {
+      title: 'Gift Configuration',
+      bindingGift: 'Microsignal Binding Gift (yuan)',
+      bindingPackage: 'Microsignal Binding Gift Package',
+      eCardGift: 'E-Card Gift (yuan)',
+      eCardPackage: 'E-Card Gift Package',
+      selectPackage: 'Select package'
+    },
     consumptionLog: {
       title: 'Consumption Log',
       earlier: 'Earlier',
@@ -415,6 +612,203 @@ export const translations = {
     },
   },
   ru: {
+    employeeManagement: {
+      employeeList: 'Список сотрудников',
+      accountName: 'Название аккаунта',
+      surname: 'Фамилия',
+      minBalance: 'Минимальный баланс',
+      maxBalance: 'Максимальный баланс',
+      addEmployee: 'Добавить сотрудника',
+      bulkRecharge: 'Массовое пополнение',
+      employeeAccountName: 'Название аккаунта сотрудника',
+      password: 'Пароль',
+      createTime: 'Время создания',
+      balance: 'Баланс',
+      operationTime: 'Время операции',
+      notSet: 'Не установлено',
+      result: 'Результат',
+      enterAccountName: 'Введите название аккаунта',
+      enterSurname: 'Введите фамилию',
+      min: 'Мин',
+      max: 'Макс',
+      dateFrom: 'Дата от',
+      dateTo: 'Дата до'
+    },
+    
+    authorizationDetails: {
+      title: 'Детали авторизационной суммы',
+      employee: 'Сотрудник',
+      rechargeAmount: 'Сумма пополнения',
+      amountAfterRecharge: 'Сумма после пополнения',
+      enterEmployee: 'Введите сотрудника',
+      enterOperator: 'Введите оператора',
+      savedFromWorkLogin: 'Сохранено из рабочего входа'
+    },
+    
+    performanceRecords: {
+      title: 'Записи результатов сотрудников',
+      employeeAccountNumber: 'Номер аккаунта сотрудника',
+      resultYear: 'Год результата',
+      enterAccountNumber: 'Введите номер аккаунта',
+      enterYear: 'напр. 2025',
+      merchant: 'Торговец',
+      actualAmount: 'Фактическая сумма',
+      amountInResultTime: 'Сумма во время результата',
+      rechargeCount: 'Количество пополнений',
+      resultPeriod: 'Период результата'
+    },
+    
+    roleConfig: {
+      title: 'Конфигурация ролей',
+      searchTitle: 'Поиск',
+      roleName: 'Название роли',
+      enterRoleName: 'Введите название роли',
+      createNewRole: 'Создать новую роль',
+      description: 'Описание'
+    },
+    qrProducts: {
+      title: 'Список продуктов по QR-кодам',
+      addNewProduct: 'Добавить новый продукт',
+      sort: 'Сортировка'
+    },
+    
+    rechargeZones: {
+      title: 'Список зон пополнения',
+      addRechargeZone: 'Добавить зону пополнения',
+      rechargeZone: 'Зона пополнения'
+    },
+    
+    qrGroups: {
+      title: 'Стратегия QR-кодов',
+      addNewStrategy: 'Добавить новую стратегию',
+      qrZone: 'Зона QR'
+    },
+    
+    promoActivities: {
+      title: 'Конфигурация промо-акций',
+      createActivity: 'Создать акцию',
+      activityName: 'Название акции',
+      devices1DayFreeAmount: 'Устройства с 1 днём бесплатной суммы',
+      qrFreeAmount: 'QR с бесплатной суммой',
+      realWaterNoFreeAmount: 'Реальная вода с картой без бесплатной суммы',
+      eWaterNoFreeAmount: 'Э-вода с картой без бесплатной суммы',
+      deviceCount: 'Количество устройств',
+      validityPeriod: 'Период действия'
+    },
+    
+    coupons: {
+      title: 'Конфигурация купонов',
+      addCoupon: 'Добавить купон',
+      totalQuantity: 'Общее количество',
+      remaining: 'Осталось',
+      availableTime: 'Доступное время'
+    },
+    packageManagement: {
+      title: 'Управление пакетами',
+      createPackage: 'Создать пакет',
+      recommendByEfficiency: 'Рекомендовать пакеты по эффективности',
+      modifyByEfficiency: 'Изменять пакеты по эффективности',
+      on: 'Вкл',
+      off: 'Выкл',
+      seeExample: 'Посмотреть пример',
+      packageName: 'Название пакета',
+      salePrice: 'Цена продажи',
+      giftAmount: 'Сумма подарка',
+      freeGifts: 'Бесплатные подарки',
+      packageType: 'Тип пакета',
+      userLimit: 'Лимит пользователя',
+      channels: 'Каналы',
+      giftPeriod: 'Период подарка (дней)',
+      redemptionPeriod: 'Период реализации (дней)',
+      createTime: 'Время создания',
+      name: 'Название'
+    },
+    
+    rechargePackages: {
+      title: 'Список пакетов',
+      addNewPackage: 'Добавить новые пакеты пополнения',
+      actualDiscount: 'Фактическая скидка',
+      usageCount: 'Количество использований',
+      published: 'Опубликовано',
+      draft: 'Черновик',
+      unlimited: 'Без ограничений',
+      limited: 'Ограничено',
+      online: 'Онлайн',
+      offline: 'Оффлайн',
+      recharge500get500: 'Пополнение 500 получить 500',
+      recharge300get300: 'Пополнение 300 получить 300',
+      recharge200get200: 'Пополнение 200 получить 200',
+      recharge100get100: 'Пополнение 100 получить 100',
+      recharge50get50: 'Пополнение 50 получить 50',
+      recharge20get20: 'Пополнение 20 получить 20'
+    },
+    
+    coinPaymentConfig: {
+      title: 'Конфигурация оплаты монетами',
+      warningTitle: 'Внимание:',
+      warningText1: 'Если сумма платежа больше суммы монет, требуется обязательная регистрация, удаление монет не может быть зачислено на электронную карту, можно использовать многократно. Если монет меньше, можно использовать только один раз, например 9 юаней поддерживает только один платеж, вода автоматически вычитается 9 юаней.',
+      exampleTitle: 'Пример:',
+      exampleText: 'Если монеты установлены на 10 юаней, платеж свыше 10 юаней требует регистрации, сумма пополняется на карту, можно использовать многократно; если меньше 10 юаней, например 9 юаней, регистрация не требуется, только одноразовое использование, пользователь получает воду автоматически вычитается 9 юаней.',
+      machineSalesCoins: 'Продажа машины - золотые монеты',
+      liquidSalesCoins: 'Продажа жидкости - золотые монеты',
+      randomMachineCoins: 'Случайная машина - золотые монеты'
+    },
+    
+    salesPackageZones: {
+      title: 'Список зон пакетов',
+      addPackageZone: 'Добавить зону пакета',
+      packageZone: 'Зона пакета'
+    },
+    downloadCenter: {
+      title: 'Центр загрузок',
+      module: 'Модуль',
+      operation: 'Операция',
+      description: 'Описание',
+      progress: 'Прогресс (приблизительно)',
+      created: 'Создано',
+      completed: 'Завершено',
+      cards: 'Карты',
+      recharges: 'Пополнения',
+      consumption: 'Потребление',
+      processing: 'В процессе',
+      failed: 'Неудача',
+      expiresAt: 'Истекает'
+    },
+    
+    threeLevelConfig: {
+      title: 'Конфигурация трёхуровневой системы',
+      relationshipDiagram: 'Диаграмма отношений',
+      userA: 'Пользователь A',
+      firstLevelOfA: 'B первый уровень A',
+      secondLevelOfA: 'C второй уровень A',
+      partner: 'Партнёр',
+      officialAccountName: 'Название официального аккаунта',
+      activityHotline: 'Горячая линия активности',
+      enterAccountName: 'Введите название аккаунта',
+      foreignNumberNote: 'Для зарубежных используйте номер с привязкой',
+      firstLevelReturnPercent: 'Процент возврата первого уровня (%)',
+      limitFirstLevelReturns: 'Ограничить возвраты первого уровня',
+      firstLevelReturnLimit: 'Лимит возвратов первого уровня',
+      secondLevelReturnPercent: 'Процент возврата второго уровня (%)',
+      limitSecondLevelReturns: 'Ограничить возвраты второго уровня',
+      secondLevelReturnLimit: 'Лимит возвратов второго уровня',
+      noLimit: 'Не ограничивать',
+      limit: 'Ограничить',
+      marketingText: 'Текст маркетинговой рекламы',
+      promoText: 'Текст промо',
+      enterMarketingText: 'Введите маркетинговый текст',
+      enterPromoText: 'Введите текст промо',
+      save: 'Сохранить'
+    },
+    
+    giftConfig: {
+      title: 'Конфигурация подарков',
+      bindingGift: 'Подарок при привязке микросигнала (юань)',
+      bindingPackage: 'Пакет подарка при привязке микросигнала',
+      eCardGift: 'Подарочная электронная карта (юань)',
+      eCardPackage: 'Пакет подарочной электронной карты',
+      selectPackage: 'Выберите пакет'
+    },
     consumptionLog: {
       title: 'Журнал потребления',
       earlier: 'Ранее',
@@ -830,6 +1224,203 @@ export const translations = {
     },
   },
   pl: {
+    employeeManagement: {
+      employeeList: 'Lista pracowników',
+      accountName: 'Nazwa konta',
+      surname: 'Nazwisko',
+      minBalance: 'Saldo minimalne',
+      maxBalance: 'Saldo maksymalne',
+      addEmployee: 'Dodaj pracownika',
+      bulkRecharge: 'Doładowanie zbiorcze',
+      employeeAccountName: 'Nazwa konta pracownika',
+      password: 'Hasło',
+      createTime: 'Czas utworzenia',
+      balance: 'Saldo',
+      operationTime: 'Czas operacji',
+      notSet: 'Nie ustawiono',
+      result: 'Wynik',
+      enterAccountName: 'Wprowadź nazwę konta',
+      enterSurname: 'Wprowadź nazwisko',
+      min: 'Min',
+      max: 'Max',
+      dateFrom: 'Data od',
+      dateTo: 'Data do'
+    },
+    
+    authorizationDetails: {
+      title: 'Szczegóły kwoty autoryzacyjnej',
+      employee: 'Pracownik',
+      rechargeAmount: 'Kwota doładowania',
+      amountAfterRecharge: 'Kwota po doładowaniu',
+      enterEmployee: 'Wprowadź pracownika',
+      enterOperator: 'Wprowadź operatora',
+      savedFromWorkLogin: 'Zapisano z logowania roboczego'
+    },
+    
+    performanceRecords: {
+      title: 'Rejestr wyników pracowników',
+      employeeAccountNumber: 'Numer konta pracownika',
+      resultYear: 'Rok wyniku',
+      enterAccountNumber: 'Wprowadź numer konta',
+      enterYear: 'np. 2025',
+      merchant: 'Kupiec',
+      actualAmount: 'Kwota faktyczna',
+      amountInResultTime: 'Kwota w czasie wyniku',
+      rechargeCount: 'Liczba doładowań',
+      resultPeriod: 'Okres wyniku'
+    },
+    
+    roleConfig: {
+      title: 'Konfiguracja ról',
+      searchTitle: 'Wyszukiwanie',
+      roleName: 'Nazwa roli',
+      enterRoleName: 'Wprowadź nazwę roli',
+      createNewRole: 'Utwórz nową rolę',
+      description: 'Opis'
+    },
+    qrProducts: {
+      title: 'Lista produktów według kodów QR',
+      addNewProduct: 'Dodaj nowy produkt',
+      sort: 'Sortowanie'
+    },
+    
+    rechargeZones: {
+      title: 'Lista stref doładowania',
+      addRechargeZone: 'Dodaj strefę doładowania',
+      rechargeZone: 'Strefa doładowania'
+    },
+    
+    qrGroups: {
+      title: 'Strategia kodów QR',
+      addNewStrategy: 'Dodaj nową strategię',
+      qrZone: 'Strefa kodów QR'
+    },
+    
+    promoActivities: {
+      title: 'Konfiguracja działań promocyjnych',
+      createActivity: 'Utwórz działanie',
+      activityName: 'Nazwa działania',
+      devices1DayFreeAmount: 'Urządzenia z 1 dniem darmowej kwoty',
+      qrFreeAmount: 'QR z darmową kwotą',
+      realWaterNoFreeAmount: 'Rzeczywista woda z kartą bez darmowej kwoty',
+      eWaterNoFreeAmount: 'E-woda z kartą bez darmowej kwoty',
+      deviceCount: 'Liczba urządzeń',
+      validityPeriod: 'Okres ważności'
+    },
+    
+    coupons: {
+      title: 'Konfiguracja kuponów',
+      addCoupon: 'Dodaj kupon',
+      totalQuantity: 'Całkowita ilość',
+      remaining: 'Pozostało',
+      availableTime: 'Dostępny czas'
+    },
+    packageManagement: {
+      title: 'Zarządzanie pakietami',
+      createPackage: 'Utwórz pakiet',
+      recommendByEfficiency: 'Rekomendacja pakietów według efektywności',
+      modifyByEfficiency: 'Zmiana pakietów według efektywności',
+      on: 'Wł',
+      off: 'Wył',
+      seeExample: 'Zobacz przykład',
+      packageName: 'Nazwa pakietu',
+      salePrice: 'Cena sprzedaży',
+      giftAmount: 'Kwota prezentu',
+      freeGifts: 'Darmowe prezenty',
+      packageType: 'Typ pakietu',
+      userLimit: 'Limit użytkownika',
+      channels: 'Kanały',
+      giftPeriod: 'Okres prezentu (dni)',
+      redemptionPeriod: 'Okres realizacji (dni)',
+      createTime: 'Czas utworzenia',
+      name: 'Nazwa'
+    },
+    
+    rechargePackages: {
+      title: 'Lista pakietów',
+      addNewPackage: 'Dodaj nowe pakiety doładowania',
+      actualDiscount: 'Faktyczna zniżka',
+      usageCount: 'Liczba użyć',
+      published: 'Opublikowane',
+      draft: 'Szkic',
+      unlimited: 'Bez ograniczeń',
+      limited: 'Ograniczone',
+      online: 'Online',
+      offline: 'Offline',
+      recharge500get500: 'Doładowanie 500 otrzymaj 500',
+      recharge300get300: 'Doładowanie 300 otrzymaj 300',
+      recharge200get200: 'Doładowanie 200 otrzymaj 200',
+      recharge100get100: 'Doładowanie 100 otrzymaj 100',
+      recharge50get50: 'Doładowanie 50 otrzymaj 50',
+      recharge20get20: 'Doładowanie 20 otrzymaj 20'
+    },
+    
+    coinPaymentConfig: {
+      title: 'Konfiguracja płatności monetami',
+      warningTitle: 'Uwaga:',
+      warningText1: 'Jeśli kwota płatności jest większa niż kwota monet, wymagana jest obowiązkowa rejestracja, usunięcie monet nie może być zaksięgowane na karcie elektronicznej, można używać wielokrotnie. Jeśli monet jest mniej, można użyć tylko raz, na przykład 9 yuanów obsługuje tylko jedną płatność, woda jest automatycznie odliczana 9 yuanów.',
+      exampleTitle: 'Przykład:',
+      exampleText: 'Jeśli monety są ustawione na 10 yuanów, płatność powyżej 10 yuanów wymaga rejestracji, kwota jest doładowywana na kartę, można używać wielokrotnie; jeśli mniej niż 10 yuanów, na przykład 9 yuanów, rejestracja nie jest wymagana, tylko jednorazowe użycie, użytkownik otrzymuje wodę automatycznie odlicza się 9 yuanów.',
+      machineSalesCoins: 'Sprzedaż maszyny - złote monety',
+      liquidSalesCoins: 'Sprzedaż płynów - złote monety',
+      randomMachineCoins: 'Losowa maszyna - złote monety'
+    },
+    
+    salesPackageZones: {
+      title: 'Lista stref pakietów',
+      addPackageZone: 'Dodaj strefę pakietu',
+      packageZone: 'Strefa pakietu'
+    },
+    downloadCenter: {
+      title: 'Centrum pobierania',
+      module: 'Moduł',
+      operation: 'Operacja',
+      description: 'Opis',
+      progress: 'Postęp (w przybliżeniu)',
+      created: 'Utworzono',
+      completed: 'Ukończono',
+      cards: 'Karty',
+      recharges: 'Doładowania',
+      consumption: 'Zużycie',
+      processing: 'W trakcie',
+      failed: 'Niepowodzenie',
+      expiresAt: 'Wygasa'
+    },
+    
+    threeLevelConfig: {
+      title: 'Konfiguracja systemu trzech poziomów',
+      relationshipDiagram: 'Diagram relacji',
+      userA: 'Użytkownik A',
+      firstLevelOfA: 'B jest pierwszym poziomem A',
+      secondLevelOfA: 'C jest drugim poziomem A',
+      partner: 'Partner',
+      officialAccountName: 'Nazwa oficjalnego konta',
+      activityHotline: 'Infolinia aktywności',
+      enterAccountName: 'Wprowadź nazwę konta',
+      foreignNumberNote: 'Dla zagranicy użyj numeru telefonu z powiązaniem',
+      firstLevelReturnPercent: 'Procent zwrotu pierwszego poziomu (%)',
+      limitFirstLevelReturns: 'Ograniczyć zwroty pierwszego poziomu',
+      firstLevelReturnLimit: 'Limit zwrotów pierwszego poziomu',
+      secondLevelReturnPercent: 'Procent zwrotu drugiego poziomu (%)',
+      limitSecondLevelReturns: 'Ograniczyć zwroty drugiego poziomu',
+      secondLevelReturnLimit: 'Limit zwrotów drugiego poziomu',
+      noLimit: 'Nie ograniczać',
+      limit: 'Ograniczyć',
+      marketingText: 'Tekst marketingowy reklamy',
+      promoText: 'Tekst promocji',
+      enterMarketingText: 'Wprowadź tekst marketingowy',
+      enterPromoText: 'Wprowadź tekst promocji',
+      save: 'Zapisz'
+    },
+    
+    giftConfig: {
+      title: 'Konfiguracja prezentów',
+      bindingGift: 'Prezent przy powiązaniu mikrosygnału (yuan)',
+      bindingPackage: 'Pakiet prezentu przy powiązaniu mikrosygnału',
+      eCardGift: 'Prezentowa karta elektroniczna (yuan)',
+      eCardPackage: 'Pakiet prezentowej karty elektronicznej',
+      selectPackage: 'Wybierz pakiet'
+    },
     consumptionLog: {
       title: 'Dziennik zużycia',
       earlier: 'Wcześniej',

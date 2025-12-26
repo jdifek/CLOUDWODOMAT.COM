@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { SearchFilter, FilterField } from '../../components/SearchFilter';
 import { DataTable } from '../../components/DataTable';
@@ -12,14 +13,14 @@ const mockData = [
     equipmentId: '*21968',
     todaySales: 0,
     currentSales: 0,
-    name: '测试',
+    name: '1',
     networkStatus: 'offline' as const,
     equipmentStatus: 'inactive' as const,
     temperature: 0,
     outdoorTemp: -1,
     version: '9.911',
     signalStrength: 16,
-    territory: '(未设置)',
+    territory: '(12)',
     simCard: '*85475',
     lastConnection: '2025-05-23 18:14:39',
     createdAt: '2025-05-21 18:16:33'

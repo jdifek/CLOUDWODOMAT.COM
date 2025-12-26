@@ -1,118 +1,131 @@
-import { useState } from 'react';
-import { useLanguage } from '../../contexts/LanguageContext';
+import { useState } from "react";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 export default function CardOpening() {
   const { t } = useLanguage();
-  const [activeTab, setActiveTab] = useState('opening');
+  const [activeTab, setActiveTab] = useState("opening");
   const [formData, setFormData] = useState({
-    startCard: '',
-    endCard: '',
-    deviceId: '',
-    merchantNumber: ''
+    startCard: "",
+    endCard: "",
+    deviceId: "",
+    merchantNumber: "",
   });
 
   const handleOpenCards = () => {
-    console.log('Opening cards:', formData);
+    console.log("Opening cards:", formData);
   };
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-gray-900">{t('cardOpening.title')}</h1>
+      <h1 className="text-2xl font-bold text-gray-900">
+        {t("cardOpening.title")}
+      </h1>
 
       <div className="bg-white rounded-lg shadow-sm">
         <div className="border-b border-gray-200">
           <div className="flex">
             <button
-              onClick={() => setActiveTab('opening')}
+              onClick={() => setActiveTab("opening")}
               className={`px-6 py-3 font-medium text-sm ${
-                activeTab === 'opening'
-                  ? 'text-[#4A90E2] border-b-2 border-[#4A90E2]'
-                  : 'text-gray-500 hover:text-gray-700'
+                activeTab === "opening"
+                  ? "text-[#4A90E2] border-b-2 border-[#4A90E2]"
+                  : "text-gray-500 hover:text-gray-700"
               }`}
             >
-              {t('cardOpening.cardOpeningTab')}
+              {t("cardOpening.cardOpeningTab")}
             </button>
             <button
-              onClick={() => setActiveTab('records')}
+              onClick={() => setActiveTab("records")}
               className={`px-6 py-3 font-medium text-sm ${
-                activeTab === 'records'
-                  ? 'text-[#4A90E2] border-b-2 border-[#4A90E2]'
-                  : 'text-gray-500 hover:text-gray-700'
+                activeTab === "records"
+                  ? "text-[#4A90E2] border-b-2 border-[#4A90E2]"
+                  : "text-gray-500 hover:text-gray-700"
               }`}
             >
-              {t('cardOpening.openingRecords')}
+              {t("cardOpening.openingRecords")}
             </button>
             <button
-              onClick={() => setActiveTab('log')}
+              onClick={() => setActiveTab("log")}
               className={`px-6 py-3 font-medium text-sm ${
-                activeTab === 'log'
-                  ? 'text-[#4A90E2] border-b-2 border-[#4A90E2]'
-                  : 'text-gray-500 hover:text-gray-700'
+                activeTab === "log"
+                  ? "text-[#4A90E2] border-b-2 border-[#4A90E2]"
+                  : "text-gray-500 hover:text-gray-700"
               }`}
             >
-              {t('cardOpening.log')}
+              {t("cardOpening.log")}
             </button>
           </div>
         </div>
 
         <div className="p-6">
-          {activeTab === 'opening' && (
+          {activeTab === "opening" && (
             <>
               <div className="space-y-4 max-w-2xl">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t('cardOpening.startCard')}
+                    {t("cardOpening.startCard")}
                   </label>
                   <input
                     type="text"
                     value={formData.startCard}
-                    onChange={(e) => setFormData({ ...formData, startCard: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, startCard: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder={t('cardOpening.enterStartCard')}
+                    placeholder={t("cardOpening.enterStartCard")}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t('cardOpening.endCard')}
+                    {t("cardOpening.endCard")}
                   </label>
                   <input
                     type="text"
                     value={formData.endCard}
-                    onChange={(e) => setFormData({ ...formData, endCard: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, endCard: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder={t('cardOpening.enterEndCard')}
+                    placeholder={t("cardOpening.enterEndCard")}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t('cardOpening.deviceId')}
+                    {t("cardOpening.deviceId")}
                   </label>
                   <input
                     type="text"
                     value={formData.deviceId}
-                    onChange={(e) => setFormData({ ...formData, deviceId: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, deviceId: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder={t('cardOpening.enterDeviceId')}
+                    placeholder={t("cardOpening.enterDeviceId")}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t('cardOpening.merchantNumber')}
+                    {t("cardOpening.merchantNumber")}
                   </label>
                   <input
                     type="text"
                     value={formData.merchantNumber}
-                    onChange={(e) => setFormData({ ...formData, merchantNumber: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        merchantNumber: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder={t('cardOpening.enterMerchantNumber')}
+                    placeholder={t("cardOpening.enterMerchantNumber")}
                   />
                 </div>
 
                 <div className="bg-[#FFF9E6] border border-[#FFD700] rounded p-3 text-sm text-gray-700">
-                  {t('cardOpening.newVersionAvailable')}
+                  {t("cardOpening.newVersionAvailable")}
                 </div>
 
                 <div className="flex gap-2 pt-4">
@@ -120,29 +133,44 @@ export default function CardOpening() {
                     onClick={handleOpenCards}
                     className="px-6 py-2 bg-[#4A90E2] text-white rounded hover:bg-[#3A7BC8] transition-colors"
                   >
-                    {t('cardOpening.openCards')}
+                    {t("cardOpening.openCards")}
                   </button>
                 </div>
               </div>
 
               <div className="mt-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('cardOpening.validRanges')}</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  {t("cardOpening.validRanges")}
+                </h3>
                 <div className="bg-white rounded-lg shadow-sm overflow-hidden">
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead className="bg-gray-50 border-b border-gray-200">
                         <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">№</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('cardOpening.merchant')}</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('cardOpening.start')}</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('cardOpening.end')}</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('cardOpening.name')}</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                            №
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                            {t("cardOpening.merchant")}
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                            {t("cardOpening.start")}
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                            {t("cardOpening.end")}
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                            {t("cardOpening.name")}
+                          </th>
                         </tr>
                       </thead>
                       <tbody className="bg-white">
                         <tr>
-                          <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                            {t('common.noData')}
+                          <td
+                            colSpan={5}
+                            className="px-6 py-12 text-center text-gray-500"
+                          >
+                            {t("common.noData")}
                           </td>
                         </tr>
                       </tbody>
@@ -153,22 +181,18 @@ export default function CardOpening() {
             </>
           )}
 
-          {activeTab === 'records' && (
+          {activeTab === "records" && (
             <div className="text-center text-gray-500 py-12">
-              {t('cardOpening.openingRecordsContent')}
+              {t("cardOpening.openingRecordsContent")}
             </div>
           )}
 
-          {activeTab === 'log' && (
+          {activeTab === "log" && (
             <div className="text-center text-gray-500 py-12">
-              {t('cardOpening.logContent')}
+              {t("cardOpening.logContent")}
             </div>
           )}
         </div>
-      </div>
-
-      <div className="text-center text-xs text-gray-400 py-4 border-t">
-        <p>© Happy-ti 2025 | powered by Happy-ti</p>
       </div>
     </div>
   );

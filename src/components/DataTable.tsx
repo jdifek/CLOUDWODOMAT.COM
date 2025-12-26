@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ReactNode } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface Column {
   key: string;
@@ -24,6 +26,8 @@ export function DataTable({
   totalRecords = 0,
   onPageChange
 }: DataTableProps) {
+  const { t } = useLanguage();
+
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
@@ -44,7 +48,7 @@ export function DataTable({
             {data.length === 0 ? (
               <tr>
                 <td colSpan={columns.length} className="px-6 py-12 text-center text-gray-500">
-                  没有找到数据。
+                  {t('common.noData')}
                 </td>
               </tr>
             ) : (
@@ -65,7 +69,7 @@ export function DataTable({
       {totalRecords > 0 && (
         <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
           <div className="text-sm text-gray-700">
-            Всего {totalRecords} записей | Всего {totalPages} страниц
+            {t('common.total')} {totalRecords} {t('common.records')} | {t('common.total')} {totalPages} {t('common.pages')}
           </div>
           <div className="flex items-center space-x-2">
             <button
@@ -76,7 +80,7 @@ export function DataTable({
               <ChevronLeft className="w-5 h-5" />
             </button>
             <span className="text-sm text-gray-700">
-              Страница {currentPage} из {totalPages}
+              {t('common.toPage')} {currentPage} {t('common.from')} {totalPages}
             </span>
             <button
               onClick={() => onPageChange?.(currentPage + 1)}

@@ -1,20 +1,24 @@
-import { useState } from 'react';
-import { Save, AlertCircle } from 'lucide-react';
+import { useState } from "react";
+import { Save, AlertCircle } from "lucide-react";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 export default function CoinPaymentConfig() {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
-    machineCoins: '10.00',
-    liquidCoins: '20.00',
-    randomCoins: '10.00'
+    machineCoins: "10.00",
+    liquidCoins: "20.00",
+    randomCoins: "10.00",
   });
 
   const handleSubmit = () => {
-    console.log('Saving coin config:', formData);
+    console.log("Saving coin config:", formData);
   };
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Konfiguracja płatności monetami</h1>
+      <h1 className="text-2xl font-bold text-gray-900">
+        {t("coinPaymentConfig.title")}
+      </h1>
 
       <div className="bg-white rounded-lg shadow-sm p-6">
         <div className="mb-6 space-y-3">
@@ -22,15 +26,12 @@ export default function CoinPaymentConfig() {
             <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
             <div className="text-sm text-red-700 space-y-2">
               <p>
-                <strong>Uwaga:</strong> Jeśli kwota płatności jest większa niż kwota monet, wymagana jest obowiązkowa rejestracja, 
-                usunięcie monet nie może być zaksięgowane na karcie elektronicznej, można używać wielokrotnie. 
-                Jeśli monet jest mniej, można użyć tylko raz, na przykład 9 yuanów obsługuje tylko jedną płatność, 
-                woda jest automatycznie odliczana 9 yuanów.
+                <strong>{t("coinPaymentConfig.warningTitle")}</strong>{" "}
+                {t("coinPaymentConfig.warningText1")}
               </p>
               <p>
-                <strong>Przykład:</strong> Jeśli monety są ustawione na 10 yuanów, płatność powyżej 10 yuanów wymaga rejestracji, 
-                kwota jest doładowywana na kartę, można używać wielokrotnie; jeśli mniej niż 10 yuanów, na przykład 9 yuanów, 
-                rejestracja nie jest wymagana, tylko jednorazowe użycie, użytkownik otrzymuje wodę automatycznie odlicza się 9 yuanów.
+                <strong>{t("coinPaymentConfig.exampleTitle")}</strong>{" "}
+                {t("coinPaymentConfig.exampleText")}
               </p>
             </div>
           </div>
@@ -39,39 +40,45 @@ export default function CoinPaymentConfig() {
         <div className="space-y-4 max-w-2xl">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Sprzedaż maszyny - złote monety
+              {t("coinPaymentConfig.machineSalesCoins")}
             </label>
             <input
               type="number"
               step="0.01"
               value={formData.machineCoins}
-              onChange={(e) => setFormData({ ...formData, machineCoins: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, machineCoins: e.target.value })
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Sprzedaż płynów - złote monety
+              {t("coinPaymentConfig.liquidSalesCoins")}
             </label>
             <input
               type="number"
               step="0.01"
               value={formData.liquidCoins}
-              onChange={(e) => setFormData({ ...formData, liquidCoins: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, liquidCoins: e.target.value })
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Losowa maszyna - złote monety
+              {t("coinPaymentConfig.randomMachineCoins")}
             </label>
             <input
               type="number"
               step="0.01"
               value={formData.randomCoins}
-              onChange={(e) => setFormData({ ...formData, randomCoins: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, randomCoins: e.target.value })
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -82,14 +89,10 @@ export default function CoinPaymentConfig() {
               className="px-6 py-2 bg-[#5CB85C] text-white rounded hover:bg-[#4CA64C] transition-colors flex items-center gap-2"
             >
               <Save className="w-4 h-4" />
-              Zapisz
+              {t("threeLevelConfig.save")}
             </button>
           </div>
         </div>
-      </div>
-
-      <div className="text-center text-xs text-gray-400 py-4 border-t">
-        <p>© Happy-ti 2025 | powered by Happy-ti</p>
       </div>
     </div>
   );
