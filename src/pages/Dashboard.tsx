@@ -188,9 +188,9 @@ export function Dashboard() {
           </button>
         </div>
         <div className="text-gray-600">
-          {activeTab === 'profit' && <p>Общая прибыль: данные в разработке</p>}
-          {activeTab === 'sales' && <p>Эффективность продаж: данные в разработке</p>}
-          {activeTab === 'exchange' && <p>Эффективность обмена: данные в разработке</p>}
+        {activeTab === 'profit' && <p>{t('dashboard.profitInDevelopment')}</p>}
+{activeTab === 'sales' && <p>{t('dashboard.salesInDevelopment')}</p>}
+{activeTab === 'exchange' && <p>{t('dashboard.exchangeInDevelopment')}</p>}
         </div>
       </div>
     </div>

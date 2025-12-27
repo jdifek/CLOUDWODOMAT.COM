@@ -446,6 +446,9 @@ export const translations = {
       smsManagement: "SMS Management",
     },
     dashboard: {
+      profitInDevelopment: "Total Profit: data in development",
+      salesInDevelopment: "Sales Efficiency: data in development",
+      exchangeInDevelopment: "Exchange Efficiency: data in development",
       todaySales: "Today's Sales",
       currentSales: "Current Sales",
       todayRevenue: "Today's Revenue",
@@ -1058,6 +1061,9 @@ export const translations = {
       smsManagement: "Управление SMS",
     },
     dashboard: {
+      profitInDevelopment: "Общая прибыль: данные в разработке",
+  salesInDevelopment: "Эффективность продаж: данные в разработке",
+  exchangeInDevelopment: "Эффективность обмена: данные в разработке",
       todaySales: "Продажи сегодня",
       currentSales: "Текущие продажи",
       todayRevenue: "Выручка сегодня",
@@ -1671,6 +1677,9 @@ export const translations = {
       smsManagement: "Zarządzanie SMS",
     },
     dashboard: {
+      profitInDevelopment: "Całkowity zysk: dane w opracowaniu",
+  salesInDevelopment: "Efektywność sprzedaży: dane w opracowaniu",
+  exchangeInDevelopment: "Efektywność wymiany: dane w opracowaniu",
       todaySales: "Dzisiejsza sprzedaż",
       currentSales: "Bieżąca sprzedaż",
       todayRevenue: "Dzisiejszy przychód",
