@@ -1,4 +1,4 @@
-import { Menu, RefreshCw, Tag, Calendar, FileText, Maximize2 } from 'lucide-react';
+import { Menu, RefreshCw, Tag, Maximize2 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface TopBarProps {
@@ -29,14 +29,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
       </div>
 
       <div className="flex items-center space-x-2 md:space-x-4">
-        <button className="hidden md:flex items-center px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded">
-          <Calendar className="w-4 h-4 mr-2" />
-          {new Date().toLocaleDateString()}
-        </button>
-        <button className="hidden md:flex items-center px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded">
-          <FileText className="w-4 h-4 mr-2" />
-          Журнал обновлений
-        </button>
+        
 
         <select
           value={language}
