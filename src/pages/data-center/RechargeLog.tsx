@@ -479,13 +479,13 @@ export default function RechargeLog() {
                     {row.deviceId}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {row.income}₽
+                    {row.income}◯
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {row.recharge}₽
+                    {row.recharge}◯
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {row.balanceAfter}₽
+                    {row.balanceAfter}◯
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <span className="px-2 py-1 bg-[#5CB85C] text-white rounded text-xs">

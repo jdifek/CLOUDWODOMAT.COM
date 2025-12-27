@@ -425,16 +425,16 @@ export default function ConsumptionLog() {
                     {row.deviceId}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {row.amount}₽
+                    {row.amount}◯
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {row.income}₽
+                    {row.income}◯
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {row.gift}₽
+                    {row.gift}◯
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {row.balanceAfter}₽
+                    {row.balanceAfter}◯
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {row.type}

@@ -137,9 +137,9 @@ export const translations = {
       warningText1: 'If the payment amount is greater than the coin amount, mandatory registration is required, coin removal cannot be charged to the e-card, can be used multiple times. If coins are less, can only be used once, for example 9 yuan only supports one payment, water is automatically deducted 9 yuan.',
       exampleTitle: 'Example:',
       exampleText: 'If coins are set to 10 yuan, payment above 10 yuan requires registration, the amount is recharged to the card, can be used multiple times; if less than 10 yuan, for example 9 yuan, registration is not required, only one-time use, user gets water automatically deducts 9 yuan.',
-      machineSalesCoins: 'Machine Sales - Gold Coins',
+      machineSalesCoins: 'WODOMAT Sales - Gold Coins',
       liquidSalesCoins: 'Liquid Sales - Gold Coins',
-      randomMachineCoins: 'Random Machine - Gold Coins'
+      randomMachineCoins: 'Random WODOMAT - Gold Coins'
     },
     
     salesPackageZones: {
@@ -419,8 +419,8 @@ export const translations = {
       roleConfig: "Role Config",
       dashboard: "Dashboard",
       equipmentManagement: "Equipment Management",
-      waterVendingMachines: "Water Vending Machines",
-      liquidVendingMachines: "Liquid Vending Machines",
+      waterVendingMachines: "WODOMATS",
+      liquidVendingMachines: "Liquid WODOMATS",
       paymentDevices: "Payment Devices",
       waterControlDevices: "Water Control Devices",
       homeEquipment: "Home Equipment",
@@ -749,9 +749,9 @@ export const translations = {
       warningText1: 'Если сумма платежа больше суммы монет, требуется обязательная регистрация, удаление монет не может быть зачислено на электронную карту, можно использовать многократно. Если монет меньше, можно использовать только один раз, например 9 юаней поддерживает только один платеж, вода автоматически вычитается 9 юаней.',
       exampleTitle: 'Пример:',
       exampleText: 'Если монеты установлены на 10 юаней, платеж свыше 10 юаней требует регистрации, сумма пополняется на карту, можно использовать многократно; если меньше 10 юаней, например 9 юаней, регистрация не требуется, только одноразовое использование, пользователь получает воду автоматически вычитается 9 юаней.',
-      machineSalesCoins: 'Продажа машины - золотые монеты',
+      machineSalesCoins: 'Продажа через ВОДОМАТ - золотые монеты',
       liquidSalesCoins: 'Продажа жидкости - золотые монеты',
-      randomMachineCoins: 'Случайная машина - золотые монеты'
+      randomMachineCoins: 'Случайный ВОДОМАТ - золотые монеты'
     },
     
     salesPackageZones: {
@@ -1031,8 +1031,8 @@ export const translations = {
       roleConfig: "Конфигурация ролей",
       dashboard: "Главная панель",
       equipmentManagement: "Управление оборудованием",
-      waterVendingMachines: "Торговые автоматы",
-      liquidVendingMachines: "Автоматы для продажи",
+      waterVendingMachines: "ВОДОМАТЫ",
+      liquidVendingMachines: "ВОДОМАТЫ для жидкостей",
       paymentDevices: "Платежные устройства",
       waterControlDevices: "Водоконтрольные устройства",
       homeEquipment: "Домашнее оборудование",
@@ -1361,9 +1361,9 @@ export const translations = {
       warningText1: 'Jeśli kwota płatności jest większa niż kwota monet, wymagana jest obowiązkowa rejestracja, usunięcie monet nie może być zaksięgowane na karcie elektronicznej, można używać wielokrotnie. Jeśli monet jest mniej, można użyć tylko raz, na przykład 9 yuanów obsługuje tylko jedną płatność, woda jest automatycznie odliczana 9 yuanów.',
       exampleTitle: 'Przykład:',
       exampleText: 'Jeśli monety są ustawione na 10 yuanów, płatność powyżej 10 yuanów wymaga rejestracji, kwota jest doładowywana na kartę, można używać wielokrotnie; jeśli mniej niż 10 yuanów, na przykład 9 yuanów, rejestracja nie jest wymagana, tylko jednorazowe użycie, użytkownik otrzymuje wodę automatycznie odlicza się 9 yuanów.',
-      machineSalesCoins: 'Sprzedaż maszyny - złote monety',
+      machineSalesCoins: 'Sprzedaż przez WODOMAT - złote monety',
       liquidSalesCoins: 'Sprzedaż płynów - złote monety',
-      randomMachineCoins: 'Losowa maszyna - złote monety'
+      randomMachineCoins: 'Losowy WODOMAT - złote monety'
     },
     
     salesPackageZones: {
@@ -1644,8 +1644,8 @@ export const translations = {
      
       dashboard: "Panel główny",
       equipmentManagement: "Zarządzanie sprzętem",
-      waterVendingMachines: "Automaty do sprzedaży wody",
-      liquidVendingMachines: "Automaty do sprzedaży płynów",
+      waterVendingMachines: "WODOMATY",
+      liquidVendingMachines: "WODOMATY do płynów",
       paymentDevices: "Urządzenia płatnicze",
       waterControlDevices: "Urządzenia kontroli wody",
       homeEquipment: "Sprzęt domowy",

@@ -403,7 +403,7 @@ export default function MemberCardsList() {
                           : "text-gray-900"
                       }
                     >
-                      {row.balance}₽
+                      {row.balance}◯
                     </span>
                     <span className="text-gray-500 text-xs ml-1">
                       ({row.gift}/{row.payment})
