@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, X, Download } from "lucide-react";
+import { Search, X, Download, Gem } from "lucide-react";
 import { useLanguage } from "../../contexts/LanguageContext";
 
 export default function RechargeLog() {
@@ -479,14 +479,25 @@ export default function RechargeLog() {
                     {row.deviceId}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {row.income}◯
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {row.recharge}◯
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {row.balanceAfter}◯
-                  </td>
+  <span className="flex items-center gap-1">
+    {row.income}
+    <Gem className="w-4 h-4 text-[#4A90E2]" />
+  </span>
+</td>
+
+<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+  <span className="flex items-center gap-1">
+    {row.recharge}
+    <Gem className="w-4 h-4 text-[#4A90E2]" />
+  </span>
+</td>
+
+<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+  <span className="flex items-center gap-1">
+    {row.balanceAfter}
+    <Gem className="w-4 h-4 text-[#4A90E2]" />
+  </span>
+</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <span className="px-2 py-1 bg-[#5CB85C] text-white rounded text-xs">
                       {t(`rechargeLog.${row.status}`)}

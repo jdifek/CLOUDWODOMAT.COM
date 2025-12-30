@@ -152,19 +152,22 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
           onClick={onClose}
         />
       )}
+
       <div
         className={`
-        ${isOpen ? "translate-x-0" : "-translate-x-full"}
-        lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-50
-        w-72 bg-[#008dd4] text-white h-screen overflow-y-auto custom-scrollbar flex flex-col
-        transition-transform duration-300 ease-in-out
-      `}
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
+          lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-50
+          w-72 bg-[#008dd4] text-white h-screen flex flex-col
+          transition-transform duration-300 ease-in-out
+        `}
       >
-        <div className=" border-b border-gray-700">
-          <img src="/image.png" alt="image.png" />
-        </div>
+        {/* Логотип всегда сверху */}
+        <div className="border-b border-gray-700 shrink-0 h-32 flex items-center justify-center">
+  <img src="/image.png" alt="logo" className="max-h-full" />
+</div>
 
-        <nav className="flex-1 p-2">
+        {/* Скролл только для меню */}
+        <nav className="flex-1 p-2 overflow-y-auto custom-scrollbar">
           {menuItems.map((item) => (
             <div key={item.key}>
               {item.children ? (
@@ -213,7 +216,6 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
             </div>
           ))}
         </nav>
-
       </div>
     </>
   );

@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { Search, X } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface SearchFilterProps {
   children: ReactNode;
@@ -8,6 +9,8 @@ interface SearchFilterProps {
 }
 
 export function SearchFilter({ children, onSearch, onClear }: SearchFilterProps) {
+  const { t } = useLanguage();
+
   return (
     <div className="bg-white rounded-lg p-6 shadow-sm mb-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-4">
@@ -19,14 +22,14 @@ export function SearchFilter({ children, onSearch, onClear }: SearchFilterProps)
           className="flex items-center px-4 py-2 bg-[#4A90E2] text-white rounded hover:bg-[#3A7BC8] transition-colors"
         >
           <Search className="w-4 h-4 mr-2" />
-          Поиск
+          {t("common.search")}
         </button>
         <button
           onClick={onClear}
           className="flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
         >
           <X className="w-4 h-4 mr-2" />
-          Очистить
+          {t("common.clear")}
         </button>
       </div>
     </div>

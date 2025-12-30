@@ -1,5 +1,19 @@
 export const translations = {
   en: {
+    
+    equipmentSecond: {
+      equipmentType: "Equipment Type",
+      equipmentNumber: "Equipment Number",
+      equipmentAddress: "Equipment Address",
+    },
+    filters: {
+      filterName: {
+        preliminary: "Preliminary"
+      },
+      filterType: {
+        vendingMachine: "Vending Machine"
+      }
+    },
     employeeManagement: {
       employeeList: 'Employee List',
       accountName: 'Account Name',
@@ -446,6 +460,9 @@ export const translations = {
       smsManagement: "SMS Management",
     },
     dashboard: {
+      last7Days: "Last 7 days",
+last7Weeks: "Last 7 weeks",
+last7Months: "Last 7 months",
       profitInDevelopment: "Total Profit: data in development",
       salesInDevelopment: "Sales Efficiency: data in development",
       exchangeInDevelopment: "Exchange Efficiency: data in development",
@@ -615,6 +632,19 @@ export const translations = {
     },
   },
   ru: {
+    equipmentSecond: {
+      equipmentType: "Тип оборудования",
+      equipmentNumber: "Номер оборудования",
+      equipmentAddress: "Адрес оборудования",
+    },
+    filters: {
+      filterName: {
+        preliminary: "Предварительный"
+      },
+      filterType: {
+        vendingMachine: "Торговый автомат"
+      }
+    },
     employeeManagement: {
       employeeList: 'Список сотрудников',
       accountName: 'Название аккаунта',
@@ -1061,6 +1091,9 @@ export const translations = {
       smsManagement: "Управление SMS",
     },
     dashboard: {
+      last7Days: "Последние 7 дней",
+last7Weeks: "Последние 7 недель",
+last7Months: "Почти 7 месяцев",
       profitInDevelopment: "Общая прибыль: данные в разработке",
   salesInDevelopment: "Эффективность продаж: данные в разработке",
   exchangeInDevelopment: "Эффективность обмена: данные в разработке",
@@ -1230,6 +1263,19 @@ export const translations = {
     },
   },
   pl: {
+    equipmentSecond: {
+      equipmentType: "Typ urządzenia",
+      equipmentNumber: "Numer urządzenia",
+      equipmentAddress: "Adres urządzenia",
+    },
+    filters: {
+      filterName: {
+        preliminary: "Wstępny"
+      },
+      filterType: {
+        vendingMachine: "Automat vendingowy"
+      }
+    },
     employeeManagement: {
       employeeList: 'Lista pracowników',
       accountName: 'Nazwa konta',
@@ -1562,19 +1608,19 @@ export const translations = {
       close: 'Zamknij'
     },
     cardTransfer: {
-      title: 'Управление переводом карт',
-      startTransfer: 'Начать перевод',
-      cardNumber: 'Номер карты',
-      merchantBefore: 'Торговец до',
-      merchantAfter: 'Торговец после',
-      giftAmountAfter: 'Сумма подарка после',
-      actualAmountAfter: 'Фактическая сумма после',
-      operator: 'Оператор',
-      time: 'Время',
-      startCardTransfer: 'Начать перевод карты',
-      enterCardNumber: 'Введите номер карты',
-      enterMerchantBefore: 'Введите торговца до',
-      enterMerchantAfter: 'Введите торговца после'
+      title: 'Zarządzanie transferem kart',
+      startTransfer: 'Rozpocznij transfer',
+      cardNumber: 'Numer karty',
+      merchantBefore: 'Sprzedawca przed',
+      merchantAfter: 'Sprzedawca po',
+      giftAmountAfter: 'Kwota prezentu po',
+      actualAmountAfter: 'Rzeczywista kwota po',
+      operator: 'Operator',
+      time: 'Czas',
+      startCardTransfer: 'Rozpocznij transfer karty',
+      enterCardNumber: 'Wprowadź numer karty',
+      enterMerchantBefore: 'Wprowadź sprzedawcę przed',
+      enterMerchantAfter: 'Wprowadź sprzedawcę po'
     },
     userManagement: {
       memberCardsList: 'Lista kart członkowskich',
@@ -1677,6 +1723,9 @@ export const translations = {
       smsManagement: "Zarządzanie SMS",
     },
     dashboard: {
+      last7Days: "Ostatnie 7 dni",
+last7Weeks: "Ostatnie 7 tygodni",
+last7Months: "Ostatnie 7 miesięcy",
       profitInDevelopment: "Całkowity zysk: dane w opracowaniu",
   salesInDevelopment: "Efektywność sprzedaży: dane w opracowaniu",
   exchangeInDevelopment: "Efektywność wymiany: dane w opracowaniu",

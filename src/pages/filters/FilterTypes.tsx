@@ -8,8 +8,8 @@ export function FilterTypes() {
   const mockData = [
     {
       id: 1,
-      filterName: "Предварительный",
-      filterType: "Торговый автомат",
+      filterName: t("filters.filterName.preliminary"),
+      filterType: t("filters.filterType.vendingMachine"),
       replacementPeriod: 90,
       warningDays: 3,
       totalWaterVolume: 30,

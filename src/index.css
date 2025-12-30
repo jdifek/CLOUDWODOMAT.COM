@@ -2,22 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .custom-scrollbar::-webkit-scrollbar {
-	height: 5px; /* Horizontal scrollbar height */
+  height: 5px; /* Horizontal scrollbar height */
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-	background-color: #84c0f1; /* Scrollbar thumb color */
-	border-radius: 10px; /* Rounded thumb */
-	cursor: pointer;
+  background-color: #84c0f1; /* Scrollbar thumb color */
+  border-radius: 10px; /* Rounded thumb */
+  cursor: pointer;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-	background-color: #84c0f1; /* Darker thumb on hover */
+  background-color: #84c0f1; /* Darker thumb on hover */
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-	background-color: transparent; /* Scrollbar track color */
-	border-radius: 10px;
+  background-color: transparent; /* Scrollbar track color */
+  border-radius: 10px;
+}
+.custom-cursor * {
+  cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAcCAMAAABf788oAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAFZUExURQAAAACN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0gCN0v///xAE2nkAAABxdFJOUwAAK38h2gKOUfHWFbcGkZJi9yrd3CkDlv3nNOnIwOZ+/ITZ/rH0XeCwvEfBu59cZFv7rxP6FGYHavO/RezvbVXt6ug98Ak3aYUEUJ4oQ6E8pkRsxmUfYcdvI3QkerU7l0iPG4leCIYzQTU4sppy2z7X1+CNgwAAAAFiS0dEcjYODVgAAAAHdElNRQfpDB0OFjMzyntiAAABKElEQVQY003PV1fCQBAF4LkhEHoRBUER0IANNKjYEBsCYkdERUTB3nX//4sJCQn3Zc58Z3bPDJESgOMA0gPAZEKfALzZzBsAWATGBEtP5FmrjTGbVXskF87O5Ng5VQCHk3XjdCgAuNxMi8clC+D19cDnVWDAz/QMDoECweGQIcEAhUdGIwaMhSkai48bMBElMZGcNIBN0XRiZrYPUpRmc/MxA9IkZRYW3Uv6JhJlI5nlldU1DdazhNxGfnNrW+13csrq0i7Tlg9J3VtQEPeUNi8WoJ6LYqm8Hy+XioA6YUEvlS4cHB4Bxydh4PSsCuLOaxd1/vLqusEnazdN0G3rjvPcO9tNodOyPjw+0XOzHXl5bbylOu/1j8+vKiHp/5b/+TFV8PvnLuIfwMReX4h8L1wAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjUtMTItMjlUMTQ6MjI6MzkrMDA6MDBFuZKwAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDI1LTEyLTI5VDE0OjIyOjM5KzAwOjAwNOQqDAAAACh0RVh0ZGF0ZTp0aW1lc3RhbXAAMjAyNS0xMi0yOVQxNDoyMjo1MSswMDowMJZxTDMAAAAASUVORK5CYII="),
+    auto !important;
 }

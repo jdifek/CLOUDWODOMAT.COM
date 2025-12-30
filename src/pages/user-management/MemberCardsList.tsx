@@ -9,6 +9,7 @@ import {
   Trash2,
   List,
   Link2,
+  Gem,
 } from "lucide-react";
 import { useLanguage } from "../../contexts/LanguageContext";
 
@@ -396,19 +397,21 @@ export default function MemberCardsList() {
                     {row.device}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <span
-                      className={
-                        parseFloat(row.balance) < 0
-                          ? "text-[#D9534F]"
-                          : "text-gray-900"
-                      }
-                    >
-                      {row.balance}◯
-                    </span>
-                    <span className="text-gray-500 text-xs ml-1">
-                      ({row.gift}/{row.payment})
-                    </span>
-                  </td>
+  <span
+    className={`inline-flex items-center gap-1 ${
+      parseFloat(row.balance) < 0
+        ? 'text-[#D9534F]'
+        : 'text-gray-900'
+    }`}
+  >
+    {row.balance}
+    <Gem className="w-4 h-4" />
+  </span>
+
+  <span className="text-gray-500 text-xs ml-1">
+    ({row.gift}/{row.payment})
+  </span>
+</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {row.package}
                   </td>

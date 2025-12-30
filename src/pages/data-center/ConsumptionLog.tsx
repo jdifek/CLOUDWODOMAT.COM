@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, X, Download, BarChart3 } from "lucide-react";
+import { Search, X, Download, BarChart3, Gem } from "lucide-react";
 import { useLanguage } from "../../contexts/LanguageContext";
 
 export default function ConsumptionLog() {
@@ -425,17 +425,33 @@ export default function ConsumptionLog() {
                     {row.deviceId}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {row.amount}◯
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {row.income}◯
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {row.gift}◯
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {row.balanceAfter}◯
-                  </td>
+  <span className="flex items-center gap-1">
+    {row.amount}
+    <Gem className="w-4 h-4 text-[#4A90E2]" />
+  </span>
+</td>
+
+<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+  <span className="flex items-center gap-1">
+    {row.income}
+    <Gem className="w-4 h-4 text-[#4A90E2]" />
+  </span>
+</td>
+
+<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+  <span className="flex items-center gap-1">
+    {row.gift}
+    <Gem className="w-4 h-4 text-[#4A90E2]" />
+  </span>
+</td>
+
+<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+  <span className="flex items-center gap-1">
+    {row.balanceAfter}
+    <Gem className="w-4 h-4 text-[#4A90E2]" />
+  </span>
+</td>
+
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {row.type}
                   </td>

@@ -30,9 +30,9 @@ export function AllFilters() {
 
   const columns = [
     { key: 'id', label: '№' },
-    { key: 'equipmentType', label: 'Тип оборудования' },
-    { key: 'equipmentNumber', label: 'Номер оборудования' },
-    { key: 'equipmentAddress', label: 'Адрес оборудования' },
+    { key: 'equipmentType', label: t('equipmentSecond.equipmentType') },
+    { key: 'equipmentNumber', label: t('equipmentSecond.equipmentNumber') },
+    { key: 'equipmentAddress', label: t('equipmentSecond.equipmentAddress') },
     { key: 'filterName', label: t('filter.filterName') },
     { key: 'filterNumber', label: t('filter.filterNumber') },
     { key: 'usedDays', label: t('filter.usedDays') },
