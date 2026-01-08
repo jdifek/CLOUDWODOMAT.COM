@@ -91,13 +91,13 @@ export function Dashboard() {
           icon={Gem}
           prefixIcon={Gem}
         />
-<MetricCard
-  title={t("dashboard.currentRevenue")}
-  value="15,00"
-  change={100}
-  icon={Gem}
-  prefixIcon={Gem}
-/>
+        <MetricCard
+          title={t("dashboard.currentRevenue")}
+          value="15,00"
+          change={100}
+          icon={Gem}
+          prefixIcon={Gem}
+        />
         <MetricCard
           title={t("dashboard.activeUsers")}
           value="2,456"
@@ -107,16 +107,16 @@ export function Dashboard() {
       </div>
 
       <div className="bg-white rounded-lg p-6 shadow-sm">
-      <div className="flex items-center justify-between mb-6">
-    <h2 className="text-xl font-semibold text-gray-900">
-      {t("dashboard.subscriptionData")}
-    </h2>
-    <select className="px-4 py-2 bg-white border border-gray-300 rounded hover:border-[#4A90E2] transition-colors cursor-pointer">
-      <option>{t("dashboard.last7Days")}</option>
-      <option>{t("dashboard.last7Weeks")}</option>
-      <option>{t("dashboard.last7Months")}</option>
-    </select>
-  </div>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold text-gray-900">
+            {t("dashboard.subscriptionData")}
+          </h2>
+          <select className="px-4 py-2 bg-white border border-gray-300 rounded hover:border-[#4A90E2] transition-colors cursor-pointer">
+            <option>{t("dashboard.last7Days")}</option>
+            <option>{t("dashboard.last7Weeks")}</option>
+            <option>{t("dashboard.last7Months")}</option>
+          </select>
+        </div>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={lineChartData}>
             <CartesianGrid strokeDasharray="3 3" />

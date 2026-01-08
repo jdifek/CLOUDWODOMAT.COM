@@ -1,6 +1,7 @@
 import { ReactNode, useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
+import { useAuth } from '../contexts/AuthContext';
 
 interface LayoutProps {
   children: ReactNode;
@@ -8,6 +9,12 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { user } = useAuth();
+
+  // Не показываем Layout если пользователь не авторизован
+  if (!user) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="flex h-screen bg-gray-100 custom-cursor">

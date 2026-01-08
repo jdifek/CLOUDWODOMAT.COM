@@ -1,5 +1,6 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { LanguageProvider } from "./contexts/LanguageContext";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { Layout } from "./components/Layout";
 import { Dashboard } from "./pages/Dashboard";
 import { WaterVendingMachines } from "./pages/equipment/WaterVendingMachines";
@@ -42,130 +43,547 @@ import EmployeeList from "./pages/employee-management/EmployeeList";
 import AuthorizationDetails from "./pages/employee-management/AuthorizationDetails";
 import PerformanceRecords from "./pages/employee-management/PerformanceRecords";
 import RoleConfig from "./pages/employee-management/RoleConfig";
+import { Profile } from "./pages/Profile";
+import { ChangePassword } from "./pages/ChangePassword";
+import { Devices } from "./pages/Devices";
+import { Login } from "./pages/Login";
+import { Subscription } from "./pages/Subscription";
+import { UsersList } from "./pages/admin/UsersList";
+import { UserDetails } from "./pages/admin/UserDetails";
+
+function ProtectedRoute({ children, adminOnly = false }: { children: React.ReactNode; adminOnly?: boolean }) {
+  const { user, loading, isAdmin } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#4A90E2]"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) return <Navigate to="/login" replace />;
+  if (adminOnly && !isAdmin) return <Navigate to="/" replace />;
+
+  return <>{children}</>;
+}
+
+function PublicRoute({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#4A90E2]"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (user) return <Navigate to="/" replace />;
+
+  return <>{children}</>;
+}
 
 function App() {
   return (
-    
     <LanguageProvider>
-      <Router>
-        <Layout>
+      <AuthProvider>
+        <Router>
           <Routes>
-            <Route path="/" element={<Dashboard />} />
+            {/* Public Route */}
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              }
+            />
+
+            {/* Protected Routes - Subscription System */}
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Profile />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/change-password"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <ChangePassword />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/devices"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Devices />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/subscription"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Subscription />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Admin Routes */}
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute adminOnly>
+                  <Layout>
+                    <UsersList />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/users/:id"
+              element={
+                <ProtectedRoute adminOnly>
+                  <Layout>
+                    <UserDetails />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Protected Routes - CRM System */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Dashboard />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/equipment/water-vending"
-              element={<WaterVendingMachines />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <WaterVendingMachines />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/equipment/liquid-vending"
-              element={<LiquidVendingMachines />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <LiquidVendingMachines />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
-            <Route path="/equipment/payment" element={<PaymentDevices />} />
+            <Route
+              path="/equipment/payment"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PaymentDevices />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/equipment/water-control"
-              element={<WaterControlDevices />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <WaterControlDevices />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
-            <Route path="/home/models" element={<EquipmentModels />} />
-            <Route path="/home/list" element={<EquipmentList />} />
-            <Route path="/home/packages" element={<PackageSettings />} />
-            <Route path="/home/zones" element={<PackageZones />} />
-            <Route path="/cloud" element={<CloudDevices />} />
-            <Route path="/industrial" element={<IndustrialEquipment />} />
-            <Route path="/filters/types" element={<FilterTypes />} />
-            <Route path="/filters/all" element={<AllFilters />} />
-            <Route path="/sim/list" element={<SimCardList />} />
-            <Route path="/sim/orders" element={<SimCardOrders />} />
+            <Route
+              path="/home/models"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <EquipmentModels />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/home/list"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <EquipmentList />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/home/packages"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PackageSettings />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/home/zones"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PackageZones />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/cloud"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <CloudDevices />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/industrial"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <IndustrialEquipment />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/filters/types"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <FilterTypes />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/filters/all"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <AllFilters />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/sim/list"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <SimCardList />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/sim/orders"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <SimCardOrders />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/user-management/member-cards"
-              element={<MemberCardsList />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <MemberCardsList />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/user-management/card-transfer"
-              element={<CardTransfer />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <CardTransfer />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/user-management/recharge-regular"
-              element={<RechargeRegular />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <RechargeRegular />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/user-management/recharge-batch"
-              element={<RechargeBatch />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <RechargeBatch />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/user-management/bulk-recharge"
-              element={<BulkRecharge />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <BulkRecharge />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/user-management/recharge-import-regular"
-              element={<RechargeImportRegular />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <RechargeImportRegular />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/user-management/card-opening"
-              element={<CardOpening />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <CardOpening />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/data-center/consumption-log"
-              element={<ConsumptionLog />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <ConsumptionLog />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
-            <Route path="/data-center/recharge-log" element={<RechargeLog />} />
+            <Route
+              path="/data-center/recharge-log"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <RechargeLog />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/data-center/operations-log"
-              element={<OperationsLog />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <OperationsLog />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/data-center/download-center"
-              element={<DownloadCenter />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <DownloadCenter />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/online-sales/three-level-config"
-              element={<ThreeLevelConfig />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <ThreeLevelConfig />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
-            <Route path="/online-sales/gift-config" element={<GiftConfig />} />
+            <Route
+              path="/online-sales/gift-config"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <GiftConfig />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/online-sales/coin-payment-config"
-              element={<CoinPaymentConfig />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <CoinPaymentConfig />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/online-sales/package-management"
-              element={<PackageManagement />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PackageManagement />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/online-sales/package-zones"
-              element={<SalesPackageZones />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <SalesPackageZones />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/online-sales/recharge-packages"
-              element={<RechargePackages />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <RechargePackages />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
-            <Route path="/online-sales/qr-products" element={<QRProducts />} />
+            <Route
+              path="/online-sales/qr-products"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <QRProducts />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/online-sales/recharge-zones"
-              element={<RechargeZones />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <RechargeZones />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
-            <Route path="/online-sales/qr-groups" element={<QRGroups />} />
-            <Route path="/online-sales/coupons" element={<CouponsConfig />} />
+            <Route
+              path="/online-sales/qr-groups"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <QRGroups />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/online-sales/coupons"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <CouponsConfig />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/online-sales/promo-activities"
-              element={<PromoActivities />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PromoActivities />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/employee-management/employee-list"
-              element={<EmployeeList />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <EmployeeList />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/employee-management/authorization-details"
-              element={<AuthorizationDetails />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <AuthorizationDetails />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/employee-management/performance-records"
-              element={<PerformanceRecords />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PerformanceRecords />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/employee-management/role-config"
-              element={<RoleConfig />}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <RoleConfig />
+                  </Layout>
+                </ProtectedRoute>
+              }
             />
           </Routes>
-        </Layout>
-      </Router>
+        </Router>
+      </AuthProvider>
     </LanguageProvider>
   );
 }
