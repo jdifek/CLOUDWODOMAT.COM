@@ -500,17 +500,59 @@ export const translations = {
       south: "South",
     },
     nav: {
-      memberCardsList: "Member Cards List",
+      menu: "WODOMAT",
+      language: "Language",
+    
+      // Dashboard
+      dashboard: "Dashboard",
+    
+      // Equipment
+      equipment: "Equipment",
+      waterVending: "Water Vending Machines",
+      liquidVending: "Liquid Vending Machines",
+      paymentDevices: "Payment Devices",
+      waterControl: "Water Control Devices",
+    
+      // Home
+      home: "Home Equipment",
+      equipmentModels: "Equipment Models",
+      equipmentList: "Equipment List",
+      packageSettings: "Package Settings",
+      packageZones: "Package Zones",
+    
+      // Cloud / Industrial
+      cloudDevices: "Cloud Devices",
+      industrialEquipment: "Industrial Equipment",
+    
+      // Filters
+      filters: "Filters",
+      filterTypes: "Filter Types",
+      allFilters: "All Filters",
+    
+      // SIM
+      simCards: "SIM Cards",
+      simCardList: "SIM Card List",
+      simCardOrders: "SIM Card Orders",
+    
+      // User management
+      userManagement: "User Management",
+      memberCards: "Member Cards",
       cardTransfer: "Card Transfer",
       rechargeRegular: "Recharge Regular",
       rechargeBatch: "Recharge Batch",
       bulkRecharge: "Bulk Recharge",
       rechargeImport: "Recharge Import",
       cardOpening: "Card Opening",
+    
+      // Data center
+      dataCenter: "Data Center",
       consumptionLog: "Consumption Log",
       rechargeLog: "Recharge Log",
       operationsLog: "Operations Log",
       downloadCenter: "Download Center",
+    
+      // Online sales
+      onlineSales: "Online Sales",
       threeLevelConfig: "Three Level Config",
       giftConfig: "Gift Config",
       coinPaymentConfig: "Coin Payment Config",
@@ -519,40 +561,17 @@ export const translations = {
       rechargeZones: "Recharge Zones",
       qrProducts: "QR Products",
       qrGroups: "QR Groups",
-      promoActivities: "Promo Activities",
       coupons: "Coupons",
+      promoActivities: "Promo Activities",
+    
+      // Employees
+      employeeManagement: "Employee Management",
       employeeList: "Employee List",
       authorizationDetails: "Authorization Details",
       performanceRecords: "Performance Records",
-      roleConfig: "Role Config",
-      dashboard: "Dashboard",
-      equipmentManagement: "Equipment Management",
-      waterVendingMachines: "WODOMATS",
-      liquidVendingMachines: "Liquid WODOMATS",
-      paymentDevices: "Payment Devices",
-      waterControlDevices: "Water Control Devices",
-      homeEquipment: "Home Equipment",
-      equipmentModels: "Equipment Models",
-      equipmentList: "Equipment List",
-      packageSettings: "Package Settings",
-      packageZones: "Package Zones",
-      cloudDevices: "Cloud Devices",
-      industrialEquipment: "Industrial Equipment",
-      filterManagement: "Filter Management",
-      filterTypes: "Filter Types",
-      allFilters: "All Filters",
-      simCardManagement: "SIM Card Management",
-      simCardList: "SIM Card List",
-      simCardOrders: "SIM Card Orders",
-      userManagement: "User Management",
-      dataCenter: "Data Center",
-      onlineSales: "Online Sales",
-      employeeManagement: "Employee Management",
-      personalCenter: "Personal Center",
-      paymentManagement: "Payment Management",
-      advancedManagement: "Advanced Management",
-      smsManagement: "SMS Management",
-    },
+      roleConfig: "Role Configuration",
+    }
+    ,
     dashboard: {
       last7Days: "Last 7 days",
       last7Weeks: "Last 7 weeks",
@@ -1222,59 +1241,78 @@ export const translations = {
       south: "Юг",
     },
     nav: {
-      memberCardsList: "Список карт участников",
-      cardTransfer: "Перевод карты",
-      rechargeRegular: "Регулярное пополнение",
+      menu: "ВОДОМАТ",
+      language: "Язык",
+    
+      // Dashboard
+      dashboard: "Панель управления",
+    
+      // Equipment
+      equipment: "Оборудование",
+      waterVending: "Водоматы",
+      liquidVending: "Жидкостные водоматы",
+      paymentDevices: "Платёжные устройства",
+      waterControl: "Контроль воды",
+    
+      // Home
+      home: "Домашнее оборудование",
+      equipmentModels: "Модели оборудования",
+      equipmentList: "Список оборудования",
+      packageSettings: "Настройки пакетов",
+      packageZones: "Зоны пакетов",
+    
+      // Cloud / Industrial
+      cloudDevices: "Облачные устройства",
+      industrialEquipment: "Промышленное оборудование",
+    
+      // Filters
+      filters: "Фильтры",
+      filterTypes: "Типы фильтров",
+      allFilters: "Все фильтры",
+    
+      // SIM
+      simCards: "SIM-карты",
+      simCardList: "Список SIM-карт",
+      simCardOrders: "Заказы SIM-карт",
+    
+      // User management
+      userManagement: "Управление пользователями",
+      memberCards: "Карты пользователей",
+      cardTransfer: "Передача карт",
+      rechargeRegular: "Обычное пополнение",
       rechargeBatch: "Пакетное пополнение",
       bulkRecharge: "Массовое пополнение",
       rechargeImport: "Импорт пополнений",
-      cardOpening: "Открытие карты",
+      cardOpening: "Открытие карт",
+    
+      // Data center
+      dataCenter: "Центр данных",
       consumptionLog: "Журнал потребления",
       rechargeLog: "Журнал пополнений",
       operationsLog: "Журнал операций",
       downloadCenter: "Центр загрузок",
-      threeLevelConfig: "Трёхуровневая конфигурация",
-      giftConfig: "Конфигурация подарков",
-      coinPaymentConfig: "Конфигурация оплаты монетами",
+    
+      // Online sales
+      onlineSales: "Онлайн-продажи",
+      threeLevelConfig: "Трёхуровневая настройка",
+      giftConfig: "Настройки подарков",
+      coinPaymentConfig: "Настройки оплаты монетами",
       packageManagement: "Управление пакетами",
       rechargePackages: "Пакеты пополнения",
       rechargeZones: "Зоны пополнения",
-      qrProducts: "QR продукты",
-      qrGroups: "QR группы",
-      promoActivities: "Промо-акции",
+      qrProducts: "QR-продукты",
+      qrGroups: "QR-группы",
       coupons: "Купоны",
+      promoActivities: "Промо-акции",
+    
+      // Employees
+      employeeManagement: "Управление персоналом",
       employeeList: "Список сотрудников",
-      authorizationDetails: "Детали авторизации",
-      performanceRecords: "Записи о производительности",
-      roleConfig: "Конфигурация ролей",
-      dashboard: "Главная панель",
-      equipmentManagement: "Управление оборудованием",
-      waterVendingMachines: "ВОДОМАТЫ",
-      liquidVendingMachines: "ВОДОМАТЫ для жидкостей",
-      paymentDevices: "Платежные устройства",
-      waterControlDevices: "Водоконтрольные устройства",
-      homeEquipment: "Домашнее оборудование",
-      equipmentModels: "Модели оборудования",
-      equipmentList: "Список оборудования",
-      packageSettings: "Пакеты настроек",
-      packageZones: "Зоны пакетов",
-      cloudDevices: "Облачные устройства",
-      industrialEquipment: "Промышленное оборудование",
-      filterManagement: "Управление фильтрами",
-      filterTypes: "Типы фильтров",
-      allFilters: "Все фильтры",
-      simCardManagement: "Управление SIM картами",
-      simCardList: "Список SIM карт",
-      simCardOrders: "Заказы SIM карт",
-      userManagement: "Управление пользователями",
-      dataCenter: "Центр данных",
-      onlineSales: "Онлайн продажи",
-      employeeManagement: "Управление сотрудниками",
-      personalCenter: "Личный центр",
-      paymentManagement: "Управление платежами",
-      advancedManagement: "Расширенное управление",
-      smsManagement: "Управление SMS",
-    },
+      authorizationDetails: "Данные авторизации",
+      performanceRecords: "Показатели эффективности",
+      roleConfig: "Настройка ролей",
+    }
+    ,
     dashboard: {
       last7Days: "Последние 7 дней",
       last7Weeks: "Последние 7 недель",
@@ -1945,60 +1983,78 @@ export const translations = {
       south: "Południe",
     },
     nav: {
-      memberCardsList: "Lista kart członkowskich",
-      cardTransfer: "Transfer karty",
-      rechargeRegular: "Regularne doładowanie",
-      rechargeBatch: "Doładowanie wsadowe",
+      menu: "WODOMAT",
+      language: "Język",
+    
+      // Dashboard
+      dashboard: "Panel główny",
+    
+      // Equipment
+      equipment: "Sprzęt",
+      waterVending: "Automaty z wodą",
+      liquidVending: "Automaty z płynami",
+      paymentDevices: "Urządzenia płatnicze",
+      waterControl: "Kontrola wody",
+    
+      // Home
+      home: "Sprzęt domowy",
+      equipmentModels: "Modele sprzętu",
+      equipmentList: "Lista sprzętu",
+      packageSettings: "Ustawienia pakietów",
+      packageZones: "Strefy pakietów",
+    
+      // Cloud / Industrial
+      cloudDevices: "Urządzenia chmurowe",
+      industrialEquipment: "Sprzęt przemysłowy",
+    
+      // Filters
+      filters: "Filtry",
+      filterTypes: "Typy filtrów",
+      allFilters: "Wszystkie filtry",
+    
+      // SIM
+      simCards: "Karty SIM",
+      simCardList: "Lista kart SIM",
+      simCardOrders: "Zamówienia kart SIM",
+    
+      // User management
+      userManagement: "Zarządzanie użytkownikami",
+      memberCards: "Karty użytkowników",
+      cardTransfer: "Transfer kart",
+      rechargeRegular: "Standardowe doładowanie",
+      rechargeBatch: "Doładowanie zbiorcze",
       bulkRecharge: "Masowe doładowanie",
       rechargeImport: "Import doładowań",
-      cardOpening: "Otwarcie karty",
+      cardOpening: "Otwarcie kart",
+    
+      // Data center
+      dataCenter: "Centrum danych",
       consumptionLog: "Dziennik zużycia",
       rechargeLog: "Dziennik doładowań",
       operationsLog: "Dziennik operacji",
       downloadCenter: "Centrum pobierania",
-      threeLevelConfig: "Konfiguracja trzech poziomów",
-      giftConfig: "Konfiguracja prezentów",
-      coinPaymentConfig: "Konfiguracja płatności monetami",
+    
+      // Online sales
+      onlineSales: "Sprzedaż online",
+      threeLevelConfig: "Konfiguracja trójpoziomowa",
+      giftConfig: "Ustawienia prezentów",
+      coinPaymentConfig: "Płatności monetami",
       packageManagement: "Zarządzanie pakietami",
       rechargePackages: "Pakiety doładowań",
       rechargeZones: "Strefy doładowań",
       qrProducts: "Produkty QR",
       qrGroups: "Grupy QR",
-      promoActivities: "Działania promocyjne",
       coupons: "Kupony",
-      employeeList: "Lista pracowników",
-      authorizationDetails: "Szczegóły autoryzacji",
-      performanceRecords: "Zapisy wydajności",
-      roleConfig: "Konfiguracja ról",
-
-      dashboard: "Panel główny",
-      equipmentManagement: "Zarządzanie sprzętem",
-      waterVendingMachines: "WODOMATY",
-      liquidVendingMachines: "WODOMATY do płynów",
-      paymentDevices: "Urządzenia płatnicze",
-      waterControlDevices: "Urządzenia kontroli wody",
-      homeEquipment: "Sprzęt domowy",
-      equipmentModels: "Modele sprzętu",
-      equipmentList: "Lista sprzętu",
-      packageSettings: "Ustawienia pakietów",
-      packageZones: "Strefy pakietów",
-      cloudDevices: "Urządzenia chmurowe",
-      industrialEquipment: "Sprzęt przemysłowy",
-      filterManagement: "Zarządzanie filtrami",
-      filterTypes: "Typy filtrów",
-      allFilters: "Wszystkie filtry",
-      simCardManagement: "Zarządzanie kartami SIM",
-      simCardList: "Lista kart SIM",
-      simCardOrders: "Zamówienia kart SIM",
-      userManagement: "Zarządzanie użytkownikami",
-      dataCenter: "Centrum danych",
-      onlineSales: "Sprzedaż online",
+      promoActivities: "Akcje promocyjne",
+    
+      // Employees
       employeeManagement: "Zarządzanie pracownikami",
-      personalCenter: "Centrum osobiste",
-      paymentManagement: "Zarządzanie płatnościami",
-      advancedManagement: "Zaawansowane zarządzanie",
-      smsManagement: "Zarządzanie SMS",
-    },
+      employeeList: "Lista pracowników",
+      authorizationDetails: "Dane autoryzacyjne",
+      performanceRecords: "Wyniki pracy",
+      roleConfig: "Konfiguracja ról",
+    }
+    ,
     dashboard: {
       last7Days: "Ostatnie 7 dni",
       last7Weeks: "Ostatnie 7 tygodni",
