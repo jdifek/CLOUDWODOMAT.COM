@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { Eye, UserCog } from 'lucide-react';
+import { Eye, Trash2, UserCog } from 'lucide-react';
 
 interface User {
   id: string;
@@ -20,6 +20,12 @@ export function UsersList() {
   const { t } = useLanguage();
   const [users, setUsers] = useState<User[]>([]);
   const navigate = useNavigate();
+  const [showCreateModal, setShowCreateModal] = useState(false);
+const [formData, setFormData] = useState({
+  email: '', password: '', name: '', surname: '', phone: '', company: '', role: 'USER'
+});
+
+
 
   useEffect(() => {
     fetchUsers();
@@ -33,7 +39,30 @@ export function UsersList() {
       console.error('Failed to fetch users');
     }
   };
-
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await api.post('/admin/users', formData);
+      setShowCreateModal(false);
+      setFormData({ email: '', password: '', name: '', surname: '', phone: '', company: '', role: 'USER' });
+      fetchUsers();
+    } catch (error: any) {
+      alert(error.response?.data?.error || 'Failed to create user');
+    }
+  };
+  
+  // Функция удаления пользователя
+  const handleDeleteUser = async (userId: string, userEmail: string) => {
+    if (!confirm(`${t('admin.deleteUserConfirm')}: ${userEmail}?`)) return;
+    
+    try {
+      await api.delete(`/admin/users/${userId}`);
+      fetchUsers();
+    } catch {
+      console.error('Failed to delete user');
+    }
+  };
+  
   const handleImpersonate = async (userId: string) => {
     if (!confirm(t('admin.loginAsUserConfirm'))) return;
 
@@ -49,8 +78,15 @@ export function UsersList() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">{t('admin.usersManagement')}</h1>
-
+      <div className="flex justify-between items-center">
+  <h1 className="text-2xl font-bold text-gray-900">{t('admin.usersManagement')}</h1>
+  <button
+    onClick={() => setShowCreateModal(true)}
+    className="px-4 py-2 bg-[#4A90E2] text-white rounded hover:bg-[#3A7BC8]"
+  >
+    + {t('admin.createUser')}
+  </button>
+</div>
       <div className="bg-white rounded-lg shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -131,6 +167,13 @@ export function UsersList() {
                     >
                       <UserCog className="w-4 h-4" />
                     </button>
+                    <button
+  onClick={() => handleDeleteUser(user.id, user.email)}
+  className="text-red-500 hover:text-red-700 ml-3"
+  title={t('admin.deleteUser')}
+>
+  <Trash2 className="w-4 h-4" />
+</button>
                   </td>
                 </tr>
               ))}
@@ -138,6 +181,61 @@ export function UsersList() {
           </table>
         </div>
       </div>
+      {showCreateModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white rounded-lg p-6 w-full max-w-md">
+      <h2 className="text-xl font-bold mb-4">{t('admin.createUser')}</h2>
+      <form onSubmit={handleCreateUser} className="space-y-4">
+        <input
+          type="email"
+          placeholder={t('admin.email')}
+          value={formData.email}
+          onChange={(e) => setFormData({...formData, email: e.target.value})}
+          className="w-full px-3 py-2 border rounded"
+          required
+        />
+        <input
+          type="password"
+          placeholder={t('admin.password')}
+          value={formData.password}
+          onChange={(e) => setFormData({...formData, password: e.target.value})}
+          className="w-full px-3 py-2 border rounded"
+          required
+        />
+        <input
+          type="text"
+          placeholder={t('admin.name')}
+          value={formData.name}
+          onChange={(e) => setFormData({...formData, name: e.target.value})}
+          className="w-full px-3 py-2 border rounded"
+        />
+        <input
+          type="text"
+          placeholder={t('admin.surname')}
+          value={formData.surname}
+          onChange={(e) => setFormData({...formData, surname: e.target.value})}
+          className="w-full px-3 py-2 border rounded"
+        />
+        <select
+          value={formData.role}
+          onChange={(e) => setFormData({...formData, role: e.target.value})}
+          className="w-full px-3 py-2 border rounded"
+        >
+          <option value="USER">USER</option>
+          <option value="ADMIN">ADMIN</option>
+        </select>
+        <div className="flex gap-2">
+          <button type="submit" className="flex-1 px-4 py-2 bg-[#4A90E2] text-white rounded hover:bg-[#3A7BC8]">
+            {t('admin.create')}
+          </button>
+          <button type="button" onClick={() => setShowCreateModal(false)} className="flex-1 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+            {t('admin.cancel')}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
     </div>
   );
 }
