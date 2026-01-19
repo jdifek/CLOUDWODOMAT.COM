@@ -24,7 +24,8 @@ export function Subscription() {
   const [loading, setLoading] = useState(false);
   const [devices, setDevices] = useState<Device[]>([]);
 
-  const basePrice = 47;
+  const basePrice = 1;
+  //47
 
   useEffect(() => {
     fetchSubscription();

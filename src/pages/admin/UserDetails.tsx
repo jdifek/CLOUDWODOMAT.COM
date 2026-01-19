@@ -24,8 +24,8 @@ export function UserDetails() {
   });
 
   // Базовая цена из ENV (в продакшене это будет process.env.BASE_PRICE)
-  const BASE_PRICE = 47; // Замени на реальное значение из ENV
-
+  const BASE_PRICE = 1; // Замени на реальное значение из ENV
+ //47
   // Автоматический расчет цены и количества устройств
   const calculatedDevicesCount = user?.devices?.length || 0;
   const calculatedPrice = BASE_PRICE * calculatedDevicesCount;
