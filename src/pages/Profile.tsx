@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { api } from '../services/api';
 import { User, Save, AlertCircle, CheckCircle } from 'lucide-react';
 
 export function Profile() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
     surname: '',
@@ -33,9 +35,9 @@ export function Profile() {
 
     try {
       await api.put('/user/me', formData);
-      setMessage({ type: 'success', text: 'Profile updated successfully' });
+      setMessage({ type: 'success', text: t('profile.updateSuccess') });
     } catch (error: any) {
-      setMessage({ type: 'error', text: error.response?.data?.error || 'Update failed' });
+      setMessage({ type: 'error', text: error.response?.data?.error || t('profile.updateFailed') });
     } finally {
       setLoading(false);
     }
@@ -43,7 +45,7 @@ export function Profile() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Profile Settings</h1>
+      <h1 className="text-2xl font-bold text-gray-900">{t('profile.title')}</h1>
 
       <div className="bg-white rounded-lg shadow-sm p-6">
         <div className="flex items-center gap-3 mb-6">
@@ -53,7 +55,7 @@ export function Profile() {
           <div>
             <h2 className="text-xl font-semibold text-gray-900">{user?.email}</h2>
             <p className="text-sm text-gray-600">
-              Role: <span className="font-medium">{user?.role}</span>
+              {t('profile.role')}: <span className="font-medium">{user?.role}</span>
             </p>
           </div>
         </div>
@@ -77,7 +79,7 @@ export function Profile() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                First Name
+                {t('profile.firstName')}
               </label>
               <input
                 type="text"
@@ -90,7 +92,7 @@ export function Profile() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Last Name
+                {t('profile.lastName')}
               </label>
               <input
                 type="text"
@@ -104,7 +106,7 @@ export function Profile() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Phone
+              {t('profile.phone')}
             </label>
             <input
               type="tel"
@@ -117,7 +119,7 @@ export function Profile() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Company
+              {t('profile.company')}
             </label>
             <input
               type="text"
@@ -134,7 +136,7 @@ export function Profile() {
             className="px-6 py-2 bg-[#4A90E2] text-white rounded hover:bg-[#3A7BC8] transition-colors flex items-center gap-2 disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
-            {loading ? 'Saving...' : 'Save Changes'}
+            {loading ? t('profile.saving') : t('profile.saveChanges')}
           </button>
         </form>
       </div>

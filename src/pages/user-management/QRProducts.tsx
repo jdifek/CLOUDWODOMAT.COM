@@ -16,7 +16,7 @@ export default function QRProducts() {
     {
       id: 1,
       price: "10",
-      name: "10 yuanów 10L",
+      name: "10 coins 10L",
       sort: "-",
       status: "published",
       created: "2025-11-21 15:43:21",
@@ -24,7 +24,7 @@ export default function QRProducts() {
     {
       id: 2,
       price: "5",
-      name: "5 yuanów 5L",
+      name: "5 coins 5L",
       sort: "-",
       status: "published",
       created: "2025-11-21 15:43:12",
@@ -32,7 +32,7 @@ export default function QRProducts() {
     {
       id: 3,
       price: "1",
-      name: "1 yuan 1L",
+      name: "1 coin 1L",
       sort: "-",
       status: "published",
       created: "2025-11-21 15:43:02",

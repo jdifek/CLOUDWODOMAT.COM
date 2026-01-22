@@ -1,5 +1,6 @@
 export const translations = {
   en: {
+   
     auth: {
       welcomeBack: "Welcome Back",
       signInToAccount: "Sign in to your account",
@@ -50,6 +51,9 @@ export const translations = {
       noDevices: "No devices found",
     },
     subscription: {
+      noActiveSubscription: "No Active Subscription",
+      subscriptionRequired: "Subscribe to access CRM features",
+      subscribe: "Subscribe Now",
       title: "Subscription",
       currentSubscription: "Current Subscription",
       status: "Status",
@@ -66,55 +70,56 @@ export const translations = {
       noSubscription: "No active subscription",
     },
     admin: {
-      usersManagement: 'Users Management',
-      userDetails: 'User Details',
-      email: 'Email',
-      name: 'Name',
-      surname: 'Surname',
-      role: 'Role',
-      devices: 'Devices',
-      subscription: 'Subscription',
-      actions: 'Actions',
-      viewDetails: 'View Details',
-      loginAsUser: 'Login as User',
-      loginAsUserConfirm: 'Login as this user?',
-      noSubscription: 'No subscription',
-      phoneLabel: 'Phone',
-      companyLabel: 'Company',
-      notSet: 'Not set',
-      createdAt: 'Created At',
-      paymentHistory: 'Payment History',
-      date: 'Date',
-      amount: 'Amount',
-      status: 'Status',
-      noPayments: 'No payment history',
-      backToList: 'Back to List',
-      impersonatingMode: 'Impersonating User Mode',
-      stopImpersonating: 'Back to Admin',
-      
+      usersManagement: "Users Management",
+      userDetails: "User Details",
+      email: "Email",
+      name: "Name",
+      surname: "Surname",
+      role: "Role",
+      devices: "Devices",
+      subscription: "Subscription",
+      actions: "Actions",
+      viewDetails: "View Details",
+      loginAsUser: "Login as User",
+      loginAsUserConfirm: "Login as this user?",
+      noSubscription: "No subscription",
+      phoneLabel: "Phone",
+      companyLabel: "Company",
+      notSet: "Not set",
+      createdAt: "Created At",
+      paymentHistory: "Payment History",
+      date: "Date",
+      amount: "Amount",
+      status: "Status",
+      noPayments: "No payment history",
+      backToList: "Back to List",
+      impersonatingMode: "Impersonating User Mode",
+      stopImpersonating: "Back to Admin",
+
       // New keys for CRUD operations
-      createUser: 'Create User',
-      deleteUser: 'Delete User',
-      deleteUserConfirm: 'Are you sure you want to delete user',
-      deleteDevice: 'Delete Device',
-      deleteDeviceConfirm: 'Are you sure you want to delete this device?',
-      addDevice: 'Add Device',
-      deviceName: 'Device Name',
-      deviceCode: 'Device Code',
-      password: 'Password',
-      edit: 'Edit',
-      save: 'Save',
-      cancel: 'Cancel',
-      create: 'Create',
-      add: 'Add',
-      
+      createUser: "Create User",
+      deleteUser: "Delete User",
+      deleteUserConfirm: "Are you sure you want to delete user",
+      deleteDevice: "Delete Device",
+      deleteDeviceConfirm: "Are you sure you want to delete this device?",
+      addDevice: "Add Device",
+      deviceName: "Device Name",
+      deviceCode: "Device Code",
+      password: "Password",
+      edit: "Edit",
+      save: "Save",
+      cancel: "Cancel",
+      create: "Create",
+      add: "Add",
+
       // Subscription management
-      editSubscription: 'Edit Subscription',
-      createSubscription: 'Create Subscription',
-      deleteSubscription: 'Delete Subscription',
-      deleteSubscriptionConfirm: 'Are you sure you want to delete this subscription?',
-      autoCalculated: 'Auto-calculated',
-      currentDevices: 'Current devices',
+      editSubscription: "Edit Subscription",
+      createSubscription: "Create Subscription",
+      deleteSubscription: "Delete Subscription",
+      deleteSubscriptionConfirm:
+        "Are you sure you want to delete this subscription?",
+      autoCalculated: "Auto-calculated",
+      currentDevices: "Current devices",
     },
 
     equipmentSecond: {
@@ -265,10 +270,10 @@ export const translations = {
       title: "Coin Payment Configuration",
       warningTitle: "Warning:",
       warningText1:
-        "If the payment amount is greater than the coin amount, mandatory registration is required, coin removal cannot be charged to the e-card, can be used multiple times. If coins are less, can only be used once, for example 9 yuan only supports one payment, water is automatically deducted 9 yuan.",
+        "If the payment amount is greater than the coin amount, mandatory registration is required, coin removal cannot be charged to the e-card, can be used multiple times. If coins are less, can only be used once, for example 9 coin only supports one payment, water is automatically deducted 9 coin.",
       exampleTitle: "Example:",
       exampleText:
-        "If coins are set to 10 yuan, payment above 10 yuan requires registration, the amount is recharged to the card, can be used multiple times; if less than 10 yuan, for example 9 yuan, registration is not required, only one-time use, user gets water automatically deducts 9 yuan.",
+        "If coins are set to 10 coin, payment above 10 coin requires registration, the amount is recharged to the card, can be used multiple times; if less than 10 coin, for example 9 coin, registration is not required, only one-time use, user gets water automatically deducts 9 coin.",
       machineSalesCoins: "WODOMAT Sales - Gold Coins",
       liquidSalesCoins: "Liquid Sales - Gold Coins",
       randomMachineCoins: "Random WODOMAT - Gold Coins",
@@ -323,9 +328,9 @@ export const translations = {
 
     giftConfig: {
       title: "Gift Configuration",
-      bindingGift: "Microsignal Binding Gift (yuan)",
+      bindingGift: "Microsignal Binding Gift (coin)",
       bindingPackage: "Microsignal Binding Gift Package",
-      eCardGift: "E-Card Gift (yuan)",
+      eCardGift: "E-Card Gift (coin)",
       eCardPackage: "E-Card Gift Package",
       selectPackage: "Select package",
     },
@@ -527,38 +532,38 @@ export const translations = {
     nav: {
       menu: "WODOMAT",
       language: "Language",
-    
+
       // Dashboard
       dashboard: "Dashboard",
-    
+
       // Equipment
       equipment: "Equipment",
       waterVending: "Water Vending Machines",
       liquidVending: "Liquid Vending Machines",
       paymentDevices: "Payment Devices",
       waterControl: "Water Control Devices",
-    
+
       // Home
       home: "Home Equipment",
       equipmentModels: "Equipment Models",
       equipmentList: "Equipment List",
       packageSettings: "Package Settings",
       packageZones: "Package Zones",
-    
+
       // Cloud / Industrial
       cloudDevices: "Cloud Devices",
       industrialEquipment: "Industrial Equipment",
-    
+
       // Filters
       filters: "Filters",
       filterTypes: "Filter Types",
       allFilters: "All Filters",
-    
+
       // SIM
       simCards: "SIM Cards",
       simCardList: "SIM Card List",
       simCardOrders: "SIM Card Orders",
-    
+
       // User management
       userManagement: "User Management",
       memberCards: "Member Cards",
@@ -568,14 +573,14 @@ export const translations = {
       bulkRecharge: "Bulk Recharge",
       rechargeImport: "Recharge Import",
       cardOpening: "Card Opening",
-    
+
       // Data center
       dataCenter: "Data Center",
       consumptionLog: "Consumption Log",
       rechargeLog: "Recharge Log",
       operationsLog: "Operations Log",
       downloadCenter: "Download Center",
-    
+
       // Online sales
       onlineSales: "Online Sales",
       threeLevelConfig: "Three Level Config",
@@ -588,15 +593,14 @@ export const translations = {
       qrGroups: "QR Groups",
       coupons: "Coupons",
       promoActivities: "Promo Activities",
-    
+
       // Employees
       employeeManagement: "Employee Management",
       employeeList: "Employee List",
       authorizationDetails: "Authorization Details",
       performanceRecords: "Performance Records",
       roleConfig: "Role Configuration",
-    }
-    ,
+    },
     dashboard: {
       last7Days: "Last 7 days",
       last7Weeks: "Last 7 weeks",
@@ -820,6 +824,9 @@ export const translations = {
       noDevices: "Устройства не найдены",
     },
     subscription: {
+      noActiveSubscription: "Нет активной подписки",
+      subscriptionRequired: "Оформите подписку для доступа к функциям CRM",
+      subscribe: "Оформить подписку",
       title: "Подписка",
       currentSubscription: "Текущая подписка",
       status: "Статус",
@@ -835,59 +842,58 @@ export const translations = {
       processing: "Обработка...",
       noSubscription: "Нет активной подписки",
     },
-   // Russian (ru)
-admin: {
-  usersManagement: 'Управление пользователями',
-  userDetails: 'Данные пользователя',
-  email: 'Email',
-  name: 'Имя',
-  surname: 'Фамилия',
-  role: 'Роль',
-  devices: 'Устройства',
-  subscription: 'Подписка',
-  actions: 'Действия',
-  viewDetails: 'Просмотреть детали',
-  loginAsUser: 'Войти как пользователь',
-  loginAsUserConfirm: 'Войти под этим пользователем?',
-  noSubscription: 'Подписка отсутствует',
-  phoneLabel: 'Телефон',
-  companyLabel: 'Компания',
-  notSet: 'Не указано',
-  createdAt: 'Дата создания',
-  paymentHistory: 'История платежей',
-  date: 'Дата',
-  amount: 'Сумма',
-  status: 'Статус',
-  noPayments: 'История платежей отсутствует',
-  backToList: 'Назад к списку',
-  impersonatingMode: 'Режим входа от имени пользователя',
-  stopImpersonating: 'Вернуться к администратору',
+    // Russian (ru)
+    admin: {
+      usersManagement: "Управление пользователями",
+      userDetails: "Данные пользователя",
+      email: "Email",
+      name: "Имя",
+      surname: "Фамилия",
+      role: "Роль",
+      devices: "Устройства",
+      subscription: "Подписка",
+      actions: "Действия",
+      viewDetails: "Просмотреть детали",
+      loginAsUser: "Войти как пользователь",
+      loginAsUserConfirm: "Войти под этим пользователем?",
+      noSubscription: "Подписка отсутствует",
+      phoneLabel: "Телефон",
+      companyLabel: "Компания",
+      notSet: "Не указано",
+      createdAt: "Дата создания",
+      paymentHistory: "История платежей",
+      date: "Дата",
+      amount: "Сумма",
+      status: "Статус",
+      noPayments: "История платежей отсутствует",
+      backToList: "Назад к списку",
+      impersonatingMode: "Режим входа от имени пользователя",
+      stopImpersonating: "Вернуться к администратору",
 
-  // CRUD
-  createUser: 'Создать пользователя',
-  deleteUser: 'Удалить пользователя',
-  deleteUserConfirm: 'Вы уверены, что хотите удалить пользователя',
-  deleteDevice: 'Удалить устройство',
-  deleteDeviceConfirm: 'Вы уверены, что хотите удалить это устройство?',
-  addDevice: 'Добавить устройство',
-  deviceName: 'Название устройства',
-  deviceCode: 'Код устройства',
-  password: 'Пароль',
-  edit: 'Редактировать',
-  save: 'Сохранить',
-  cancel: 'Отмена',
-  create: 'Создать',
-  add: 'Добавить',
+      // CRUD
+      createUser: "Создать пользователя",
+      deleteUser: "Удалить пользователя",
+      deleteUserConfirm: "Вы уверены, что хотите удалить пользователя",
+      deleteDevice: "Удалить устройство",
+      deleteDeviceConfirm: "Вы уверены, что хотите удалить это устройство?",
+      addDevice: "Добавить устройство",
+      deviceName: "Название устройства",
+      deviceCode: "Код устройства",
+      password: "Пароль",
+      edit: "Редактировать",
+      save: "Сохранить",
+      cancel: "Отмена",
+      create: "Создать",
+      add: "Добавить",
 
-  // Subscription
-  editSubscription: 'Редактировать подписку',
-  createSubscription: 'Создать подписку',
-  deleteSubscription: 'Удалить подписку',
-  deleteSubscriptionConfirm: 'Вы уверены, что хотите удалить эту подписку?',
-  autoCalculated: 'Рассчитывается автоматически',
-  currentDevices: 'Текущие устройства',
-}
-,    
+      // Subscription
+      editSubscription: "Редактировать подписку",
+      createSubscription: "Создать подписку",
+      deleteSubscription: "Удалить подписку",
+      deleteSubscriptionConfirm: "Вы уверены, что хотите удалить эту подписку?",
+      autoCalculated: "Рассчитывается автоматически",
+      currentDevices: "Текущие устройства",
+    },
     equipmentSecond: {
       equipmentType: "Тип оборудования",
       equipmentNumber: "Номер оборудования",
@@ -923,7 +929,7 @@ admin: {
       dateFrom: "Дата от",
       dateTo: "Дата до",
     },
-  
+
     authorizationDetails: {
       title: "Детали авторизационной суммы",
       employee: "Сотрудник",
@@ -1036,10 +1042,10 @@ admin: {
       title: "Конфигурация оплаты монетами",
       warningTitle: "Внимание:",
       warningText1:
-        "Если сумма платежа больше суммы монет, требуется обязательная регистрация, удаление монет не может быть зачислено на электронную карту, можно использовать многократно. Если монет меньше, можно использовать только один раз, например 9 юаней поддерживает только один платеж, вода автоматически вычитается 9 юаней.",
+        "Если сумма платежа больше суммы монет, требуется обязательная регистрация, удаление монет не может быть зачислено на электронную карту, можно использовать многократно. Если монет меньше, можно использовать только один раз, например 9 монет поддерживает только один платеж, вода автоматически вычитается 9 монет.",
       exampleTitle: "Пример:",
       exampleText:
-        "Если монеты установлены на 10 юаней, платеж свыше 10 юаней требует регистрации, сумма пополняется на карту, можно использовать многократно; если меньше 10 юаней, например 9 юаней, регистрация не требуется, только одноразовое использование, пользователь получает воду автоматически вычитается 9 юаней.",
+        "Если монеты установлены на 10 монет, платеж свыше 10 монет требует регистрации, сумма пополняется на карту, можно использовать многократно; если меньше 10 монет, например 9 монет, регистрация не требуется, только одноразовое использование, пользователь получает воду автоматически вычитается 9 монет.",
       machineSalesCoins: "Продажа через ВОДОМАТ - золотые монеты",
       liquidSalesCoins: "Продажа жидкости - золотые монеты",
       randomMachineCoins: "Случайный ВОДОМАТ - золотые монеты",
@@ -1094,9 +1100,9 @@ admin: {
 
     giftConfig: {
       title: "Конфигурация подарков",
-      bindingGift: "Подарок при привязке микросигнала (юань)",
+      bindingGift: "Подарок при привязке микросигнала (монета)",
       bindingPackage: "Пакет подарка при привязке микросигнала",
-      eCardGift: "Подарочная электронная карта (юань)",
+      eCardGift: "Подарочная электронная карта (монета)",
       eCardPackage: "Пакет подарочной электронной карты",
       selectPackage: "Выберите пакет",
     },
@@ -1297,38 +1303,38 @@ admin: {
     nav: {
       menu: "ВОДОМАТ",
       language: "Язык",
-    
+
       // Dashboard
       dashboard: "Панель управления",
-    
+
       // Equipment
       equipment: "Оборудование",
       waterVending: "Водоматы",
       liquidVending: "Жидкостные водоматы",
       paymentDevices: "Платёжные устройства",
       waterControl: "Контроль воды",
-    
+
       // Home
       home: "Домашнее оборудование",
       equipmentModels: "Модели оборудования",
       equipmentList: "Список оборудования",
       packageSettings: "Настройки пакетов",
       packageZones: "Зоны пакетов",
-    
+
       // Cloud / Industrial
       cloudDevices: "Облачные устройства",
       industrialEquipment: "Промышленное оборудование",
-    
+
       // Filters
       filters: "Фильтры",
       filterTypes: "Типы фильтров",
       allFilters: "Все фильтры",
-    
+
       // SIM
       simCards: "SIM-карты",
       simCardList: "Список SIM-карт",
       simCardOrders: "Заказы SIM-карт",
-    
+
       // User management
       userManagement: "Управление пользователями",
       memberCards: "Карты пользователей",
@@ -1338,14 +1344,14 @@ admin: {
       bulkRecharge: "Массовое пополнение",
       rechargeImport: "Импорт пополнений",
       cardOpening: "Открытие карт",
-    
+
       // Data center
       dataCenter: "Центр данных",
       consumptionLog: "Журнал потребления",
       rechargeLog: "Журнал пополнений",
       operationsLog: "Журнал операций",
       downloadCenter: "Центр загрузок",
-    
+
       // Online sales
       onlineSales: "Онлайн-продажи",
       threeLevelConfig: "Трёхуровневая настройка",
@@ -1358,15 +1364,14 @@ admin: {
       qrGroups: "QR-группы",
       coupons: "Купоны",
       promoActivities: "Промо-акции",
-    
+
       // Employees
       employeeManagement: "Управление персоналом",
       employeeList: "Список сотрудников",
       authorizationDetails: "Данные авторизации",
       performanceRecords: "Показатели эффективности",
       roleConfig: "Настройка ролей",
-    }
-    ,
+    },
     dashboard: {
       last7Days: "Последние 7 дней",
       last7Weeks: "Последние 7 недель",
@@ -1541,124 +1546,125 @@ admin: {
   },
   pl: {
     auth: {
-      welcomeBack: 'Witaj ponownie',
-      signInToAccount: 'Zaloguj się na swoje konto',
-      email: 'Email',
-      password: 'Hasło',
-      signIn: 'Zaloguj się',
-      signingIn: 'Logowanie...',
-      loginFailed: 'Logowanie nie powiodło się. Sprawdź dane logowania.',
-      logout: 'Wyloguj',
-      },
-      profile: {
-      title: 'Ustawienia profilu',
-      firstName: 'Imię',
-      lastName: 'Nazwisko',
-      phone: 'Telefon',
-      company: 'Firma',
-      role: 'Rola',
-      saveChanges: 'Zapisz zmiany',
-      saving: 'Zapisywanie...',
-      updateSuccess: 'Profil zaktualizowany pomyślnie',
-      updateFailed: 'Nie udało się zaktualizować profilu',
-      },
-      password: {
-      title: 'Zmień hasło',
-      currentPassword: 'Aktualne hasło',
-      newPassword: 'Nowe hasło',
-      confirmPassword: 'Potwierdź nowe hasło',
-      changePassword: 'Zmień hasło',
-      changing: 'Zmienianie...',
-      passwordsNotMatch: 'Hasła nie pasują do siebie',
-      passwordTooShort: 'Hasło musi mieć co najmniej 6 znaków',
-      changeSuccess: 'Hasło zostało zmienione pomyślnie',
-      changeFailed: 'Nie udało się zmienić hasła',
-      incorrectPassword: 'Nieprawidłowe aktualne hasło',
-      },
-      devices: {
-      title: 'Moje urządzenia',
-      addDevice: 'Dodaj urządzenie',
-      editDevice: 'Edytuj urządzenie',
-      deviceName: 'Nazwa urządzenia',
-      deviceCode: 'Kod urządzenia',
-      createdAt: 'Utworzono',
-      actions: 'Akcje',
-      save: 'Zapisz',
-      cancel: 'Anuluj',
-      saving: 'Zapisywanie...',
-      deleteConfirm: 'Czy na pewno chcesz usunąć to urządzenie?',
-      noDevices: 'Nie znaleziono urządzeń',
-      },
-      subscription: {
-      title: 'Subskrypcja',
-      currentSubscription: 'Aktualna subskrypcja',
-      status: 'Status',
-      price: 'Cena',
-      renewalDate: 'Data odnowienia',
-      devicesCount: 'Urządzenia',
-      startSubscription: 'Rozpocznij subskrypcję',
-      upgradeSubscription: 'Zaktualizuj subskrypcję',
-      numberOfDevices: 'Liczba urządzeń',
-      basePricePerDevice: 'Cena bazowa za urządzenie',
-      totalMonthly: 'Suma miesięczna',
-      proceedToPayment: 'Przejdź do płatności',
-      processing: 'Przetwarzanie...',
-      noSubscription: 'Brak aktywnej subskrypcji',
-      },
-     // Polish (pl)
-admin: {
-  usersManagement: 'Zarządzanie użytkownikami',
-  userDetails: 'Szczegóły użytkownika',
-  email: 'Email',
-  name: 'Imię',
-  surname: 'Nazwisko',
-  role: 'Rola',
-  devices: 'Urządzenia',
-  subscription: 'Subskrypcja',
-  actions: 'Akcje',
-  viewDetails: 'Zobacz szczegóły',
-  loginAsUser: 'Zaloguj się jako użytkownik',
-  loginAsUserConfirm: 'Zalogować się jako ten użytkownik?',
-  noSubscription: 'Brak subskrypcji',
-  phoneLabel: 'Telefon',
-  companyLabel: 'Firma',
-  notSet: 'Nie ustawiono',
-  createdAt: 'Data utworzenia',
-  paymentHistory: 'Historia płatności',
-  date: 'Data',
-  amount: 'Kwota',
-  status: 'Status',
-  noPayments: 'Brak historii płatności',
-  backToList: 'Powrót do listy',
-  impersonatingMode: 'Tryb podszywania się pod użytkownika',
-  stopImpersonating: 'Powrót do administratora',
+      welcomeBack: "Witaj ponownie",
+      signInToAccount: "Zaloguj się na swoje konto",
+      email: "Email",
+      password: "Hasło",
+      signIn: "Zaloguj się",
+      signingIn: "Logowanie...",
+      loginFailed: "Logowanie nie powiodło się. Sprawdź dane logowania.",
+      logout: "Wyloguj",
+    },
+    profile: {
+      title: "Ustawienia profilu",
+      firstName: "Imię",
+      lastName: "Nazwisko",
+      phone: "Telefon",
+      company: "Firma",
+      role: "Rola",
+      saveChanges: "Zapisz zmiany",
+      saving: "Zapisywanie...",
+      updateSuccess: "Profil zaktualizowany pomyślnie",
+      updateFailed: "Nie udało się zaktualizować profilu",
+    },
+    password: {
+      title: "Zmień hasło",
+      currentPassword: "Aktualne hasło",
+      newPassword: "Nowe hasło",
+      confirmPassword: "Potwierdź nowe hasło",
+      changePassword: "Zmień hasło",
+      changing: "Zmienianie...",
+      passwordsNotMatch: "Hasła nie pasują do siebie",
+      passwordTooShort: "Hasło musi mieć co najmniej 6 znaków",
+      changeSuccess: "Hasło zostało zmienione pomyślnie",
+      changeFailed: "Nie udało się zmienić hasła",
+      incorrectPassword: "Nieprawidłowe aktualne hasło",
+    },
+    devices: {
+      title: "Moje urządzenia",
+      addDevice: "Dodaj urządzenie",
+      editDevice: "Edytuj urządzenie",
+      deviceName: "Nazwa urządzenia",
+      deviceCode: "Kod urządzenia",
+      createdAt: "Utworzono",
+      actions: "Akcje",
+      save: "Zapisz",
+      cancel: "Anuluj",
+      saving: "Zapisywanie...",
+      deleteConfirm: "Czy na pewno chcesz usunąć to urządzenie?",
+      noDevices: "Nie znaleziono urządzeń",
+    },
+    subscription: {
+      noActiveSubscription: "Brak aktywnej subskrypcji",
+      subscriptionRequired: "Subskrybuj, aby uzyskać dostęp do funkcji CRM",
+      subscribe: "Subskrybuj teraz",
+      title: "Subskrypcja",
+      currentSubscription: "Aktualna subskrypcja",
+      status: "Status",
+      price: "Cena",
+      renewalDate: "Data odnowienia",
+      devicesCount: "Urządzenia",
+      startSubscription: "Rozpocznij subskrypcję",
+      upgradeSubscription: "Zaktualizuj subskrypcję",
+      numberOfDevices: "Liczba urządzeń",
+      basePricePerDevice: "Cena bazowa za urządzenie",
+      totalMonthly: "Suma miesięczna",
+      proceedToPayment: "Przejdź do płatności",
+      processing: "Przetwarzanie...",
+      noSubscription: "Brak aktywnej subskrypcji",
+    },
+    // Polish (pl)
+    admin: {
+      usersManagement: "Zarządzanie użytkownikami",
+      userDetails: "Szczegóły użytkownika",
+      email: "Email",
+      name: "Imię",
+      surname: "Nazwisko",
+      role: "Rola",
+      devices: "Urządzenia",
+      subscription: "Subskrypcja",
+      actions: "Akcje",
+      viewDetails: "Zobacz szczegóły",
+      loginAsUser: "Zaloguj się jako użytkownik",
+      loginAsUserConfirm: "Zalogować się jako ten użytkownik?",
+      noSubscription: "Brak subskrypcji",
+      phoneLabel: "Telefon",
+      companyLabel: "Firma",
+      notSet: "Nie ustawiono",
+      createdAt: "Data utworzenia",
+      paymentHistory: "Historia płatności",
+      date: "Data",
+      amount: "Kwota",
+      status: "Status",
+      noPayments: "Brak historii płatności",
+      backToList: "Powrót do listy",
+      impersonatingMode: "Tryb podszywania się pod użytkownika",
+      stopImpersonating: "Powrót do administratora",
 
-  // CRUD
-  createUser: 'Utwórz użytkownika',
-  deleteUser: 'Usuń użytkownika',
-  deleteUserConfirm: 'Czy na pewno chcesz usunąć użytkownika',
-  deleteDevice: 'Usuń urządzenie',
-  deleteDeviceConfirm: 'Czy na pewno chcesz usunąć to urządzenie?',
-  addDevice: 'Dodaj urządzenie',
-  deviceName: 'Nazwa urządzenia',
-  deviceCode: 'Kod urządzenia',
-  password: 'Hasło',
-  edit: 'Edytuj',
-  save: 'Zapisz',
-  cancel: 'Anuluj',
-  create: 'Utwórz',
-  add: 'Dodaj',
+      // CRUD
+      createUser: "Utwórz użytkownika",
+      deleteUser: "Usuń użytkownika",
+      deleteUserConfirm: "Czy na pewno chcesz usunąć użytkownika",
+      deleteDevice: "Usuń urządzenie",
+      deleteDeviceConfirm: "Czy na pewno chcesz usunąć to urządzenie?",
+      addDevice: "Dodaj urządzenie",
+      deviceName: "Nazwa urządzenia",
+      deviceCode: "Kod urządzenia",
+      password: "Hasło",
+      edit: "Edytuj",
+      save: "Zapisz",
+      cancel: "Anuluj",
+      create: "Utwórz",
+      add: "Dodaj",
 
-  // Subscription
-  editSubscription: 'Edytuj subskrypcję',
-  createSubscription: 'Utwórz subskrypcję',
-  deleteSubscription: 'Usuń subskrypcję',
-  deleteSubscriptionConfirm: 'Czy na pewno chcesz usunąć tę subskrypcję?',
-  autoCalculated: 'Obliczane automatycznie',
-  currentDevices: 'Aktualne urządzenia',
-}
-,
-      
+      // Subscription
+      editSubscription: "Edytuj subskrypcję",
+      createSubscription: "Utwórz subskrypcję",
+      deleteSubscription: "Usuń subskrypcję",
+      deleteSubscriptionConfirm: "Czy na pewno chcesz usunąć tę subskrypcję?",
+      autoCalculated: "Obliczane automatycznie",
+      currentDevices: "Aktualne urządzenia",
+    },
     equipmentSecond: {
       equipmentType: "Typ urządzenia",
       equipmentNumber: "Numer urządzenia",
@@ -1807,10 +1813,10 @@ admin: {
       title: "Konfiguracja płatności monetami",
       warningTitle: "Uwaga:",
       warningText1:
-        "Jeśli kwota płatności jest większa niż kwota monet, wymagana jest obowiązkowa rejestracja, usunięcie monet nie może być zaksięgowane na karcie elektronicznej, można używać wielokrotnie. Jeśli monet jest mniej, można użyć tylko raz, na przykład 9 yuanów obsługuje tylko jedną płatność, woda jest automatycznie odliczana 9 yuanów.",
+        "Jeśli kwota płatności jest większa niż kwota monet, wymagana jest obowiązkowa rejestracja, usunięcie monet nie może być zaksięgowane na karcie elektronicznej, można używać wielokrotnie. Jeśli monet jest mniej, można użyć tylko raz, na przykład 9 coins obsługuje tylko jedną płatność, woda jest automatycznie odliczana 9 coins.",
       exampleTitle: "Przykład:",
       exampleText:
-        "Jeśli monety są ustawione na 10 yuanów, płatność powyżej 10 yuanów wymaga rejestracji, kwota jest doładowywana na kartę, można używać wielokrotnie; jeśli mniej niż 10 yuanów, na przykład 9 yuanów, rejestracja nie jest wymagana, tylko jednorazowe użycie, użytkownik otrzymuje wodę automatycznie odlicza się 9 yuanów.",
+        "Jeśli monety są ustawione na 10 coins, płatność powyżej 10 coins wymaga rejestracji, kwota jest doładowywana na kartę, można używać wielokrotnie; jeśli mniej niż 10 coins, na przykład 9 coins, rejestracja nie jest wymagana, tylko jednorazowe użycie, użytkownik otrzymuje wodę automatycznie odlicza się 9 coins.",
       machineSalesCoins: "Sprzedaż przez WODOMAT - złote monety",
       liquidSalesCoins: "Sprzedaż płynów - złote monety",
       randomMachineCoins: "Losowy WODOMAT - złote monety",
@@ -1865,9 +1871,9 @@ admin: {
 
     giftConfig: {
       title: "Konfiguracja prezentów",
-      bindingGift: "Prezent przy powiązaniu mikrosygnału (yuan)",
+      bindingGift: "Prezent przy powiązaniu mikrosygnału (coin)",
       bindingPackage: "Pakiet prezentu przy powiązaniu mikrosygnału",
-      eCardGift: "Prezentowa karta elektroniczna (yuan)",
+      eCardGift: "Prezentowa karta elektroniczna (coin)",
       eCardPackage: "Pakiet prezentowej karty elektronicznej",
       selectPackage: "Wybierz pakiet",
     },
@@ -2069,38 +2075,38 @@ admin: {
     nav: {
       menu: "WODOMAT",
       language: "Język",
-    
+
       // Dashboard
       dashboard: "Panel główny",
-    
+
       // Equipment
       equipment: "Sprzęt",
       waterVending: "Automaty z wodą",
       liquidVending: "Automaty z płynami",
       paymentDevices: "Urządzenia płatnicze",
       waterControl: "Kontrola wody",
-    
+
       // Home
       home: "Sprzęt domowy",
       equipmentModels: "Modele sprzętu",
       equipmentList: "Lista sprzętu",
       packageSettings: "Ustawienia pakietów",
       packageZones: "Strefy pakietów",
-    
+
       // Cloud / Industrial
       cloudDevices: "Urządzenia chmurowe",
       industrialEquipment: "Sprzęt przemysłowy",
-    
+
       // Filters
       filters: "Filtry",
       filterTypes: "Typy filtrów",
       allFilters: "Wszystkie filtry",
-    
+
       // SIM
       simCards: "Karty SIM",
       simCardList: "Lista kart SIM",
       simCardOrders: "Zamówienia kart SIM",
-    
+
       // User management
       userManagement: "Zarządzanie użytkownikami",
       memberCards: "Karty użytkowników",
@@ -2110,14 +2116,14 @@ admin: {
       bulkRecharge: "Masowe doładowanie",
       rechargeImport: "Import doładowań",
       cardOpening: "Otwarcie kart",
-    
+
       // Data center
       dataCenter: "Centrum danych",
       consumptionLog: "Dziennik zużycia",
       rechargeLog: "Dziennik doładowań",
       operationsLog: "Dziennik operacji",
       downloadCenter: "Centrum pobierania",
-    
+
       // Online sales
       onlineSales: "Sprzedaż online",
       threeLevelConfig: "Konfiguracja trójpoziomowa",
@@ -2130,15 +2136,14 @@ admin: {
       qrGroups: "Grupy QR",
       coupons: "Kupony",
       promoActivities: "Akcje promocyjne",
-    
+
       // Employees
       employeeManagement: "Zarządzanie pracownikami",
       employeeList: "Lista pracowników",
       authorizationDetails: "Dane autoryzacyjne",
       performanceRecords: "Wyniki pracy",
       roleConfig: "Konfiguracja ról",
-    }
-    ,
+    },
     dashboard: {
       last7Days: "Ostatnie 7 dni",
       last7Weeks: "Ostatnie 7 tygodni",

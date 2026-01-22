@@ -51,8 +51,16 @@ import { Subscription } from "./pages/Subscription";
 import { UsersList } from "./pages/admin/UsersList";
 import { UserDetails } from "./pages/admin/UserDetails";
 
-function ProtectedRoute({ children, adminOnly = false }: { children: React.ReactNode; adminOnly?: boolean }) {
-  const { user, loading, isAdmin } = useAuth();
+function ProtectedRoute({ 
+  children, 
+  adminOnly = false,
+  requiresSubscription = false 
+}: { 
+  children: React.ReactNode; 
+  adminOnly?: boolean;
+  requiresSubscription?: boolean;
+}) {
+  const { user, loading, isAdmin, hasActiveSubscription } = useAuth();
 
   if (loading) {
     return (
@@ -67,6 +75,11 @@ function ProtectedRoute({ children, adminOnly = false }: { children: React.React
 
   if (!user) return <Navigate to="/login" replace />;
   if (adminOnly && !isAdmin) return <Navigate to="/" replace />;
+  
+  // Админы имеют доступ ко всему
+  if (!isAdmin && requiresSubscription && !hasActiveSubscription) {
+    return <Navigate to="/subscription" replace />;
+  }
 
   return <>{children}</>;
 }
@@ -106,7 +119,7 @@ function App() {
               }
             />
 
-            {/* Protected Routes - Subscription System */}
+            {/* Protected Routes - Available without subscription */}
             <Route
               path="/profile"
               element={
@@ -148,7 +161,7 @@ function App() {
               }
             />
 
-            {/* Admin Routes */}
+            {/* Admin Routes - Always accessible for admins */}
             <Route
               path="/admin/users"
               element={
@@ -170,11 +183,11 @@ function App() {
               }
             />
 
-            {/* Protected Routes - CRM System */}
+            {/* CRM Routes - Require active subscription (except for admins) */}
             <Route
               path="/"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <Dashboard />
                   </Layout>
@@ -184,7 +197,7 @@ function App() {
             <Route
               path="/equipment/water-vending"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <WaterVendingMachines />
                   </Layout>
@@ -194,7 +207,7 @@ function App() {
             <Route
               path="/equipment/liquid-vending"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <LiquidVendingMachines />
                   </Layout>
@@ -204,7 +217,7 @@ function App() {
             <Route
               path="/equipment/payment"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <PaymentDevices />
                   </Layout>
@@ -214,7 +227,7 @@ function App() {
             <Route
               path="/equipment/water-control"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <WaterControlDevices />
                   </Layout>
@@ -224,7 +237,7 @@ function App() {
             <Route
               path="/home/models"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <EquipmentModels />
                   </Layout>
@@ -234,7 +247,7 @@ function App() {
             <Route
               path="/home/list"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <EquipmentList />
                   </Layout>
@@ -244,7 +257,7 @@ function App() {
             <Route
               path="/home/packages"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <PackageSettings />
                   </Layout>
@@ -254,7 +267,7 @@ function App() {
             <Route
               path="/home/zones"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <PackageZones />
                   </Layout>
@@ -264,7 +277,7 @@ function App() {
             <Route
               path="/cloud"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <CloudDevices />
                   </Layout>
@@ -274,7 +287,7 @@ function App() {
             <Route
               path="/industrial"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <IndustrialEquipment />
                   </Layout>
@@ -284,7 +297,7 @@ function App() {
             <Route
               path="/filters/types"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <FilterTypes />
                   </Layout>
@@ -294,7 +307,7 @@ function App() {
             <Route
               path="/filters/all"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <AllFilters />
                   </Layout>
@@ -304,7 +317,7 @@ function App() {
             <Route
               path="/sim/list"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <SimCardList />
                   </Layout>
@@ -314,7 +327,7 @@ function App() {
             <Route
               path="/sim/orders"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <SimCardOrders />
                   </Layout>
@@ -324,7 +337,7 @@ function App() {
             <Route
               path="/user-management/member-cards"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <MemberCardsList />
                   </Layout>
@@ -334,7 +347,7 @@ function App() {
             <Route
               path="/user-management/card-transfer"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <CardTransfer />
                   </Layout>
@@ -344,7 +357,7 @@ function App() {
             <Route
               path="/user-management/recharge-regular"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <RechargeRegular />
                   </Layout>
@@ -354,7 +367,7 @@ function App() {
             <Route
               path="/user-management/recharge-batch"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <RechargeBatch />
                   </Layout>
@@ -364,7 +377,7 @@ function App() {
             <Route
               path="/user-management/bulk-recharge"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <BulkRecharge />
                   </Layout>
@@ -374,7 +387,7 @@ function App() {
             <Route
               path="/user-management/recharge-import-regular"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <RechargeImportRegular />
                   </Layout>
@@ -384,7 +397,7 @@ function App() {
             <Route
               path="/user-management/card-opening"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <CardOpening />
                   </Layout>
@@ -394,7 +407,7 @@ function App() {
             <Route
               path="/data-center/consumption-log"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <ConsumptionLog />
                   </Layout>
@@ -404,7 +417,7 @@ function App() {
             <Route
               path="/data-center/recharge-log"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <RechargeLog />
                   </Layout>
@@ -414,7 +427,7 @@ function App() {
             <Route
               path="/data-center/operations-log"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <OperationsLog />
                   </Layout>
@@ -424,7 +437,7 @@ function App() {
             <Route
               path="/data-center/download-center"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <DownloadCenter />
                   </Layout>
@@ -434,7 +447,7 @@ function App() {
             <Route
               path="/online-sales/three-level-config"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <ThreeLevelConfig />
                   </Layout>
@@ -444,7 +457,7 @@ function App() {
             <Route
               path="/online-sales/gift-config"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <GiftConfig />
                   </Layout>
@@ -454,7 +467,7 @@ function App() {
             <Route
               path="/online-sales/coin-payment-config"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <CoinPaymentConfig />
                   </Layout>
@@ -464,7 +477,7 @@ function App() {
             <Route
               path="/online-sales/package-management"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <PackageManagement />
                   </Layout>
@@ -474,7 +487,7 @@ function App() {
             <Route
               path="/online-sales/package-zones"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <SalesPackageZones />
                   </Layout>
@@ -484,7 +497,7 @@ function App() {
             <Route
               path="/online-sales/recharge-packages"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <RechargePackages />
                   </Layout>
@@ -494,7 +507,7 @@ function App() {
             <Route
               path="/online-sales/qr-products"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <QRProducts />
                   </Layout>
@@ -504,7 +517,7 @@ function App() {
             <Route
               path="/online-sales/recharge-zones"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <RechargeZones />
                   </Layout>
@@ -514,7 +527,7 @@ function App() {
             <Route
               path="/online-sales/qr-groups"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <QRGroups />
                   </Layout>
@@ -524,7 +537,7 @@ function App() {
             <Route
               path="/online-sales/coupons"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <CouponsConfig />
                   </Layout>
@@ -534,7 +547,7 @@ function App() {
             <Route
               path="/online-sales/promo-activities"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <PromoActivities />
                   </Layout>
@@ -544,7 +557,7 @@ function App() {
             <Route
               path="/employee-management/employee-list"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <EmployeeList />
                   </Layout>
@@ -554,7 +567,7 @@ function App() {
             <Route
               path="/employee-management/authorization-details"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <AuthorizationDetails />
                   </Layout>
@@ -564,7 +577,7 @@ function App() {
             <Route
               path="/employee-management/performance-records"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <PerformanceRecords />
                   </Layout>
@@ -574,7 +587,7 @@ function App() {
             <Route
               path="/employee-management/role-config"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresSubscription>
                   <Layout>
                     <RoleConfig />
                   </Layout>

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { X, LogOut, Home, Settings, Package, Users, CreditCard } from "lucide-react";
+import { X, LogOut, Home, Settings, Package, Users, CreditCard, AlertCircle } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useAuth } from "../contexts/AuthContext";
@@ -11,7 +11,7 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { language, setLanguage, t } = useLanguage();
-  const { logout, isAdmin } = useAuth();
+  const { logout, isAdmin, hasActiveSubscription } = useAuth();
   const navigate = useNavigate();
   const isImpersonating = localStorage.getItem('impersonating') === 'true';
 
@@ -212,6 +212,30 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           </div>
         )}
 
+        {/* Предупреждение об отсутствии подписки */}
+        {!isAdmin && !hasActiveSubscription && (
+          <div className="p-4 bg-orange-50 border-b border-orange-200">
+            <div className="flex items-start gap-2">
+              <AlertCircle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm text-orange-800 font-medium mb-2">
+                  {t('subscription.noActiveSubscription') || 'No Active Subscription'}
+                </p>
+                <p className="text-xs text-orange-700 mb-3">
+                  {t('subscription.subscriptionRequired') || 'Subscribe to access CRM features'}
+                </p>
+                <NavLink
+                  to="/subscription"
+                  onClick={onClose}
+                  className="block w-full px-3 py-2 bg-orange-600 text-white text-sm rounded hover:bg-orange-700 transition-colors font-medium text-center"
+                >
+                  {t('subscription.subscribe') || 'Subscribe Now'}
+                </NavLink>
+              </div>
+            </div>
+          </div>
+        )}
+
         <nav className="flex-1 overflow-y-auto p-4">
           {/* Админские страницы (только для админа) */}
           {isAdmin && (
@@ -228,7 +252,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             </>
           )}
 
-          {/* Страницы подписки */}
+          {/* Страницы подписки - всегда доступны */}
           <div className="mb-4">
             <div className="px-4 py-2 text-xs font-bold text-gray-500 uppercase bg-blue-50 rounded">
               {t('subscription.title')}
@@ -238,17 +262,20 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             </ul>
           </div>
 
-          <div className="border-t border-gray-200 my-4"></div>
-
-          {/* CRM меню */}
-          <div className="mb-4">
-            <div className="px-4 py-2 text-xs font-bold text-gray-500 uppercase bg-green-50 rounded">
-              CRM System
-            </div>
-            <ul className="mt-2 space-y-1">
-              {crmMenuItems.map((item, index) => renderMenuItem(item, index))}
-            </ul>
-          </div>
+          {/* CRM меню - доступно только с подпиской или для админов */}
+          {(isAdmin || hasActiveSubscription) && (
+            <>
+              <div className="border-t border-gray-200 my-4"></div>
+              <div className="mb-4">
+                <div className="px-4 py-2 text-xs font-bold text-gray-500 uppercase bg-green-50 rounded">
+                  CRM System
+                </div>
+                <ul className="mt-2 space-y-1">
+                  {crmMenuItems.map((item, index) => renderMenuItem(item, index))}
+                </ul>
+              </div>
+            </>
+          )}
         </nav>
 
         <div className="p-4 border-t">

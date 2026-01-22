@@ -1,6 +1,14 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { api } from '../services/api';
 
+interface Subscription {
+  id: string;
+  status: 'ACTIVE' | 'CANCELED' | 'PAST_DUE' | 'INCOMPLETE';
+  price: number;
+  devicesCount: number;
+  currentPeriodEnd?: string;
+}
+
 interface User {
   id: string;
   email: string;
@@ -9,6 +17,7 @@ interface User {
   surname?: string;
   phone?: string;
   company?: string;
+  subscription?: Subscription;
 }
 
 interface AuthContextType {
@@ -17,6 +26,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   isAdmin: boolean;
+  hasActiveSubscription: boolean;
   loading: boolean;
 }
 
@@ -62,9 +72,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const isAdmin = user?.role === 'ADMIN';
+  const hasActiveSubscription = user?.subscription?.status === 'ACTIVE';
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isAdmin, loading }}>
+    <AuthContext.Provider value={{ user, token, login, logout, isAdmin, hasActiveSubscription, loading }}>
       {children}
     </AuthContext.Provider>
   );
