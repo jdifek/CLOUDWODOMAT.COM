@@ -43,6 +43,7 @@ export function UsersList() {
       console.error("Failed to fetch users");
     }
   };
+
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -63,7 +64,6 @@ export function UsersList() {
     }
   };
 
-  // Функция удаления пользователя
   const handleDeleteUser = async (userId: string, userEmail: string) => {
     if (!confirm(`${t("admin.deleteUserConfirm")}: ${userEmail}?`)) return;
 
@@ -80,8 +80,18 @@ export function UsersList() {
 
     try {
       const response = await api.post(`/admin/users/${userId}/impersonate`);
+      
+      // Сохраняем текущий токен админа
+      const currentToken = localStorage.getItem('token');
+      if (currentToken) {
+        localStorage.setItem('adminToken', currentToken);
+      }
+      
+      // Устанавливаем токен impersonation
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("impersonating", "true");
+      
+      // Перенаправляем на главную
       window.location.href = "/";
     } catch {
       console.error("Failed to impersonate user");
@@ -176,48 +186,32 @@ export function UsersList() {
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
-  <div className="flex items-center gap-2">
-    <button
-      onClick={() => navigate(`/admin/users/${user.id}`)}
-      title={t("admin.viewDetails")}
-      className="
-        p-2 rounded-md
-        text-[#4A90E2]
-        hover:bg-blue-50 hover:text-[#3A7BC8]
-        transition-colors
-      "
-    >
-      <Eye className="w-5 h-5" />
-    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => navigate(`/admin/users/${user.id}`)}
+                        title={t("admin.viewDetails")}
+                        className="p-2 rounded-md text-[#4A90E2] hover:bg-blue-50 hover:text-[#3A7BC8] transition-colors"
+                      >
+                        <Eye className="w-5 h-5" />
+                      </button>
 
-    <button
-      onClick={() => handleImpersonate(user.id)}
-      title={t("admin.loginAsUser")}
-      className="
-        p-2 rounded-md
-        text-[#F0AD4E]
-        hover:bg-yellow-50 hover:text-[#EC971F]
-        transition-colors
-      "
-    >
-      <UserCog className="w-5 h-5" />
-    </button>
+                      <button
+                        onClick={() => handleImpersonate(user.id)}
+                        title={t("admin.loginAsUser")}
+                        className="p-2 rounded-md text-[#F0AD4E] hover:bg-yellow-50 hover:text-[#EC971F] transition-colors"
+                      >
+                        <UserCog className="w-5 h-5" />
+                      </button>
 
-    <button
-      onClick={() => handleDeleteUser(user.id, user.email)}
-      title={t("admin.deleteUser")}
-      className="
-        p-2 rounded-md
-        text-red-500
-        hover:bg-red-50 hover:text-red-700
-        transition-colors
-      "
-    >
-      <Trash2 className="w-5 h-5" />
-    </button>
-  </div>
-</td>
-
+                      <button
+                        onClick={() => handleDeleteUser(user.id, user.email)}
+                        title={t("admin.deleteUser")}
+                        className="p-2 rounded-md text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>

@@ -21,7 +21,15 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   };
 
   const handleStopImpersonating = () => {
+    // Восстанавливаем токен админа
+    const adminToken = localStorage.getItem('adminToken');
+    if (adminToken) {
+      localStorage.setItem('token', adminToken);
+      localStorage.removeItem('adminToken');
+    }
     localStorage.removeItem('impersonating');
+    
+    // Перезагружаем страницу для обновления контекста
     window.location.href = '/admin/users';
   };
 
