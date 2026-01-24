@@ -129,6 +129,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   // Админское меню
   const adminMenuItems = [
     { label: t('admin.usersManagement'), path: '/admin/users', icon: Users },
+    { label: t('admin.systemSettings'), path: '/admin/settings', icon: Settings },
   ];
 
   const renderMenuItem = (item: any, index: number) => {

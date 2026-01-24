@@ -1,33 +1,42 @@
-import { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState, useEffect } from 'react';
 import { SearchFilter, FilterField } from '../../components/SearchFilter';
 import { DataTable } from '../../components/DataTable';
 import { ActionButton } from '../../components/ActionButton';
 import { StatusIndicator } from '../../components/StatusIndicator';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Download, QrCode, Settings, Thermometer, Signal } from 'lucide-react';
+import { api } from '../../services/api';
 
-const mockData = [
-  {
-    id: 1,
-    equipmentId: '*21968',
-    todaySales: 25,
-    currentSales: 450,
-    name: 'Machine A',
-    networkStatus: 'online' as const,
-    equipmentStatus: 'active' as const,
-    temperature: 22,
-    outdoorTemp: 18,
-    version: '9.911',
-    signalStrength: 16,
-    territory: 'Zone 1',
-    simCard: '*85475',
-    lastConnection: '2025-05-23 18:14:39',
-    createdAt: '2025-05-21 18:16:33'
-  }
-];
+interface Device {
+  id: string;
+  name: string;
+  code: string;
+  createdAt: string;
+}
+
+interface MachineData {
+  id: number;
+  equipmentId: string;
+  todaySales: number | null;
+  currentSales: number | null;
+  name: string;
+  networkStatus: 'online' | 'offline';
+  equipmentStatus: 'active' | 'inactive';
+  temperature: number | null;
+  outdoorTemp: number | null;
+  version: string | null;
+  signalStrength: number | null;
+  territory: string | null;
+  simCard: string | null;
+  lastConnection: string | null;
+  createdAt: string;
+}
 
 export function WaterVendingMachines() {
   const { t } = useLanguage();
+  const [devices, setDevices] = useState<Device[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     equipmentName: '',
     equipmentId: '',
@@ -37,8 +46,44 @@ export function WaterVendingMachines() {
     versionNumber: ''
   });
 
+  useEffect(() => {
+    fetchDevices();
+  }, []);
+
+  const fetchDevices = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get("/user/devices");
+      setDevices(response.data);
+    } catch (error) {
+      console.error("Failed to fetch devices:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Преобразуем Device в MachineData с прочерками для отсутствующих полей
+  const machineData: MachineData[] = devices.map((device, index) => ({
+    id: index + 1,
+    equipmentId: device.code,
+    todaySales: null,
+    currentSales: null,
+    name: device.name,
+    networkStatus: 'offline', // По умолчанию offline, пока бэк не вернет
+    equipmentStatus: 'inactive', // По умолчанию inactive, пока бэк не вернет
+    temperature: null,
+    outdoorTemp: null,
+    version: null,
+    signalStrength: null,
+    territory: null,
+    simCard: null,
+    lastConnection: null,
+    createdAt: device.createdAt
+  }));
+
   const handleSearch = () => {
     console.log('Searching with filters:', filters);
+    // TODO: Реализовать фильтрацию когда бэк будет готов
   };
 
   const handleClear = () => {
@@ -55,8 +100,16 @@ export function WaterVendingMachines() {
   const columns = [
     { key: 'id', label: '№' },
     { key: 'equipmentId', label: t('equipment.equipmentId') },
-    { key: 'todaySales', label: t('equipment.todaySales') },
-    { key: 'currentSales', label: t('equipment.currentSales') },
+    { 
+      key: 'todaySales', 
+      label: t('equipment.todaySales'),
+      render: (value: number | null) => value ?? '—'
+    },
+    { 
+      key: 'currentSales', 
+      label: t('equipment.currentSales'),
+      render: (value: number | null) => value ?? '—'
+    },
     { key: 'name', label: t('equipment.equipmentName') },
     {
       key: 'networkStatus',
@@ -75,28 +128,54 @@ export function WaterVendingMachines() {
     {
       key: 'temperature',
       label: t('equipment.temperature'),
-      render: (value: number, row: any) => (
-        <div className="flex items-center">
-          <Thermometer className="w-4 h-4 mr-1 text-blue-500" />
-          <span>{value}°C | {row.outdoorTemp}°C</span>
-        </div>
-      )
+      render: (value: number | null, row: any) => {
+        if (value === null && row.outdoorTemp === null) return '—';
+        return (
+          <div className="flex items-center">
+            <Thermometer className="w-4 h-4 mr-1 text-blue-500" />
+            <span>{value ?? '—'}°C | {row.outdoorTemp ?? '—'}°C</span>
+          </div>
+        );
+      }
     },
-    { key: 'version', label: t('equipment.versionNumber') },
+    { 
+      key: 'version', 
+      label: t('equipment.versionNumber'),
+      render: (value: string | null) => value ?? '—'
+    },
     {
       key: 'signalStrength',
       label: t('equipment.signalStrength'),
-      render: (value: number) => (
-        <div className="flex items-center">
-          <Signal className="w-4 h-4 mr-1 text-green-500" />
-          <span>{value}</span>
-        </div>
-      )
+      render: (value: number | null) => {
+        if (value === null) return '—';
+        return (
+          <div className="flex items-center">
+            <Signal className="w-4 h-4 mr-1 text-green-500" />
+            <span>{value}</span>
+          </div>
+        );
+      }
     },
-    { key: 'territory', label: t('equipment.territory') },
-    { key: 'simCard', label: t('equipment.simCard') },
-    { key: 'lastConnection', label: t('equipment.lastConnection') },
-    { key: 'createdAt', label: t('common.createdAt') },
+    { 
+      key: 'territory', 
+      label: t('equipment.territory'),
+      render: (value: string | null) => value ?? '—'
+    },
+    { 
+      key: 'simCard', 
+      label: t('equipment.simCard'),
+      render: (value: string | null) => value ?? '—'
+    },
+    { 
+      key: 'lastConnection', 
+      label: t('equipment.lastConnection'),
+      render: (value: string | null) => value ?? '—'
+    },
+    { 
+      key: 'createdAt', 
+      label: t('common.createdAt'),
+      render: (value: string) => new Date(value).toLocaleString()
+    },
     {
       key: 'operations',
       label: t('common.operations'),
@@ -121,6 +200,17 @@ export function WaterVendingMachines() {
       )
     }
   ];
+
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <h1 className="text-2xl font-bold text-gray-900">{t('nav.waterVendingMachines')}</h1>
+        <div className="flex justify-center items-center p-8">
+          <div className="text-gray-500">{t('common.loading') || 'Загрузка...'}</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -193,10 +283,10 @@ export function WaterVendingMachines() {
 
       <DataTable
         columns={columns}
-        data={mockData}
+        data={machineData}
         currentPage={1}
         totalPages={1}
-        totalRecords={mockData.length}
+        totalRecords={machineData.length}
       />
     </div>
   );

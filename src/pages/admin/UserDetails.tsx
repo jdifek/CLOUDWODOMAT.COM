@@ -22,24 +22,32 @@ export function UserDetails() {
     devicesCount: '',
     currentPeriodEnd: ''
   });
+  const [basePrice, setBasePrice] = useState<number>(1);
 
-  // Базовая цена из ENV (в продакшене это будет process.env.BASE_PRICE)
-  const BASE_PRICE = 1; // Замени на реальное значение из ENV
- //47
   // Автоматический расчет цены и количества устройств
   const calculatedDevicesCount = user?.devices?.length || 0;
-  const calculatedPrice = BASE_PRICE * calculatedDevicesCount;
+  const calculatedPrice = basePrice * calculatedDevicesCount;
 
   useEffect(() => {
+    fetchSettings();
     fetchUser();
   }, [id]);
+
+  const fetchSettings = async () => {
+    try {
+      const response = await api.get('/settings');
+      setBasePrice(parseFloat(response.data.BASE_PRICE) || 1);
+    } catch (error) {
+      console.error('Failed to fetch settings:', error);
+      setBasePrice(1); // Fallback
+    }
+  };
 
   const fetchUser = async () => {
     try {
       const response = await api.get(`/admin/users/${id}`);
       setUser(response.data);
       
-      // Prefill subscription form if exists
       if (response.data.subscription) {
         setSubscriptionForm({
           status: response.data.subscription.status,
@@ -330,7 +338,7 @@ export function UserDetails() {
             </div>
             <div>
               <p className="text-sm text-gray-600">{t('subscription.price')}</p>
-              <p className="text-gray-900">zł{user.subscription.price}/month</p>
+              <p className="text-gray-900">zł{user.subscription.price.toFixed(2)}/month</p>
             </div>
             <div>
               <p className="text-sm text-gray-600">{t('subscription.devicesCount')}</p>
@@ -414,7 +422,7 @@ export function UserDetails() {
                       {new Date(payment.createdAt).toLocaleString()}
                     </td>
                     <td className="px-4 py-2 text-sm text-gray-900">
-                    zł{payment.amount}
+                      zł{payment.amount.toFixed(2)}
                     </td>
                     <td className="px-4 py-2 text-sm">
                       <span className="px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800">
@@ -514,7 +522,7 @@ export function UserDetails() {
                   type="number"
                   step="0.01"
                   placeholder="29.99"
-                  value={user.subscription ? subscriptionForm.price : calculatedPrice}
+                  value={user.subscription ? subscriptionForm.price : calculatedPrice.toFixed(2)}
                   onChange={(e) => setSubscriptionForm({...subscriptionForm, price: e.target.value})}
                   className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] bg-gray-50"
                   disabled={true}
@@ -522,7 +530,7 @@ export function UserDetails() {
                 />
                 {!user.subscription && (
                   <p className="text-xs text-gray-500 mt-1">
-                    {t('admin.autoCalculated')}: zł{BASE_PRICE} × {calculatedDevicesCount} {t('admin.devices').toLowerCase()}
+                    {t('admin.autoCalculated')}: zł{basePrice.toFixed(2)} × {calculatedDevicesCount} {t('admin.devices').toLowerCase()}
                   </p>
                 )}
               </div>
@@ -574,10 +582,7 @@ export function UserDetails() {
                 )}
                 <button 
                   type="button" 
-                  onClick={() => {
-                    setShowSubscriptionModal(false);
-                   
-                  }}
+                  onClick={() => setShowSubscriptionModal(false)}
                   className="flex-1 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
                 >
                   {t('admin.cancel')}

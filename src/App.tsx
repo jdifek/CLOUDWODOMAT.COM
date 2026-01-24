@@ -50,6 +50,7 @@ import { Login } from "./pages/Login";
 import { Subscription } from "./pages/Subscription";
 import { UsersList } from "./pages/admin/UsersList";
 import { UserDetails } from "./pages/admin/UserDetails";
+import { AdminSettings } from "./pages/AdminSettings";
 
 function ProtectedRoute({ 
   children, 
@@ -162,6 +163,14 @@ function App() {
             />
 
             {/* Admin Routes - Always accessible for admins */}
+            <Route path="/admin/settings" element={
+  <ProtectedRoute adminOnly>
+      <Layout>
+
+    <AdminSettings />
+      </Layout>
+  </ProtectedRoute>
+} />
             <Route
               path="/admin/users"
               element={
