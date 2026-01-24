@@ -551,8 +551,9 @@ saveSettings: "Save Settings",
 
       // Equipment
       equipment: "Equipment",
-      waterVending: "Water Vending Machines",
-      liquidVending: "Liquid Vending Machines",
+      waterVending: "Wodomats",
+      liquidVending: "Liquid Wodomats",
+      
       paymentDevices: "Payment Devices",
       waterControl: "Water Control Devices",
 
@@ -2120,8 +2121,9 @@ saveSettings: "Zapisz ustawienia",
 
       // Equipment
       equipment: "Sprzęt",
-      waterVending: "Automaty z wodą",
-      liquidVending: "Automaty z płynami",
+      waterVending: "Wodomaty",
+      liquidVending: "Wodomaty z płynami",
+      
       paymentDevices: "Urządzenia płatnicze",
       waterControl: "Kontrola wody",
 
