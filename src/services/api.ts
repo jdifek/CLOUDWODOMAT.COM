@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { credentialsService } from './credentialsService';
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -22,6 +23,7 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
 export const apiHappy = axios.create({
   baseURL: import.meta.env.VITE_API_HAPPY_URL,
 });
@@ -32,22 +34,12 @@ apiHappy.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
-  // Добавляем базовые параметры для HappyTi API
-  const appid = import.meta.env.VITE_APPID;
-  const saler = import.meta.env.VITE_SALER;
+  const credentials = credentialsService.get();
 
   if (config.method === 'get') {
-    config.params = {
-      appid,
-      saler,
-      ...config.params,
-    };
+    config.params = { ...credentials, ...config.params };
   } else if (config.method === 'post') {
-    config.data = {
-      appid,
-      saler,
-      ...config.data,
-    };
+    config.data = { ...credentials, ...config.data };
   }
 
   return config;

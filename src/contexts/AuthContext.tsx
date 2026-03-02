@@ -1,9 +1,16 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { api } from '../services/api';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import { api } from "../services/api";
+import { credentialsService } from "../services/credentialsService";
 
 interface Subscription {
   id: string;
-  status: 'ACTIVE' | 'CANCELED' | 'PAST_DUE' | 'INCOMPLETE';
+  status: "ACTIVE" | "CANCELED" | "PAST_DUE" | "INCOMPLETE";
   price: number;
   devicesCount: number;
   currentPeriodEnd?: string;
@@ -12,12 +19,14 @@ interface Subscription {
 interface User {
   id: string;
   email: string;
-  role: 'USER' | 'ADMIN';
+  role: "USER" | "ADMIN";
   name?: string;
   surname?: string;
   phone?: string;
   company?: string;
   subscription?: Subscription;
+  appid?: string;
+  saler?: string;
 }
 
 interface AuthContextType {
@@ -34,7 +43,9 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -47,9 +58,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const fetchUser = async () => {
     try {
-      const response = await api.get('/user/me');
-      setUser(response.data);
-    } catch  {
+      const response = await api.get("/user/me");
+      const userData: User = response.data;
+      setUser(userData);
+
+      if (userData.appid && userData.saler) {
+        credentialsService.set({ appid: userData.appid, saler: userData.saler });
+      }
+    } catch {
       logout();
     } finally {
       setLoading(false);
@@ -57,25 +73,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const login = async (email: string, password: string) => {
-    const response = await api.post('/auth/login', { email, password });
+    const response = await api.post("/auth/login", { email, password });
     const { token: newToken, user: userData } = response.data;
-    
-    localStorage.setItem('token', newToken);
+
+    localStorage.setItem("token", newToken);
     setToken(newToken);
     setUser(userData);
+
+    if (userData.appid && userData.saler) {
+      credentialsService.set({ appid: userData.appid, saler: userData.saler });
+    }
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
     setToken(null);
     setUser(null);
+    credentialsService.clear();
   };
 
-  const isAdmin = user?.role === 'ADMIN';
-  const hasActiveSubscription = user?.subscription?.status === 'ACTIVE';
+  const isAdmin = user?.role === "ADMIN";
+  const hasActiveSubscription = user?.subscription?.status === "ACTIVE";
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isAdmin, hasActiveSubscription, loading }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        login,
+        logout,
+        isAdmin,
+        hasActiveSubscription,
+        loading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -83,6 +114,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within AuthProvider');
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 }

@@ -29,8 +29,9 @@ export function UsersList() {
     phone: "",
     company: "",
     role: "USER",
+    appid: "",
+    saler: "",
   });
-
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -57,6 +58,8 @@ export function UsersList() {
         phone: "",
         company: "",
         role: "USER",
+        appid: "",
+        saler: "",
       });
       fetchUsers();
     } catch (error: any) {
@@ -80,17 +83,17 @@ export function UsersList() {
 
     try {
       const response = await api.post(`/admin/users/${userId}/impersonate`);
-      
+
       // Сохраняем текущий токен админа
-      const currentToken = localStorage.getItem('token');
+      const currentToken = localStorage.getItem("token");
       if (currentToken) {
-        localStorage.setItem('adminToken', currentToken);
+        localStorage.setItem("adminToken", currentToken);
       }
-      
+
       // Устанавливаем токен impersonation
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("impersonating", "true");
-      
+
       // Перенаправляем на главную
       window.location.href = "/";
     } catch {
@@ -271,6 +274,24 @@ export function UsersList() {
                 <option value="USER">USER</option>
                 <option value="ADMIN">ADMIN</option>
               </select>
+              <input
+                type="text"
+                placeholder="App ID"
+                value={formData.appid}
+                onChange={(e) =>
+                  setFormData({ ...formData, appid: e.target.value })
+                }
+                className="w-full px-3 py-2 border rounded font-mono"
+              />
+              <input
+                type="text"
+                placeholder="Saler"
+                value={formData.saler}
+                onChange={(e) =>
+                  setFormData({ ...formData, saler: e.target.value })
+                }
+                className="w-full px-3 py-2 border rounded font-mono"
+              />
               <div className="flex gap-2">
                 <button
                   type="submit"

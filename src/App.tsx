@@ -4,7 +4,6 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { Layout } from "./components/Layout";
 import { Dashboard } from "./pages/Dashboard";
 import { WaterVendingMachines } from "./pages/equipment/WaterVendingMachines";
-import { LiquidVendingMachines } from "./pages/equipment/LiquidVendingMachines";
 import { PaymentDevices } from "./pages/equipment/PaymentDevices";
 import { WaterControlDevices } from "./pages/equipment/WaterControlDevices";
 import { EquipmentModels } from "./pages/home/EquipmentModels";
@@ -213,16 +212,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/equipment/liquid-vending"
-              element={
-                <ProtectedRoute requiresSubscription>
-                  <Layout>
-                    <LiquidVendingMachines />
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
+           
             <Route
               path="/equipment/payment"
               element={

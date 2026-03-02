@@ -40,7 +40,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       label: t("nav.equipment"),
       children: [
         { label: t("nav.waterVending"), path: "/equipment/water-vending" },
-        { label: t("nav.liquidVending"), path: "/equipment/liquid-vending" },
         { label: t("nav.paymentDevices"), path: "/equipment/payment" },
         { label: t("nav.waterControl"), path: "/equipment/water-control" },
       ],

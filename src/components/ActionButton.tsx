@@ -1,13 +1,14 @@
-import { ReactNode } from 'lucide-react';
+import { ReactNode } from "react";
 
 interface ActionButtonProps {
   variant?: 'primary' | 'success' | 'warning' | 'danger' | 'secondary';
   onClick?: () => void;
   children: ReactNode;
   size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
 }
 
-export function ActionButton({ variant = 'primary', onClick, children, size = 'md' }: ActionButtonProps) {
+export function ActionButton({ variant = 'primary', onClick, children, size = 'md', disabled = false }: ActionButtonProps) {
   const variants = {
     primary: 'bg-[#4A90E2] hover:bg-[#3A7BC8] text-white',
     success: 'bg-[#5CB85C] hover:bg-[#4CA64C] text-white',
@@ -25,7 +26,8 @@ export function ActionButton({ variant = 'primary', onClick, children, size = 'm
   return (
     <button
       onClick={onClick}
-      className={`${variants[variant]} ${sizes[size]} rounded transition-colors font-medium`}
+      disabled={disabled}
+      className={`${variants[variant]} ${sizes[size]} rounded transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed`}
     >
       {children}
     </button>

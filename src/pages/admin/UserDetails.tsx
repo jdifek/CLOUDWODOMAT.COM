@@ -201,7 +201,9 @@ export function UserDetails() {
                     surname: user.surname || '',
                     phone: user.phone || '',
                     company: user.company || '',
-                    role: user.role
+                    role: user.role,
+                    appid: user.appid || '',
+                    saler: user.saler || '',
                   });
                 }}
                 className="px-4 py-2 bg-[#4A90E2] text-white rounded hover:bg-[#3A7BC8]"
@@ -300,6 +302,34 @@ export function UserDetails() {
               <p className="text-gray-900">{user.role}</p>
             )}
           </div>
+          <div>
+  <p className="text-sm text-gray-600 mb-1">App ID</p>
+  {editMode ? (
+    <input
+      type="text"
+      value={editData.appid}
+      onChange={(e) => setEditData({...editData, appid: e.target.value})}
+      className="w-full px-3 py-2 border rounded"
+      placeholder="appid"
+    />
+  ) : (
+    <p className="text-gray-900 font-mono text-sm">{user.appid || t('admin.notSet')}</p>
+  )}
+</div>
+<div>
+  <p className="text-sm text-gray-600 mb-1">Saler</p>
+  {editMode ? (
+    <input
+      type="text"
+      value={editData.saler}
+      onChange={(e) => setEditData({...editData, saler: e.target.value})}
+      className="w-full px-3 py-2 border rounded"
+      placeholder="saler"
+    />
+  ) : (
+    <p className="text-gray-900 font-mono text-sm">{user.saler || t('admin.notSet')}</p>
+  )}
+</div>
           <div>
             <p className="text-sm text-gray-600">{t('admin.createdAt')}</p>
             <p className="text-gray-900">{new Date(user.createdAt).toLocaleString()}</p>
