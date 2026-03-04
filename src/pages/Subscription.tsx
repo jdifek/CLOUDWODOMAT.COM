@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { api } from "../services/api";
 import { useLanguage } from "../contexts/LanguageContext";
 import { CreditCard, Calendar, DollarSign, Package } from "lucide-react";
+import { HappyTiService } from "../services/happyTiService";
 
 interface SubscriptionData {
   id: string;
@@ -11,25 +12,19 @@ interface SubscriptionData {
   currentPeriodEnd: string | null;
 }
 
-interface Device {
-  id: string;
-  name: string;
-  code: string;
-  createdAt: string;
-}
-
 export function Subscription() {
   const { t } = useLanguage();
   const [subscription, setSubscription] = useState<SubscriptionData | null>(null);
   const [loading, setLoading] = useState(false);
-  const [devices, setDevices] = useState<Device[]>([]);
+  const [vendingCount, setVendingCount] = useState(0);
+  const [vendingLoading, setVendingLoading] = useState(true);
   const [basePrice, setBasePrice] = useState<number>(1);
   const [settingsLoading, setSettingsLoading] = useState(true);
 
   useEffect(() => {
     fetchSettings();
     fetchSubscription();
-    fetchDevices();
+    fetchVendingDevices();
   }, []);
 
   const fetchSettings = async () => {
@@ -38,18 +33,28 @@ export function Subscription() {
       setBasePrice(parseFloat(response.data.BASE_PRICE) || 1);
     } catch (error) {
       console.error("Failed to fetch settings:", error);
-      setBasePrice(1); // Fallback
+      setBasePrice(1);
     } finally {
       setSettingsLoading(false);
     }
   };
 
-  const fetchDevices = async () => {
+  const fetchVendingDevices = async () => {
+    setVendingLoading(true);
     try {
-      const response = await api.get("/user/devices");
-      setDevices(response.data);
-    } catch {
-      console.error("Failed to fetch devices");
+      const types = ["shop", "shop_liquid", "shop_happyfu", "shop_water"] as const;
+      const results = await Promise.all(
+        types.map((type) => HappyTiService.deviceList({ type, page: 1 }))
+      );
+      const total = results.reduce((sum, res) => {
+        if (res.data.code === 0) return sum + res.data.data.length;
+        return sum;
+      }, 0);
+      setVendingCount(total);
+    } catch (error) {
+      console.error("Failed to fetch vending devices:", error);
+    } finally {
+      setVendingLoading(false);
     }
   };
 
@@ -63,7 +68,7 @@ export function Subscription() {
   };
 
   const handleCheckout = async () => {
-    if (devices.length === 0) {
+    if (vendingCount === 0) {
       alert(t("subscription.noDevicesError") || "Please add at least one device before subscribing.");
       return;
     }
@@ -71,7 +76,7 @@ export function Subscription() {
     setLoading(true);
     try {
       const response = await api.post("/subscription/checkout", {
-        devicesCount: devices.length,
+        devicesCount: vendingCount,
       });
       window.location.href = response.data.url;
     } catch (error) {
@@ -82,9 +87,9 @@ export function Subscription() {
     }
   };
 
-  const calculatePrice = () => basePrice * devices.length;
+  const calculatePrice = () => basePrice * vendingCount;
 
-  if (settingsLoading) {
+  if (settingsLoading || vendingLoading) {
     return (
       <div className="text-center py-12">
         <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#4A90E2]"></div>
@@ -178,7 +183,7 @@ export function Subscription() {
                 {t("subscription.devicesCount")}:
               </span>
               <span className="font-semibold text-gray-900">
-                ×{devices.length}
+                ×{vendingCount}
               </span>
             </div>
             <div className="border-t border-gray-300 pt-2 mt-2 flex justify-between items-center">
@@ -191,7 +196,7 @@ export function Subscription() {
             </div>
           </div>
 
-          {devices.length === 0 && (
+          {vendingCount === 0 && (
             <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
               <p className="text-sm text-yellow-800">
                 {t("subscription.addDevicesFirst") || "Please add at least one device before subscribing."}
@@ -201,7 +206,7 @@ export function Subscription() {
 
           <button
             onClick={handleCheckout}
-            disabled={loading || devices.length === 0}
+            disabled={loading || vendingCount === 0}
             className="w-full px-6 py-3 bg-[#4A90E2] text-white rounded hover:bg-[#3A7BC8] transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <CreditCard className="w-5 h-5" />

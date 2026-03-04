@@ -34,94 +34,104 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   };
 
   // Основное меню CRM
-  const crmMenuItems = [
-    { label: t("nav.dashboard"), path: "/", icon: Home },
-    {
-      label: t("nav.equipment"),
-      children: [
-        { label: t("nav.waterVending"), path: "/equipment/water-vending" },
-        { label: t("nav.paymentDevices"), path: "/equipment/payment" },
-        { label: t("nav.waterControl"), path: "/equipment/water-control" },
-      ],
-    },
-    {
-      label: t("nav.home"),
-      children: [
-        { label: t("nav.equipmentModels"), path: "/home/models" },
-        { label: t("nav.equipmentList"), path: "/home/list" },
-        { label: t("nav.packageSettings"), path: "/home/packages" },
-        { label: t("nav.packageZones"), path: "/home/zones" },
-      ],
-    },
-    { label: t("nav.cloudDevices"), path: "/cloud" },
-    { label: t("nav.industrialEquipment"), path: "/industrial" },
-    {
-      label: t("nav.filters"),
-      children: [
-        { label: t("nav.filterTypes"), path: "/filters/types" },
-        { label: t("nav.allFilters"), path: "/filters/all" },
-      ],
-    },
-    {
-      label: t("nav.simCards"),
-      children: [
-        { label: t("nav.simCardList"), path: "/sim/list" },
-        { label: t("nav.simCardOrders"), path: "/sim/orders" },
-      ],
-    },
-    {
-      label: t("nav.userManagement"),
-      children: [
-        { label: t("nav.memberCards"), path: "/user-management/member-cards" },
-        { label: t("nav.cardTransfer"), path: "/user-management/card-transfer" },
-        { label: t("nav.rechargeRegular"), path: "/user-management/recharge-regular" },
-        { label: t("nav.rechargeBatch"), path: "/user-management/recharge-batch" },
-        { label: t("nav.bulkRecharge"), path: "/user-management/bulk-recharge" },
-        { label: t("nav.rechargeImport"), path: "/user-management/recharge-import-regular" },
-        { label: t("nav.cardOpening"), path: "/user-management/card-opening" },
-      ],
-    },
-    {
-      label: t("nav.dataCenter"),
-      children: [
-        { label: t("nav.consumptionLog"), path: "/data-center/consumption-log" },
-        { label: t("nav.rechargeLog"), path: "/data-center/recharge-log" },
-        { label: t("nav.operationsLog"), path: "/data-center/operations-log" },
-        { label: t("nav.downloadCenter"), path: "/data-center/download-center" },
-      ],
-    },
-    {
-      label: t("nav.onlineSales"),
-      children: [
-        { label: t("nav.threeLevelConfig"), path: "/online-sales/three-level-config" },
-        { label: t("nav.giftConfig"), path: "/online-sales/gift-config" },
-        { label: t("nav.coinPaymentConfig"), path: "/online-sales/coin-payment-config" },
-        { label: t("nav.packageManagement"), path: "/online-sales/package-management" },
-        { label: t("nav.packageZones"), path: "/online-sales/package-zones" },
-        { label: t("nav.rechargePackages"), path: "/online-sales/recharge-packages" },
-        { label: t("nav.qrProducts"), path: "/online-sales/qr-products" },
-        { label: t("nav.rechargeZones"), path: "/online-sales/recharge-zones" },
-        { label: t("nav.qrGroups"), path: "/online-sales/qr-groups" },
-        { label: t("nav.coupons"), path: "/online-sales/coupons" },
-        { label: t("nav.promoActivities"), path: "/online-sales/promo-activities" },
-      ],
-    },
-    {
-      label: t("nav.employeeManagement"),
-      children: [
-        { label: t("nav.employeeList"), path: "/employee-management/employee-list" },
-        { label: t("nav.authorizationDetails"), path: "/employee-management/authorization-details" },
-        { label: t("nav.performanceRecords"), path: "/employee-management/performance-records" },
-        { label: t("nav.roleConfig"), path: "/employee-management/role-config" },
-      ],
-    },
-  ];
+ // Основное меню CRM
+const crmMenuItems = [
+  { label: t("nav.dashboard"), path: "/", icon: Home },
+
+  {
+    label: t("nav.equipment"),
+    children: [
+      { label: t("nav.waterVending"), path: "/equipment/water-vending" },
+      // { label: t("nav.paymentDevices"), path: "/equipment/payment" },
+      // { label: t("nav.waterControl"), path: "/equipment/water-control" },
+    ],
+  },
+
+  // {
+  //   label: t("nav.home"),
+  //   children: [
+  //     { label: t("nav.equipmentModels"), path: "/home/models" },
+  //     { label: t("nav.equipmentList"), path: "/home/list" },
+  //     { label: t("nav.packageSettings"), path: "/home/packages" },
+  //     { label: t("nav.packageZones"), path: "/home/zones" },
+  //   ],
+  // },
+
+  // { label: t("nav.cloudDevices"), path: "/cloud" },
+  // { label: t("nav.industrialEquipment"), path: "/industrial" },
+
+  // {
+  //   label: t("nav.filters"),
+  //   children: [
+  //     { label: t("nav.filterTypes"), path: "/filters/types" },
+  //     { label: t("nav.allFilters"), path: "/filters/all" },
+  //   ],
+  // },
+
+  // {
+  //   label: t("nav.simCards"),
+  //   children: [
+  //     { label: t("nav.simCardList"), path: "/sim/list" },
+  //     { label: t("nav.simCardOrders"), path: "/sim/orders" },
+  //   ],
+  // },
+
+  // {
+  //   label: t("nav.userManagement"),
+  //   children: [
+  //     { label: t("nav.memberCards"), path: "/user-management/member-cards" },
+  //     { label: t("nav.cardTransfer"), path: "/user-management/card-transfer" },
+  //     { label: t("nav.rechargeRegular"), path: "/user-management/recharge-regular" },
+  //     { label: t("nav.rechargeBatch"), path: "/user-management/recharge-batch" },
+  //     { label: t("nav.bulkRecharge"), path: "/user-management/bulk-recharge" },
+  //     { label: t("nav.rechargeImport"), path: "/user-management/recharge-import-regular" },
+  //     { label: t("nav.cardOpening"), path: "/user-management/card-opening" },
+  //   ],
+  // },
+
+  // {
+  //   label: t("nav.dataCenter"),
+  //   children: [
+  //     { label: t("nav.consumptionLog"), path: "/data-center/consumption-log" },
+  //     { label: t("nav.rechargeLog"), path: "/data-center/recharge-log" },
+  //     { label: t("nav.operationsLog"), path: "/data-center/operations-log" },
+  //     { label: t("nav.downloadCenter"), path: "/data-center/download-center" },
+  //   ],
+  // },
+
+  // {
+  //   label: t("nav.onlineSales"),
+  //   children: [
+  //     { label: t("nav.threeLevelConfig"), path: "/online-sales/three-level-config" },
+  //     { label: t("nav.giftConfig"), path: "/online-sales/gift-config" },
+  //     { label: t("nav.coinPaymentConfig"), path: "/online-sales/coin-payment-config" },
+  //     { label: t("nav.packageManagement"), path: "/online-sales/package-management" },
+  //     { label: t("nav.packageZones"), path: "/online-sales/package-zones" },
+  //     { label: t("nav.rechargePackages"), path: "/online-sales/recharge-packages" },
+  //     { label: t("nav.qrProducts"), path: "/online-sales/qr-products" },
+  //     { label: t("nav.rechargeZones"), path: "/online-sales/recharge-zones" },
+  //     { label: t("nav.qrGroups"), path: "/online-sales/qr-groups" },
+  //     { label: t("nav.coupons"), path: "/online-sales/coupons" },
+  //     { label: t("nav.promoActivities"), path: "/online-sales/promo-activities" },
+  //   ],
+  // },
+
+  // {
+  //   label: t("nav.employeeManagement"),
+  //   children: [
+  //     { label: t("nav.employeeList"), path: "/employee-management/employee-list" },
+  //     { label: t("nav.authorizationDetails"), path: "/employee-management/authorization-details" },
+  //     { label: t("nav.performanceRecords"), path: "/employee-management/performance-records" },
+  //     { label: t("nav.roleConfig"), path: "/employee-management/role-config" },
+  //   ],
+  // },
+];
 
   // Меню подписки
   const subscriptionMenuItems = [
     { label: t('profile.title'), path: '/profile', icon: Settings },
     { label: t('password.title'), path: '/change-password', icon: Settings },
-    { label: t('devices.title'), path: '/devices', icon: Package },
+    // { label: t('devices.title'), path: '/devices', icon: Package },
     { label: t('subscription.title'), path: '/subscription', icon: CreditCard },
   ];
 
