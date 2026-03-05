@@ -2,7 +2,7 @@
 import { MetricCard } from "../components/MetricCard";
 import { DataTable } from "../components/DataTable";
 import { useLanguage } from "../contexts/LanguageContext";
-import { TrendingUp, Users, ShoppingCart } from "lucide-react";
+import { TrendingUp, ShoppingCart } from "lucide-react";
 import {
   LineChart,
   Line,
@@ -236,7 +236,7 @@ export function Dashboard() {
   return (
     <div className="space-y-6">
       {/* Карточки метрик */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard
           title={t("dashboard.todaySales")}
           value={stats.todaySales.toString()}
@@ -259,11 +259,7 @@ export function Dashboard() {
           icon={TrendingUp}
           prefix="zł"
         />
-        <MetricCard
-          title={t("dashboard.activeUsers")}
-          value={stats.activeDevices.toString()}
-          icon={Users}
-        />
+      
       </div>
 
       {/* График */}

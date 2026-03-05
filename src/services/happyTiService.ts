@@ -313,6 +313,7 @@ interface ConsumeRecordItem {
 }
 
 interface RecordListResponse {
+  error: number;
   code: number;
   msg: string;
   data: ConsumeRecordItem[];
@@ -626,6 +627,7 @@ interface CheckupRecord {
 }
 
 interface DeviceCheckupResponse {
+  error: number;
   code: number;
   msg: string;
   data: CheckupRecord[];

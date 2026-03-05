@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { X, LogOut, Home, Settings, Package, Users, CreditCard, AlertCircle } from "lucide-react";
+import { X, LogOut, Home, Settings, Users, CreditCard, AlertCircle } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useAuth } from "../contexts/AuthContext";
