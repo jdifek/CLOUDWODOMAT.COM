@@ -3,6 +3,9 @@ export const translations = {
     vendingMachines: {
        // Analytics
   analytics: "Analytics",
+  analyticsTerminal: "Terminal",
+analyticsQr: "QR",
+analyticsCash: "Cash",
   analyticsPeriodDay: "Day",
   analyticsPeriodWeek: "Week",
   analyticsPeriodMonth: "Month",

@@ -488,7 +488,27 @@ export function VendingMachinesPage({
   const [loadingMore, setLoadingMore] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-
+  const [consumesPage, setConsumesPage] = useState(1);
+  const [consumesHasMore, setConsumesHasMore] = useState(false);
+  const [consumesLoadingMore, setConsumesLoadingMore] = useState(false);
+  const loadMoreConsumes = async (deviceId: string) => {
+    setConsumesLoadingMore(true);
+    const nextPage = consumesPage + 1;
+    try {
+      const res = await HappyTiService.recordList({ page: nextPage });
+      if (res.data.code === 0) {
+        const batch = res.data.data ?? [];
+        const filtered = batch.filter((r) => r.shop_num === deviceId);
+        setConsumes((prev) => [...prev, ...filtered]);
+        setConsumesPage(nextPage);
+        setConsumesHasMore(batch.length === 20);
+      }
+    } catch (err) {
+      console.error("Load more consumes failed:", err);
+    } finally {
+      setConsumesLoadingMore(false);
+    }
+  };
   const [filters, setFilters] = useState<Filters>({
     location: "",
     deviceId: "",
@@ -588,13 +608,15 @@ export function VendingMachinesPage({
   const loadConsumes = async (deviceId: string) => {
     if (consumes.length > 0) return;
     setConsumesLoading(true);
+    setConsumesPage(1);
     try {
       const res = await HappyTiService.recordList({ page: 1 });
       if (res.data.code === 0) {
-        const filtered = res.data.data.filter(
-          (r) => r.shop_num === deviceId || r.location.includes(deviceId)
-        );
-        setConsumes(filtered.length > 0 ? filtered : res.data.data.slice(0, 20));
+        const batch = res.data.data ?? [];
+        const filtered = batch.filter((r) => r.shop_num === deviceId);
+        setConsumes(filtered);
+        // Показываем кнопку если страница полная (могут быть ещё)
+        setConsumesHasMore(batch.length === 20);
       }
     } catch (err) {
       console.error("Consumes fetch failed:", err);
@@ -602,7 +624,6 @@ export function VendingMachinesPage({
       setConsumesLoading(false);
     }
   };
-
   const loadRecharges = async (deviceId: string) => {
     setRechargesLoading(true);
     try {
@@ -636,6 +657,8 @@ export function VendingMachinesPage({
     setCheckups([]);
     setConsumes([]);
     setRecharges([]);
+    setConsumesPage(1);
+  setConsumesHasMore(false);
   };
 
   // ─── Filters ────────────────────────────────────────────────────────────────
@@ -1038,41 +1061,59 @@ export function VendingMachinesPage({
                   ) : consumes.length === 0 ? (
                     <Empty text={t("vendingMachines.noConsumption")} />
                   ) : (
-                    <div className="space-y-3">
-                      {consumes.map((rec, idx) => {
-                        const isTerminal = rec.pay_id?.endsWith("_pos");
-                        const isCoin = rec.card_num === "coin";
-                        const paymentType = isTerminal
-                          ? t("vendingMachines.terminal")
-                          : isCoin
-                          ? t("vendingMachines.cash")
-                          : rec.card_num || "—";
-
-                        return (
-                          <div key={idx} className="border border-gray-200 rounded-lg p-4">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="text-sm font-semibold text-gray-700">
-                                #{rec.key_id}
-                              </span>
-                              <span className="text-xs text-gray-400">
-                                {formatDate(rec.time, language)}
-                              </span>
+                    <>
+                      <div className="space-y-3">
+                        {consumes.map((rec, idx) => {
+                          const isTerminal = rec.pay_id?.endsWith("_pos");
+                          const isCoin = rec.card_num === "coin";
+                          const paymentType = isTerminal
+                            ? t("vendingMachines.terminal")
+                            : isCoin
+                            ? t("vendingMachines.cash")
+                            : rec.card_num || "—";
+            
+                          return (
+                            <div key={idx} className="border border-gray-200 rounded-lg p-4">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-sm font-semibold text-gray-700">
+                                  #{rec.key_id}
+                                </span>
+                                <span className="text-xs text-gray-400">
+                                  {formatDate(rec.time, language)}
+                                </span>
+                              </div>
+                              <div className="grid grid-cols-2 gap-x-6 gap-y-1">
+                                <MiniRow label={t("vendingMachines.paymentType")} value={paymentType} />
+                                <MiniRow label={t("vendingMachines.paymentId")} value={rec.pay_id?.replace("_pos", "") || "—"} />
+                                <MiniRow label={t("vendingMachines.amount")} value={rec.value ? `${rec.value} zł` : "—"} />
+                                <MiniRow label={t("vendingMachines.charged")} value={rec.cost_value ? `${rec.cost_value} zł` : "—"} />
+                                <MiniRow label={t("vendingMachines.balanceAfter")} value={rec.after_value ? `${rec.after_value} zł` : "—"} />
+                                <MiniRow label={t("vendingMachines.method")} value={rec.path || "—"} />
+                                <MiniRow label={t("vendingMachines.waterPort1")} value={rec.water1 || "—"} />
+                                <MiniRow label={t("vendingMachines.waterPort2")} value={rec.water2 || "—"} />
+                                <MiniRow label={t("vendingMachines.address")} value={rec.location || "—"} />
+                              </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-x-6 gap-y-1">
-                              <MiniRow label={t("vendingMachines.paymentType")} value={paymentType} />
-                              <MiniRow label={t("vendingMachines.paymentId")} value={rec.pay_id?.replace("_pos", "") || "—"} />
-                              <MiniRow label={t("vendingMachines.amount")} value={rec.value ? `${rec.value} zł` : "—"} />
-                              <MiniRow label={t("vendingMachines.charged")} value={rec.cost_value ? `${rec.cost_value} zł` : "—"} />
-                              <MiniRow label={t("vendingMachines.balanceAfter")} value={rec.after_value ? `${rec.after_value} zł` : "—"} />
-                              <MiniRow label={t("vendingMachines.method")} value={rec.path || "—"} />
-                              <MiniRow label={t("vendingMachines.waterPort1")} value={rec.water1 || "—"} />
-                              <MiniRow label={t("vendingMachines.waterPort2")} value={rec.water2 || "—"} />
-                              <MiniRow label={t("vendingMachines.address")} value={rec.location || "—"} />
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
+                          );
+                        })}
+                      </div>
+            
+                      {consumesHasMore && selectedDetail && (
+                        <div className="flex justify-center pt-4">
+                          <button
+                            onClick={() => loadMoreConsumes(selectedDetail.id)}
+                            disabled={consumesLoadingMore}
+                            className="flex items-center gap-2 px-4 py-2 text-sm text-[#4A90E2] border border-[#4A90E2] rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-50"
+                          >
+                            {consumesLoadingMore ? (
+                              <div className="w-4 h-4 border-2 border-blue-300 border-t-blue-600 rounded-full animate-spin" />
+                            ) : (
+                              t("vendingMachines.loadMore")
+                            )}
+                          </button>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               ) : activeTab === "recharges" ? (
