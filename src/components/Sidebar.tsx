@@ -21,121 +21,48 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   };
 
   const handleStopImpersonating = () => {
-    // Восстанавливаем токен админа
     const adminToken = localStorage.getItem('adminToken');
     if (adminToken) {
       localStorage.setItem('token', adminToken);
       localStorage.removeItem('adminToken');
     }
     localStorage.removeItem('impersonating');
-    
-    // Перезагружаем страницу для обновления контекста
     window.location.href = '/admin/users';
   };
 
-  // Основное меню CRM
- // Основное меню CRM
-const crmMenuItems = [
-  { label: t("nav.dashboard"), path: "/", icon: Home },
+  const supportMessages: Record<string, { text: string; hours: string }> = {
+    en: {
+      text: "To contact our technical support chat, please click the button below 💬👇",
+      hours: "Working hours: 09:00 – 18:00 Warsaw time",
+    },
+    ru: {
+      text: "Чтобы связаться с чатом технической поддержки, воспользуйтесь кнопкой ниже 💬👇",
+      hours: "Часы работы: 9:00 – 18:00 Варшава",
+    },
+    pl: {
+      text: "Aby skontaktować się z czatem wsparcia technicznego, skorzystaj z przycisku poniżej 💬👇",
+      hours: "Godziny pracy: 9:00 – 18:00 Warszawa",
+    },
+  };
 
-  {
-    label: t("nav.equipment"),
-    children: [
-      { label: t("nav.waterVending"), path: "/equipment/water-vending" },
-      // { label: t("nav.paymentDevices"), path: "/equipment/payment" },
-      // { label: t("nav.waterControl"), path: "/equipment/water-control" },
-    ],
-  },
+  const support = supportMessages[language] ?? supportMessages.en;
 
-  // {
-  //   label: t("nav.home"),
-  //   children: [
-  //     { label: t("nav.equipmentModels"), path: "/home/models" },
-  //     { label: t("nav.equipmentList"), path: "/home/list" },
-  //     { label: t("nav.packageSettings"), path: "/home/packages" },
-  //     { label: t("nav.packageZones"), path: "/home/zones" },
-  //   ],
-  // },
+  const crmMenuItems = [
+    { label: t("nav.dashboard"), path: "/", icon: Home },
+    {
+      label: t("nav.equipment"),
+      children: [
+        { label: t("nav.waterVending"), path: "/equipment/water-vending" },
+      ],
+    },
+  ];
 
-  // { label: t("nav.cloudDevices"), path: "/cloud" },
-  // { label: t("nav.industrialEquipment"), path: "/industrial" },
-
-  // {
-  //   label: t("nav.filters"),
-  //   children: [
-  //     { label: t("nav.filterTypes"), path: "/filters/types" },
-  //     { label: t("nav.allFilters"), path: "/filters/all" },
-  //   ],
-  // },
-
-  // {
-  //   label: t("nav.simCards"),
-  //   children: [
-  //     { label: t("nav.simCardList"), path: "/sim/list" },
-  //     { label: t("nav.simCardOrders"), path: "/sim/orders" },
-  //   ],
-  // },
-
-  // {
-  //   label: t("nav.userManagement"),
-  //   children: [
-  //     { label: t("nav.memberCards"), path: "/user-management/member-cards" },
-  //     { label: t("nav.cardTransfer"), path: "/user-management/card-transfer" },
-  //     { label: t("nav.rechargeRegular"), path: "/user-management/recharge-regular" },
-  //     { label: t("nav.rechargeBatch"), path: "/user-management/recharge-batch" },
-  //     { label: t("nav.bulkRecharge"), path: "/user-management/bulk-recharge" },
-  //     { label: t("nav.rechargeImport"), path: "/user-management/recharge-import-regular" },
-  //     { label: t("nav.cardOpening"), path: "/user-management/card-opening" },
-  //   ],
-  // },
-
-  // {
-  //   label: t("nav.dataCenter"),
-  //   children: [
-  //     { label: t("nav.consumptionLog"), path: "/data-center/consumption-log" },
-  //     { label: t("nav.rechargeLog"), path: "/data-center/recharge-log" },
-  //     { label: t("nav.operationsLog"), path: "/data-center/operations-log" },
-  //     { label: t("nav.downloadCenter"), path: "/data-center/download-center" },
-  //   ],
-  // },
-
-  // {
-  //   label: t("nav.onlineSales"),
-  //   children: [
-  //     { label: t("nav.threeLevelConfig"), path: "/online-sales/three-level-config" },
-  //     { label: t("nav.giftConfig"), path: "/online-sales/gift-config" },
-  //     { label: t("nav.coinPaymentConfig"), path: "/online-sales/coin-payment-config" },
-  //     { label: t("nav.packageManagement"), path: "/online-sales/package-management" },
-  //     { label: t("nav.packageZones"), path: "/online-sales/package-zones" },
-  //     { label: t("nav.rechargePackages"), path: "/online-sales/recharge-packages" },
-  //     { label: t("nav.qrProducts"), path: "/online-sales/qr-products" },
-  //     { label: t("nav.rechargeZones"), path: "/online-sales/recharge-zones" },
-  //     { label: t("nav.qrGroups"), path: "/online-sales/qr-groups" },
-  //     { label: t("nav.coupons"), path: "/online-sales/coupons" },
-  //     { label: t("nav.promoActivities"), path: "/online-sales/promo-activities" },
-  //   ],
-  // },
-
-  // {
-  //   label: t("nav.employeeManagement"),
-  //   children: [
-  //     { label: t("nav.employeeList"), path: "/employee-management/employee-list" },
-  //     { label: t("nav.authorizationDetails"), path: "/employee-management/authorization-details" },
-  //     { label: t("nav.performanceRecords"), path: "/employee-management/performance-records" },
-  //     { label: t("nav.roleConfig"), path: "/employee-management/role-config" },
-  //   ],
-  // },
-];
-
-  // Меню подписки
   const subscriptionMenuItems = [
     { label: t('profile.title'), path: '/profile', icon: Settings },
     { label: t('password.title'), path: '/change-password', icon: Settings },
-    // { label: t('devices.title'), path: '/devices', icon: Package },
     { label: t('subscription.title'), path: '/subscription', icon: CreditCard },
   ];
 
-  // Админское меню
   const adminMenuItems = [
     { label: t('admin.usersManagement'), path: '/admin/users', icon: Users },
     { label: t('admin.systemSettings'), path: '/admin/settings', icon: Settings },
@@ -206,6 +133,7 @@ const crmMenuItems = [
           isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         } flex flex-col`}
       >
+        {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-xl font-bold text-[#4A90E2]">
             {t("nav.menu")}
@@ -215,7 +143,7 @@ const crmMenuItems = [
           </button>
         </div>
 
-        {/* Индикатор impersonate */}
+        {/* Impersonate banner */}
         {isImpersonating && (
           <div className="p-4 bg-yellow-50 border-b border-yellow-200">
             <p className="text-sm text-yellow-800 mb-2 font-medium">
@@ -230,7 +158,7 @@ const crmMenuItems = [
           </div>
         )}
 
-        {/* Предупреждение об отсутствии подписки */}
+        {/* No subscription warning */}
         {!isAdmin && !hasActiveSubscription && (
           <div className="p-4 bg-orange-50 border-b border-orange-200">
             <div className="flex items-start gap-2">
@@ -254,8 +182,8 @@ const crmMenuItems = [
           </div>
         )}
 
+        {/* Nav */}
         <nav className="flex-1 overflow-y-auto p-4">
-          {/* Админские страницы (только для админа) */}
           {isAdmin && (
             <>
               <div className="mb-4">
@@ -270,7 +198,6 @@ const crmMenuItems = [
             </>
           )}
 
-          {/* Страницы подписки - всегда доступны */}
           <div className="mb-4">
             <div className="px-4 py-2 text-xs font-bold text-gray-500 uppercase bg-blue-50 rounded">
               {t('subscription.title')}
@@ -280,7 +207,6 @@ const crmMenuItems = [
             </ul>
           </div>
 
-          {/* CRM меню - доступно только с подпиской или для админов */}
           {(isAdmin || hasActiveSubscription) && (
             <>
               <div className="border-t border-gray-200 my-4"></div>
@@ -296,27 +222,56 @@ const crmMenuItems = [
           )}
         </nav>
 
-        <div className="p-4 border-t">
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {t("nav.language")}
-            </label>
-            <select
-              value={language}
-              onChange={(e) =>
-                setLanguage(e.target.value as "en" | "ru" | "pl")
-              }
-              className="w-full px-3 py-2 bg-white border border-gray-300 rounded hover:border-[#4A90E2] transition-colors cursor-pointer"
-            >
-              <option value="en">English</option>
-              <option value="ru">Русский</option>
-              <option value="pl">Polski</option>
-            </select>
+        {/* Bottom section */}
+        <div className="p-4 border-t space-y-3">
+
+          {/* Language selector — compact pill row (replaces dropdown) */}
+          <div className="flex items-center justify-center gap-1 bg-gray-100 rounded-lg p-1">
+            {(["en", "ru", "pl"] as const).map((lang) => (
+              <button
+                key={lang}
+                onClick={() => setLanguage(lang)}
+                className={`flex-1 py-1.5 rounded-md text-xs font-semibold transition-all duration-150 ${
+                  language === lang
+                    ? "bg-white text-[#4A90E2] shadow-sm"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                {lang === "en" ? "EN" : lang === "ru" ? "RU" : "PL"}
+              </button>
+            ))}
           </div>
 
+          {/* Telegram Support Card */}
+          <div className="rounded-xl border border-gray-200 bg-gray-50 overflow-hidden">
+            <div className="px-3 py-3 text-center">
+              <p className="text-xs font-bold text-gray-700 mb-0.5">
+                {language === "ru" ? "Техническая поддержка" : language === "pl" ? "Wsparcie techniczne" : "Technical Support"}
+              </p>
+              <p className="text-[11px] text-gray-500">
+                {support.hours}
+              </p>
+            </div>
+            <div className="px-3 pb-3">
+              <a
+                href="https://t.me/ZdrowaWodaSupportPLBot"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-[#229ED9] hover:bg-[#1a8bbf] active:bg-[#157a9f] transition-colors text-white text-sm font-semibold shadow-sm"
+              >
+                {/* Telegram plane icon (SVG) */}
+                <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.96 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                </svg>
+                Telegram
+              </a>
+            </div>
+          </div>
+
+          {/* Logout */}
           <button
             onClick={handleLogout}
-            className="w-full px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors flex items-center justify-center gap-2"
+            className="w-full px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors flex items-center justify-center gap-2 text-sm"
           >
             <LogOut className="w-4 h-4" />
             {t('auth.logout')}
