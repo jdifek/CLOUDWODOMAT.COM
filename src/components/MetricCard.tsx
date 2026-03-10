@@ -5,6 +5,7 @@ interface MetricCardProps {
   value: string | number;
   icon: LucideIcon;
   prefix?: string;
+  suffix?: string;
 }
 
 export function MetricCard({
@@ -12,6 +13,7 @@ export function MetricCard({
   value,
   icon: Icon,
   prefix,
+  suffix,
 }: MetricCardProps) {
   return (
     <div className="bg-white rounded-lg p-6 shadow-sm">
@@ -25,6 +27,9 @@ export function MetricCard({
           <span className="text-[#4A90E2] text-2xl font-semibold">{prefix}</span>
         )}
         <span>{value}</span>
+        {suffix && (
+          <span className="text-[#4A90E2] text-2xl font-semibold">{suffix}</span>
+        )}
       </div>
     </div>
   );

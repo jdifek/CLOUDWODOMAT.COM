@@ -9,7 +9,7 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import { translateStatusCn } from "../../utils/deviceStatus";
 import { formatDate } from "../../utils/formatDate";
 import {
-  Download,
+ 
   Signal,
   X,
   Thermometer,
@@ -521,7 +521,7 @@ export function VendingMachinesPage({
   });
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<ModalTab>("details");
+  const [activeTab, setActiveTab] = useState<ModalTab>("analytics");
   const [detailLoading, setDetailLoading] = useState(false);
   const [selectedDetail, setSelectedDetail] = useState<DeviceDetail | null>(null);
   const [checkups, setCheckups] = useState<CheckupRecord[]>([]);
@@ -573,7 +573,8 @@ export function VendingMachinesPage({
 
   const openModal = async (device: DeviceListItem) => {
     setModalOpen(true);
-    setActiveTab("details");
+    setActiveTab("analytics");
+
     setSelectedDetail(null);
     setCheckups([]);
     setConsumes([]);
@@ -706,20 +707,7 @@ export function VendingMachinesPage({
 
   const columns = [
     { key: "id", label: "№" },
-    { key: "deviceId", label: t("equipment.equipmentId") },
     { key: "location", label: t("equipment.territory") },
-    {
-      key: "networkStatus",
-      label: t("equipment.networkStatus"),
-      render: (value: "online" | "offline") => (
-        <StatusIndicator status={value} label={t(`common.${value}`)} />
-      ),
-    },
-    {
-      key: "createdAt",
-      label: t("common.createdAt"),
-      render: (value: string) => formatDate(value, language),
-    },
     {
       key: "operations",
       label: t("common.operations"),
@@ -729,6 +717,21 @@ export function VendingMachinesPage({
         </ActionButton>
       ),
     },
+    {
+      key: "networkStatus",
+      label: t("equipment.networkStatus"),
+      render: (value: "online" | "offline") => (
+        <StatusIndicator status={value} label={t(`common.${value}`)} />
+      ),
+    },
+    { key: "deviceId", label: t("equipment.equipmentId") },
+   
+    {
+      key: "createdAt",
+      label: t("common.createdAt"),
+      render: (value: string) => formatDate(value, language),
+    },
+   
   ];
 
   // ─── Render ──────────────────────────────────────────────────────────────────
@@ -766,12 +769,6 @@ export function VendingMachinesPage({
         />
       </SearchFilter>
 
-      <div className="flex gap-2">
-        <ActionButton variant="success">
-          <Download className="w-4 h-4 mr-2 inline" />
-          {t("common.export")}
-        </ActionButton>
-      </div>
 
       {loading ? (
         <div className="flex justify-center items-center p-12">
@@ -842,17 +839,11 @@ export function VendingMachinesPage({
 
             {/* Tabs */}
             <div className="flex border-b border-gray-200 px-6 shrink-0 overflow-x-auto">
-              <TabBtn
-                active={activeTab === "details"}
-                onClick={() => handleTabChange("details")}
-                icon={<Signal className="w-4 h-4" />}
-                label={t("vendingMachines.details")}
-              />
-              <TabBtn
-                active={activeTab === "inspections"}
-                onClick={() => handleTabChange("inspections")}
-                icon={<ClipboardList className="w-4 h-4" />}
-                label={t("vendingMachines.inspections")}
+            <TabBtn
+                active={activeTab === "analytics"}
+                onClick={() => handleTabChange("analytics")}
+                icon={<BarChart2 className="w-4 h-4" />}
+                label={t("vendingMachines.analytics")}
               />
               <TabBtn
                 active={activeTab === "consumes"}
@@ -861,16 +852,24 @@ export function VendingMachinesPage({
                 label={t("vendingMachines.consumption")}
               />
               <TabBtn
+                active={activeTab === "details"}
+                onClick={() => handleTabChange("details")}
+                icon={<Signal className="w-4 h-4" />}
+                label={t("vendingMachines.details")}
+              />
+           
+              
+              <TabBtn
                 active={activeTab === "recharges"}
                 onClick={() => handleTabChange("recharges")}
                 icon={<Receipt className="w-4 h-4" />}
                 label={t("vendingMachines.recharges")}
               />
-              <TabBtn
-                active={activeTab === "analytics"}
-                onClick={() => handleTabChange("analytics")}
-                icon={<BarChart2 className="w-4 h-4" />}
-                label={t("vendingMachines.analytics")}
+                <TabBtn
+                active={activeTab === "inspections"}
+                onClick={() => handleTabChange("inspections")}
+                icon={<ClipboardList className="w-4 h-4" />}
+                label={t("vendingMachines.inspections")}
               />
             </div>
 

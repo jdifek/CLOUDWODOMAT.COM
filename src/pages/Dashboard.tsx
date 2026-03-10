@@ -2,13 +2,10 @@
 import { MetricCard } from "../components/MetricCard";
 import { DataTable } from "../components/DataTable";
 import { useLanguage } from "../contexts/LanguageContext";
-import { TrendingUp, ShoppingCart, Calendar, ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
+import { TrendingUp, ShoppingCart, Calendar, ChevronLeft, ChevronRight, RefreshCw, Droplets } from "lucide-react";
 import {
   LineChart,
   Line,
-  PieChart,
-  Pie,
-  Cell,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -19,8 +16,6 @@ import {
 import { useState, useEffect, useCallback } from "react";
 import { HappyTiService } from "../services/happyTiService";
 
-const COLORS = ["#4A90E2", "#5CB85C", "#F0AD4E", "#D9534F"];
-
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface DashboardStats {
@@ -29,6 +24,7 @@ interface DashboardStats {
   todayRevenue: number;
   periodRevenue: number;
   activeDevices: number;
+  todayLiters: number;
 }
 
 interface DeviceStats {
@@ -332,6 +328,7 @@ export function Dashboard() {
     todayRevenue: 0,
     periodRevenue: 0,
     activeDevices: 0,
+    todayLiters: 0,
   });
 
   const [devices, setDevices] = useState<DeviceItem[]>([]);
@@ -388,12 +385,20 @@ export function Dashboard() {
       const periodSales = allRecords.length;
       const periodRevenue = allRecords.reduce((s, r) => s + parseFloat(r.cost_value || r.value || "0"), 0);
 
+      // Calculate today's liters (water1 + water2)
+      const todayLiters = todayRecords.reduce((s, r) => {
+        const w1 = parseFloat(r.water1 || "0");
+        const w2 = parseFloat(r.water2 || "0");
+        return s + w1 + w2;
+      }, 0);
+
       setStats((prev) => ({
         ...prev,
         todaySales,
         periodSales,
         todayRevenue: Math.round(todayRevenue * 100) / 100,
         periodRevenue: Math.round(periodRevenue * 100) / 100,
+        todayLiters: Math.round(todayLiters * 10) / 10,
       }));
 
       prepareChartData(allRecords, from, to);
@@ -422,11 +427,17 @@ export function Dashboard() {
       const dayRecs = records.filter((r) => apiTimeToWarsawDate(r.time) === day);
       const sales = dayRecs.length;
       const revenue = dayRecs.reduce((s, r) => s + parseFloat(r.cost_value || r.value || "0"), 0);
+      const liters = dayRecs.reduce((s, r) => {
+        const w1 = parseFloat(r.water1 || "0");
+        const w2 = parseFloat(r.water2 || "0");
+        return s + w1 + w2;
+      }, 0);
       const [, mm, dd] = day.split("-");
       return {
         date: `${dd}.${mm}`,
         sales,
         revenue: Math.round(revenue * 100) / 100,
+        liters: Math.round(liters * 10) / 10,
       };
     });
 
@@ -451,18 +462,6 @@ export function Dashboard() {
     setDateTo(to);
     loadRecords(from, to);
   };
-
-  // ─── Pie data ─────────────────────────────────────────────────────────────
-
-  const deviceStatusPieData = [
-    { name: t("common.online"), value: deviceStats.online },
-    { name: t("common.offline"), value: deviceStats.offline },
-  ];
-
-  const deviceTypePieData = [
-    { name: "Shop", value: devices.filter((d) => d.id.startsWith("86")).length },
-    { name: "Water", value: devices.filter((d) => !d.id.startsWith("86")).length },
-  ];
 
   // ─── Table data (all devices) ─────────────────────────────────────────────
 
@@ -494,7 +493,7 @@ export function Dashboard() {
     <div className="space-y-6">
 
       {/* ── Metric cards ── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <MetricCard
           title={t("dashboard.todaySales")}
           value={stats.todaySales.toString()}
@@ -516,6 +515,12 @@ export function Dashboard() {
           value={stats.periodRevenue.toFixed(2)}
           icon={TrendingUp}
           prefix="zł"
+        />
+        <MetricCard
+          title={t("dashboard.todayLiters") ?? "Litry dziś"}
+          value={stats.todayLiters.toFixed(1)}
+          icon={Droplets}
+          suffix={t("common.liter")}
         />
       </div>
 
@@ -571,43 +576,15 @@ export function Dashboard() {
               name={t("dashboard.revenue")}
               dot={chartData.length <= 14}
             />
+            <Line
+              type="monotone"
+              dataKey="liters"
+              stroke="#4A90E2"
+              name={t("common.liter") ?? "L"}
+              dot={chartData.length <= 14}
+            />
           </LineChart>
         </ResponsiveContainer>
-      </div>
-
-      {/* ── Pie charts ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg p-6 shadow-sm">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            {t("dashboard.loadingStats")}
-          </h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <PieChart>
-              <Pie data={deviceStatusPieData} cx="50%" cy="50%" outerRadius={80} dataKey="value" label>
-                {deviceStatusPieData.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="bg-white rounded-lg p-6 shadow-sm">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            {t("dashboard.equipmentSettings")}
-          </h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <PieChart>
-              <Pie data={deviceTypePieData} cx="50%" cy="50%" outerRadius={80} dataKey="value" label>
-                {deviceTypePieData.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
       </div>
 
       {/* ── Devices table (all) ── */}

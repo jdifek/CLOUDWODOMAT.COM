@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, useMemo, useRef } from "react";
 import {
   TrendingUp,
@@ -57,12 +56,10 @@ const PAGE_SIZE = 20;
 
 // ─── Timezone Helpers ─────────────────────────────────────────────────────────
 
-/** Текущая дата в Warsaw timezone → "YYYY-MM-DD" */
 function todayWarsaw(): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Warsaw" }).format(new Date());
 }
 
-/** Конвертирует время API (UTC+8) → реальный UTC → объект Date */
 function toWarsawDate(str: string): Date {
   const parts = str.split(" ");
   if (parts.length < 2) return new Date(str);
@@ -73,31 +70,18 @@ function toWarsawDate(str: string): Date {
   return new Date(utcMs);
 }
 
+function apiTimeToWarsawDate(apiTime: string): string {
+  const d = toWarsawDate(apiTime);
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Warsaw" }).format(d);
+}
+
 function fmtApiDate(d: Date): string {
-  // API ожидает UTC+8, добавляем 8 часов к UTC
   const utc8Ms = d.getTime() + 8 * 60 * 60 * 1000;
   const d8 = new Date(utc8Ms);
   const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d8.getUTCFullYear()}-${pad(d8.getUTCMonth()+1)}-${pad(d8.getUTCDate())} ${pad(d8.getUTCHours())}:${pad(d8.getUTCMinutes())}:${pad(d8.getUTCSeconds())}`;
-}
-/** "YYYY-MM-DD" → начало дня 00:00:00 по Warsaw в UTC */
-function dayStart(dateStr: string): Date {
-  const [y, m, d] = dateStr.split("-").map(Number);
-  // Создаём полночь Warsaw как UTC: берём UTC полночь и корректируем на смещение Warsaw
-  const approx = new Date(Date.UTC(y, m - 1, d, 12, 0, 0)); // полдень UTC как ref
-  const warsawOffset = getWarsawOffsetMs(approx);
-  return new Date(Date.UTC(y, m - 1, d, 0, 0, 0) - warsawOffset);
+  return `${d8.getUTCFullYear()}-${pad(d8.getUTCMonth() + 1)}-${pad(d8.getUTCDate())} ${pad(d8.getUTCHours())}:${pad(d8.getUTCMinutes())}:${pad(d8.getUTCSeconds())}`;
 }
 
-/** "YYYY-MM-DD" → конец дня 23:59:59 по Warsaw в UTC */
-function dayEnd(dateStr: string): Date {
-  const [y, m, d] = dateStr.split("-").map(Number);
-  const approx = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
-  const warsawOffset = getWarsawOffsetMs(approx);
-  return new Date(Date.UTC(y, m - 1, d, 23, 59, 59) - warsawOffset);
-}
-
-/** Смещение Warsaw relative to UTC в миллисекундах для заданного момента */
 function getWarsawOffsetMs(date: Date): number {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: "Europe/Warsaw",
@@ -110,10 +94,38 @@ function getWarsawOffsetMs(date: Date): number {
   return warsawMs - date.getTime();
 }
 
+function dayStart(dateStr: string): Date {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const approx = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+  const offset = getWarsawOffsetMs(approx);
+  return new Date(Date.UTC(y, m - 1, d, 0, 0, 0) - offset);
+}
 
-function groupByHour(
-  records: { time: string; value: number }[]
-): { label: string; value: number }[] {
+function dayEnd(dateStr: string): Date {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const approx = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+  const offset = getWarsawOffsetMs(approx);
+  return new Date(Date.UTC(y, m - 1, d, 23, 59, 59) - offset);
+}
+
+function addDays(dateStr: string, days: number): string {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  return new Date(Date.UTC(y, m - 1, d + days)).toISOString().slice(0, 10);
+}
+
+function getDaysBetween(from: string, to: string): string[] {
+  const days: string[] = [];
+  const [fy, fm, fd] = from.split("-").map(Number);
+  const [ty, tm, td] = to.split("-").map(Number);
+  const start = new Date(Date.UTC(fy, fm - 1, fd));
+  const end = new Date(Date.UTC(ty, tm - 1, td));
+  for (let cur = new Date(start); cur <= end; cur.setUTCDate(cur.getUTCDate() + 1)) {
+    days.push(cur.toISOString().slice(0, 10));
+  }
+  return days;
+}
+
+function groupByHour(records: { time: string; value: number }[]): { label: string; value: number }[] {
   const map: Record<string, number> = {};
   records.forEach(({ time, value }) => {
     const d = toWarsawDate(time);
@@ -130,6 +142,23 @@ function groupByHour(
     .map(([h, value]) => ({ label: `${h}:00`, value }));
 }
 
+function groupByDay(
+  records: { time: string; value: number }[],
+  from: string,
+  to: string
+): { label: string; value: number }[] {
+  const days = getDaysBetween(from, to);
+  const map: Record<string, number> = {};
+  records.forEach(({ time, value }) => {
+    const day = apiTimeToWarsawDate(time);
+    map[day] = (map[day] || 0) + value;
+  });
+  return days.map((day) => {
+    const [, mm, dd] = day.split("-");
+    return { label: `${dd}.${mm}`, value: map[day] || 0 };
+  });
+}
+
 function getPaymentType(record: ConsumeRecord, t: (key: string) => string): string {
   const payId = record.pay_id ?? "";
   const path = (record.path ?? "").toLowerCase();
@@ -144,8 +173,7 @@ function MiniCalendar({
   selected,
   onSelect,
   onClose,
-  language
-
+  language,
 }: {
   selected: string;
   language: string;
@@ -156,9 +184,22 @@ function MiniCalendar({
   const [viewYear, setViewYear] = useState(() => parseInt(selected.split("-")[0]));
   const [viewMonth, setViewMonth] = useState(() => parseInt(selected.split("-")[1]) - 1);
 
+  const locale = language === "pl" ? "pl-PL" : language === "ru" ? "ru-RU" : "en-GB";
+  const monthNames = Array.from({ length: 12 }, (_, i) =>
+    new Intl.DateTimeFormat(locale, { month: "long" }).format(new Date(2000, i, 1))
+  );
+  const dayNames = Array.from({ length: 7 }, (_, i) =>
+    new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(2000, 0, 3 + i))
+  );
+
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
   const firstDow = new Date(viewYear, viewMonth, 1).getDay();
-  const startOffset = (firstDow + 6) % 7; // Monday-first
+  const startOffset = (firstDow + 6) % 7;
+  const pad2 = (n: number) => String(n).padStart(2, "0");
+  const cells: (number | null)[] = [
+    ...Array(startOffset).fill(null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ];
 
   const prevMonth = () => {
     if (viewMonth === 0) { setViewMonth(11); setViewYear((y) => y - 1); }
@@ -169,21 +210,6 @@ function MiniCalendar({
     else setViewMonth((m) => m + 1);
   };
 
-  const pad2 = (n: number) => String(n).padStart(2, "0");
-// Внутри MiniCalendar, получить язык через useLanguage() или передать пропсом
-const locale = language === "pl" ? "pl-PL" : language === "ru" ? "ru-RU" : "en-GB";
-
-const monthNames = Array.from({ length: 12 }, (_, i) =>
-  new Intl.DateTimeFormat(locale, { month: "long" }).format(new Date(2000, i, 1))
-);
-const dayNames = Array.from({ length: 7 }, (_, i) =>
-  new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(2000, 0, 3 + i)) // 3 jan 2000 = понедельник
-);
-  const cells: (number | null)[] = [
-    ...Array(startOffset).fill(null),
-    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
-  ];
-
   return (
     <div
       className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-xl z-50 p-3 w-64"
@@ -193,20 +219,18 @@ const dayNames = Array.from({ length: 7 }, (_, i) =>
         <button onClick={prevMonth} className="p-1 hover:bg-gray-100 rounded transition-colors">
           <ChevronLeft className="w-4 h-4 text-gray-500" />
         </button>
-        <span className="text-sm font-semibold text-gray-700">
+        <span className="text-sm font-semibold text-gray-700 capitalize">
           {monthNames[viewMonth]} {viewYear}
         </span>
         <button onClick={nextMonth} className="p-1 hover:bg-gray-100 rounded transition-colors">
           <ChevronRight className="w-4 h-4 text-gray-500" />
         </button>
       </div>
-
       <div className="grid grid-cols-7 mb-1">
         {dayNames.map((d) => (
           <div key={d} className="text-center text-xs text-gray-400 py-1">{d}</div>
         ))}
       </div>
-
       <div className="grid grid-cols-7 gap-0.5">
         {cells.map((day, i) => {
           if (day === null) return <div key={i} />;
@@ -236,13 +260,121 @@ const dayNames = Array.from({ length: 7 }, (_, i) =>
   );
 }
 
+// ─── Date Range Picker ────────────────────────────────────────────────────────
+
+function DateRangePicker({
+  from,
+  to,
+  onChange,
+  language,
+}: {
+  from: string;
+  to: string;
+  onChange: (from: string, to: string) => void;
+  language: string;
+}) {
+  const [openCal, setOpenCal] = useState<"from" | "to" | null>(null);
+
+  const locale = language === "pl" ? "pl-PL" : language === "ru" ? "ru-RU" : "en-GB";
+  const fmt = (dateStr: string) => {
+    const [y, m, d] = dateStr.split("-");
+    return new Intl.DateTimeFormat(locale, { day: "2-digit", month: "2-digit", year: "numeric" })
+      .format(new Date(Number(y), Number(m) - 1, Number(d)));
+  };
+
+  useEffect(() => {
+    if (!openCal) return;
+    const handler = () => setOpenCal(null);
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
+  }, [openCal]);
+
+  const presets = [
+    { label: "1d", days: 1 },
+    { label: "7d", days: 7 },
+    { label: "14d", days: 14 },
+    { label: "30d", days: 30 },
+    { label: "90d", days: 90 },
+  ];
+
+  const applyPreset = (days: number) => {
+    const today = todayWarsaw();
+    const fromDate = addDays(today, -(days - 1));
+    onChange(fromDate, today);
+  };
+
+  return (
+    <div className="flex items-center gap-2 flex-wrap">
+      {/* Presets */}
+      <div className="flex gap-1">
+        {presets.map(({ label, days }) => (
+          <button
+            key={label}
+            onClick={() => applyPreset(days)}
+            className="px-2 py-1 text-xs font-medium rounded-lg border border-gray-200 text-gray-600 hover:border-[#4A90E2] hover:text-[#4A90E2] transition-colors"
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {/* From */}
+      <div className="relative" onClick={(e) => e.stopPropagation()}>
+        <button
+          onClick={() => setOpenCal(openCal === "from" ? null : "from")}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:border-[#4A90E2] transition-colors shadow-sm"
+        >
+          <Calendar className="w-3.5 h-3.5 text-[#4A90E2]" />
+          {fmt(from)}
+        </button>
+        {openCal === "from" && (
+          <MiniCalendar
+            selected={from}
+            onSelect={(d) => { onChange(d, to < d ? d : to); }}
+            onClose={() => setOpenCal(null)}
+            language={language}
+          />
+        )}
+      </div>
+
+      <span className="text-gray-400 text-sm">—</span>
+
+      {/* To */}
+      <div className="relative" onClick={(e) => e.stopPropagation()}>
+        <button
+          onClick={() => setOpenCal(openCal === "to" ? null : "to")}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:border-[#4A90E2] transition-colors shadow-sm"
+        >
+          <Calendar className="w-3.5 h-3.5 text-[#4A90E2]" />
+          {fmt(to)}
+        </button>
+        {openCal === "to" && (
+          <MiniCalendar
+            selected={to}
+            onSelect={(d) => { onChange(from > d ? d : from, d); }}
+            onClose={() => setOpenCal(null)}
+            language={language}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── Bar Chart ────────────────────────────────────────────────────────────────
 
 function BarChart({
-  data, color = "#4A90E2", height = 100, valueUnit = "", noDataLabel = "No data",
+  data,
+  color = "#4A90E2",
+  height = 100,
+  valueUnit = "",
+  noDataLabel = "No data",
 }: {
   data: { label: string; value: number }[];
-  color?: string; height?: number; valueUnit?: string; noDataLabel?: string;
+  color?: string;
+  height?: number;
+  valueUnit?: string;
+  noDataLabel?: string;
 }) {
   if (!data.length)
     return (
@@ -257,7 +389,11 @@ function BarChart({
     <div style={{ height }} className="flex flex-col">
       <div className="flex items-end gap-1 flex-1 min-h-0">
         {data.map(({ label, value }, i) => (
-          <div key={i} className="flex-1 flex flex-col items-center gap-0.5 group relative h-full justify-end" style={{ minWidth: 0 }}>
+          <div
+            key={i}
+            className="flex-1 flex flex-col items-center gap-0.5 group relative h-full justify-end"
+            style={{ minWidth: 0 }}
+          >
             <div className="absolute bottom-full mb-1 hidden group-hover:flex flex-col items-center z-10 pointer-events-none">
               <div className="bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap">
                 {label}: {value.toFixed(2)}{valueUnit}
@@ -266,14 +402,22 @@ function BarChart({
             </div>
             <div
               className="w-full rounded-t transition-all min-h-[3px]"
-              style={{ height: `${Math.max((value / max) * 100, 3)}%`, backgroundColor: color, opacity: 0.85 }}
+              style={{
+                height: `${Math.max((value / max) * 100, 3)}%`,
+                backgroundColor: color,
+                opacity: 0.85,
+              }}
             />
           </div>
         ))}
       </div>
       <div className="flex mt-1">
         {data.map(({ label }, i) => (
-          <div key={i} className="flex-1 text-center text-gray-400 overflow-hidden" style={{ fontSize: data.length > 10 ? 8 : 10 }}>
+          <div
+            key={i}
+            className="flex-1 text-center text-gray-400 overflow-hidden"
+            style={{ fontSize: data.length > 10 ? 8 : 10 }}
+          >
             {data.length <= 7 ? label : i % Math.ceil(data.length / 7) === 0 ? label : ""}
           </div>
         ))}
@@ -284,13 +428,20 @@ function BarChart({
 
 // ─── Donut Chart ──────────────────────────────────────────────────────────────
 
-function DonutChart({ data, noDataLabel = "No data" }: {
+function DonutChart({
+  data,
+  noDataLabel = "No data",
+}: {
   data: { label: string; value: number; color: string }[];
   noDataLabel?: string;
 }) {
   const total = data.reduce((s, d) => s + d.value, 0);
   if (total === 0)
-    return <div className="flex items-center justify-center text-gray-300 text-xs py-4">{noDataLabel}</div>;
+    return (
+      <div className="flex items-center justify-center text-gray-300 text-xs py-4">
+        {noDataLabel}
+      </div>
+    );
 
   let cumulative = 0;
   const radius = 40, cx = 60, cy = 60;
@@ -313,10 +464,14 @@ function DonutChart({ data, noDataLabel = "No data" }: {
           const startAngle = (cumulative / total) * 360;
           cumulative += d.value;
           const endAngle = (cumulative / total) * 360;
-          return <path key={i} d={arcPath(cx, cy, radius, startAngle, endAngle)} fill={d.color} opacity={0.9} />;
+          return (
+            <path key={i} d={arcPath(cx, cy, radius, startAngle, endAngle)} fill={d.color} opacity={0.9} />
+          );
         })}
         <circle cx={cx} cy={cy} r={24} fill="white" />
-        <text x={cx} y={cy} textAnchor="middle" dominantBaseline="central" fontSize={10} fontWeight="600" fill="#374151">{total}</text>
+        <text x={cx} y={cy} textAnchor="middle" dominantBaseline="central" fontSize={10} fontWeight="600" fill="#374151">
+          {total}
+        </text>
       </svg>
       <div className="flex flex-col gap-1.5 flex-1 min-w-0">
         {data.map((d, i) => (
@@ -335,9 +490,15 @@ function DonutChart({ data, noDataLabel = "No data" }: {
 
 // ─── Small UI components ──────────────────────────────────────────────────────
 
-function KpiCard({ icon, label, value, sub, color, trend }: {
-  icon: React.ReactNode; label: string; value: string;
-  sub?: string; color: string; trend?: "up" | "flat";
+function KpiCard({
+  icon, label, value, sub, color, trend,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  sub?: string;
+  color: string;
+  trend?: "up" | "flat";
 }) {
   return (
     <div className="bg-white rounded-xl border border-gray-100 p-4 flex flex-col gap-2 shadow-sm">
@@ -355,9 +516,7 @@ function KpiCard({ icon, label, value, sub, color, trend }: {
   );
 }
 
-function SectionCard({ title, icon, children }: {
-  title: string; icon: React.ReactNode; children: React.ReactNode;
-}) {
+function SectionCard({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
       <div className="flex items-center gap-2 mb-3">
@@ -370,7 +529,10 @@ function SectionCard({ title, icon, children }: {
 }
 
 function LoadingState({ pagesLoaded, loadingLabel, noteLabel, pagesLabel }: {
-  pagesLoaded: number; loadingLabel: string; noteLabel: string; pagesLabel: string;
+  pagesLoaded: number;
+  loadingLabel: string;
+  noteLabel: string;
+  pagesLabel: string;
 }) {
   return (
     <div className="space-y-4">
@@ -401,9 +563,14 @@ function LoadingState({ pagesLoaded, loadingLabel, noteLabel, pagesLabel }: {
 
 export function AnalyticsTab({ deviceId }: AnalyticsTabProps) {
   const { t, language } = useLanguage();
+  const L = t("common.liter");
 
-  const [selectedDate, setSelectedDate] = useState<string>(todayWarsaw());
-  const [calendarOpen, setCalendarOpen] = useState(false);
+  // Date range — default: last 7 days
+  const initTo = todayWarsaw();
+  const initFrom = addDays(initTo, -6);
+  const [dateFrom, setDateFrom] = useState(initFrom);
+  const [dateTo, setDateTo] = useState(initTo);
+
   const [isLoading, setIsLoading] = useState(true);
   const [pagesLoaded, setPagesLoaded] = useState(0);
   const [consumes, setConsumes] = useState<ConsumeRecord[]>([]);
@@ -411,19 +578,9 @@ export function AnalyticsTab({ deviceId }: AnalyticsTabProps) {
 
   const abortRef = useRef<AbortController | null>(null);
 
-  // Человекочитаемое название выбранной даты
-  const displayDate = useMemo(() => {
-    const today = todayWarsaw();
-    if (selectedDate === today) return "Сегодня";
-    const d = new Date(selectedDate + "T12:00:00Z");
-    d.setUTCDate(d.getUTCDate() - 1);
-    const yesterday = d.toISOString().slice(0, 10);
-    if (selectedDate === yesterday) return "Вчера";
-    const [y, m, day] = selectedDate.split("-");
-    return `${day}.${m}.${y}`;
-  }, [selectedDate]);
+  const isMultiDay = dateFrom !== dateTo;
 
-  const load = async (dateStr: string) => {
+  const load = async (from: string, to: string) => {
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
@@ -434,11 +591,11 @@ export function AnalyticsTab({ deviceId }: AnalyticsTabProps) {
     setCheckups([]);
 
     try {
-      const begin = dayStart(dateStr);
-      const end = dayEnd(dateStr);
+      const begin = dayStart(from);
+      const end = dayEnd(to);
 
       const [fetchedConsumes, checkupRes] = await Promise.all([
-        fetchAllConsumesForDay(deviceId, begin, end, controller.signal, setPagesLoaded),
+        fetchAllConsumes(deviceId, begin, end, controller.signal, setPagesLoaded),
         HappyTiService.deviceCheckup({ deviceId, page: 1 }).catch(() => null),
       ]);
 
@@ -457,29 +614,23 @@ export function AnalyticsTab({ deviceId }: AnalyticsTabProps) {
   };
 
   useEffect(() => {
-    load(selectedDate);
+    load(dateFrom, dateTo);
     return () => abortRef.current?.abort();
-  }, [deviceId, selectedDate]);
+  }, [deviceId]);
 
-  // Закрываем календарь кликом вне
-  useEffect(() => {
-    if (!calendarOpen) return;
-    const handler = () => setCalendarOpen(false);
-    document.addEventListener("click", handler);
-    return () => document.removeEventListener("click", handler);
-  }, [calendarOpen]);
-
-  const goDay = (delta: number) => {
-    const d = new Date(selectedDate + "T12:00:00Z");
-    d.setUTCDate(d.getUTCDate() + delta);
-    const next = d.toISOString().slice(0, 10);
-    if (next <= todayWarsaw()) setSelectedDate(next);
+  const handleDateChange = (from: string, to: string) => {
+    setDateFrom(from);
+    setDateTo(to);
+    load(from, to);
   };
 
   // ── Stats ──────────────────────────────────────────────────────────────────
 
   const stats = useMemo(() => {
-    const totalRevenue = consumes.reduce((s, r) => s + parseFloat(r.cost_value || r.value || "0"), 0);
+    const totalRevenue = consumes.reduce(
+      (s, r) => s + parseFloat(r.cost_value || r.value || "0"),
+      0
+    );
     const txCount = consumes.length;
     const avgTx = txCount > 0 ? totalRevenue / txCount : 0;
     const water1 = consumes.reduce((s, r) => s + parseFloat(String(r.water1 ?? "0")), 0);
@@ -491,21 +642,36 @@ export function AnalyticsTab({ deviceId }: AnalyticsTabProps) {
       payTypes[type] = (payTypes[type] || 0) + 1;
     });
 
-    const revenueChart = groupByHour(consumes.map((r) => ({
-      time: r.time, value: parseFloat(r.cost_value || r.value || "0"),
-    })));
-    const waterChart = groupByHour(consumes.map((r) => ({
+    const revenueData = consumes.map((r) => ({
+      time: r.time,
+      value: parseFloat(r.cost_value || r.value || "0"),
+    }));
+    const waterData = consumes.map((r) => ({
       time: r.time,
       value: parseFloat(String(r.water1 ?? "0")) + parseFloat(String(r.water2 ?? "0")),
-    })));
+    }));
+
+    const revenueChart = isMultiDay
+      ? groupByDay(revenueData, dateFrom, dateTo)
+      : groupByHour(revenueData);
+
+    const waterChart = isMultiDay
+      ? groupByDay(waterData, dateFrom, dateTo)
+      : groupByHour(waterData);
 
     return {
-      totalRevenue, txCount, avgTx, water1, water2,
+      totalRevenue,
+      txCount,
+      avgTx,
+      water1,
+      water2,
       totalWater: water1 + water2,
-      payTypes, revenueChart, waterChart,
+      payTypes,
+      revenueChart,
+      waterChart,
       latestCheckup: checkups[0] || null,
     };
-  }, [consumes, checkups, t]);
+  }, [consumes, checkups, t, isMultiDay, dateFrom, dateTo]);
 
   const terminalLabel = t("vendingMachines.analyticsTerminal");
   const qrLabel = t("vendingMachines.analyticsQr");
@@ -516,66 +682,35 @@ export function AnalyticsTab({ deviceId }: AnalyticsTabProps) {
     [cashLabel]: "#F5A623",
   };
   const donutData = Object.entries(stats.payTypes).map(([label, value]) => ({
-    label, value, color: payTypeColors[label] || "#ccc",
+    label,
+    value,
+    color: payTypeColors[label] || "#ccc",
   }));
   const noDataLabel = t("vendingMachines.analyticsNoData");
+  const chartPerLabel = isMultiDay
+    ? t("vendingMachines.analyticsPerDay")
+    : t("vendingMachines.analyticsPerHour");
 
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
     <div className="space-y-4">
-
-      {/* ── Date picker row ── */}
-      <div className="flex items-center justify-between">
-
-        {/* Кнопка с датой + выпадающий календарь */}
-        <div className="relative">
-          <button
-            onClick={(e) => { e.stopPropagation(); setCalendarOpen((v) => !v); }}
-            className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm"
-          >
-            <Calendar className="w-4 h-4 text-[#4A90E2]" />
-            {displayDate}
-            <ChevronRight className={`w-3 h-3 text-gray-400 transition-transform ${calendarOpen ? "rotate-90" : ""}`} />
-          </button>
-
-          {calendarOpen && (
-            <MiniCalendar
-              selected={selectedDate}
-              onSelect={setSelectedDate}
-              onClose={() => setCalendarOpen(false)}
-              language={language}  // добавить
-
-            />
-          )}
-        </div>
-
-        {/* Стрелки пред/след день + обновить */}
-        <div className="flex items-center gap-1">
-          <button
-            onClick={() => goDay(-1)}
-            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
-            title="Предыдущий день"
-          >
-            <ChevronLeft className="w-4 h-4 text-gray-500" />
-          </button>
-          <button
-            onClick={() => goDay(1)}
-            disabled={selectedDate >= todayWarsaw()}
-            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-30"
-            title="Следующий день"
-          >
-            <ChevronRight className="w-4 h-4 text-gray-500" />
-          </button>
-          <button
-            onClick={() => load(selectedDate)}
-            disabled={isLoading}
-            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
-            title={t("common.search")}
-          >
-            <RefreshCw className={`w-4 h-4 text-gray-400 ${isLoading ? "animate-spin" : ""}`} />
-          </button>
-        </div>
+      {/* ── Date range picker ── */}
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <DateRangePicker
+          from={dateFrom}
+          to={dateTo}
+          onChange={handleDateChange}
+          language={language}
+        />
+        <button
+          onClick={() => load(dateFrom, dateTo)}
+          disabled={isLoading}
+          className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
+          title={t("common.search")}
+        >
+          <RefreshCw className={`w-4 h-4 text-gray-400 ${isLoading ? "animate-spin" : ""}`} />
+        </button>
       </div>
 
       {/* Loading */}
@@ -593,7 +728,7 @@ export function AnalyticsTab({ deviceId }: AnalyticsTabProps) {
         <>
           {stats.txCount === 0 && (
             <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-xs text-amber-700">
-              {t("vendingMachines.analyticsNoTransactions")}
+              {t("vendingMachines.analyticsNoTransactionsPeriod")}
             </div>
           )}
 
@@ -626,7 +761,7 @@ export function AnalyticsTab({ deviceId }: AnalyticsTabProps) {
             <KpiCard
               icon={<Droplets className="w-4 h-4 text-cyan-600" />}
               label={t("vendingMachines.analyticsWaterVolume")}
-              value={`${stats.totalWater.toFixed(1)} л`}
+              value={`${stats.totalWater.toFixed(1)} ${L}`}
               sub={`${t("vendingMachines.analyticsPort1")}: ${stats.water1.toFixed(1)} / ${t("vendingMachines.analyticsPort2")}: ${stats.water2.toFixed(1)}`}
               color="bg-cyan-50"
             />
@@ -634,18 +769,30 @@ export function AnalyticsTab({ deviceId }: AnalyticsTabProps) {
 
           {/* Revenue Chart */}
           <SectionCard
-            title={`${t("vendingMachines.analyticsRevenueChart")} ${t("vendingMachines.analyticsPerHour")}`}
+            title={`${t("vendingMachines.analyticsRevenueChart")} ${chartPerLabel}`}
             icon={<TrendingUp className="w-4 h-4 text-blue-500" />}
           >
-            <BarChart data={stats.revenueChart} color="#4A90E2" height={110} valueUnit=" zł" noDataLabel={noDataLabel} />
+            <BarChart
+              data={stats.revenueChart}
+              color="#4A90E2"
+              height={110}
+              valueUnit=" zł"
+              noDataLabel={noDataLabel}
+            />
           </SectionCard>
 
           {/* Water Chart */}
           <SectionCard
-            title={`${t("vendingMachines.analyticsWaterChart")} ${t("vendingMachines.analyticsPerHour")} (л)`}
+            title={`${t("vendingMachines.analyticsWaterChart")} ${chartPerLabel} (${L})`}
             icon={<Droplets className="w-4 h-4 text-cyan-500" />}
           >
-            <BarChart data={stats.waterChart} color="#06B6D4" height={90} valueUnit=" л" noDataLabel={noDataLabel} />
+            <BarChart
+              data={stats.waterChart}
+              color="#06B6D4"
+              height={90}
+              valueUnit={` ${L}`}
+              noDataLabel={noDataLabel}
+            />
             <div className="flex gap-4 mt-3 pt-3 border-t border-gray-100">
               {[
                 { label: t("vendingMachines.analyticsPort1"), val: stats.water1 },
@@ -655,7 +802,9 @@ export function AnalyticsTab({ deviceId }: AnalyticsTabProps) {
                 <>
                   <div key={label} className="flex-1 text-center">
                     <p className="text-xs text-gray-400">{label}</p>
-                    <p className={`text-sm font-bold ${cyan ? "text-cyan-600" : "text-gray-800"}`}>{val.toFixed(1)} л</p>
+                    <p className={`text-sm font-bold ${cyan ? "text-cyan-600" : "text-gray-800"}`}>
+                      {val.toFixed(1)} {L}
+                    </p>
                   </div>
                   {i < arr.length - 1 && <div className="w-px bg-gray-100" />}
                 </>
@@ -668,10 +817,11 @@ export function AnalyticsTab({ deviceId }: AnalyticsTabProps) {
             title={t("vendingMachines.analyticsPaymentTypes")}
             icon={<CreditCard className="w-4 h-4 text-purple-500" />}
           >
-            {donutData.length === 0
-              ? <p className="text-xs text-gray-400 text-center py-4">{noDataLabel}</p>
-              : <DonutChart data={donutData} noDataLabel={noDataLabel} />
-            }
+            {donutData.length === 0 ? (
+              <p className="text-xs text-gray-400 text-center py-4">{noDataLabel}</p>
+            ) : (
+              <DonutChart data={donutData} noDataLabel={noDataLabel} />
+            )}
             <div className="mt-3 pt-3 border-t border-gray-100 space-y-1">
               {[
                 { label: terminalLabel, desc: t("vendingMachines.analyticsTerminalDesc") },
@@ -695,8 +845,8 @@ export function AnalyticsTab({ deviceId }: AnalyticsTabProps) {
                 {[
                   { label: t("vendingMachines.analyticsWaterMeterLabel"), value: stats.latestCheckup.water_meter },
                   { label: t("vendingMachines.analyticsRecoveryRate"), value: stats.latestCheckup.recovery_rate },
-                  { label: t("vendingMachines.analyticsRawWater"), value: `${stats.latestCheckup.raw_water} л` },
-                  { label: t("vendingMachines.analyticsSaleWater"), value: `${stats.latestCheckup.sale_water} л` },
+                  { label: t("vendingMachines.analyticsRawWater"), value: `${stats.latestCheckup.raw_water} ${L}` },
+                  { label: t("vendingMachines.analyticsSaleWater"), value: `${stats.latestCheckup.sale_water} ${L}` },
                   { label: t("vendingMachines.analyticsEleUsed"), value: `${stats.latestCheckup.use_ele} кВт·ч` },
                   { label: t("vendingMachines.analyticsDayEle"), value: `${stats.latestCheckup.day_use_ele} кВт·ч` },
                 ].map(({ label, value }) => (
@@ -717,9 +867,9 @@ export function AnalyticsTab({ deviceId }: AnalyticsTabProps) {
   );
 }
 
-// ─── Fetch — все страницы без лимита ─────────────────────────────────────────
+// ─── Fetch ────────────────────────────────────────────────────────────────────
 
-async function fetchAllConsumesForDay(
+async function fetchAllConsumes(
   deviceId: string,
   begin: Date,
   end: Date,
@@ -730,7 +880,6 @@ async function fetchAllConsumesForDay(
 
   for (let page = 1; ; page++) {
     if (signal.aborted) break;
-
     try {
       const res = await HappyTiService.recordList({
         page,
@@ -745,11 +894,12 @@ async function fetchAllConsumesForDay(
       if (String(code) !== "0") break;
 
       const batch: ConsumeRecord[] = res.data.data ?? [];
-      if (batch.length === 0) break; // данных больше нет
+      if (batch.length === 0) break;
 
+      // Filter by deviceId
       collected.push(...batch.filter((r) => r.shop_num === deviceId));
 
-      if (batch.length < PAGE_SIZE) break; // последняя страница
+      if (batch.length < PAGE_SIZE) break;
     } catch {
       if (signal.aborted) break;
       break;
