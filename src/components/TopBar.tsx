@@ -19,9 +19,9 @@ export function TopBar({ onMenuClick }: TopBarProps) {
   ];
 
   const botLabels = {
-    en: 'Open bot',
-    ru: 'Открыть бота',
-    pl: 'Otwórz bota',
+    en: 'Bot notifications',
+    ru: 'БОТ-уведомления',
+    pl: 'Bot powiadomień',
   };
 
   const statusLabels = {
