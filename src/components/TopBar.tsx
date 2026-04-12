@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Menu } from "lucide-react";
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -19,9 +19,9 @@ export function TopBar({ onMenuClick }: TopBarProps) {
   ];
 
   const botLabels = {
-    en: 'Bot notifications',
-    ru: 'БОТ-уведомления',
-    pl: 'Bot powiadomień',
+    en: 'Open bot',
+    ru: 'Открыть бота',
+    pl: 'Otwórz bota',
   };
 
   const statusLabels = {
@@ -36,12 +36,24 @@ export function TopBar({ onMenuClick }: TopBarProps) {
 
   return (
     <div className="bg-white border-b border-gray-200 px-4 md:px-6 h-[52px] flex items-center justify-between">
-      {/* Левая часть — статус */}
+      
+      {/* Левая часть */}
       <div className="flex items-center gap-2">
+        
+        {/* Burger button (mobile only) */}
+        <button
+          onClick={onMenuClick}
+          className="lg:hidden p-1.5 rounded-md hover:bg-gray-100 transition"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
+        {/* Статус */}
         <span className="relative flex h-2 w-2">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
           <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
         </span>
+
         <span className="text-xs text-gray-500 hidden sm:block">
           {statusLabels[language]}
         </span>
@@ -49,6 +61,8 @@ export function TopBar({ onMenuClick }: TopBarProps) {
 
       {/* Правая часть */}
       <div className="flex items-center gap-2 md:gap-3">
+        
+        {/* Язык */}
         <select
           value={language}
           onChange={(e) => setLanguage(e.target.value as 'en' | 'ru' | 'pl')}
@@ -63,6 +77,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
 
         <div className="w-px h-5 bg-gray-200" />
 
+        {/* Кнопка бота */}
         <a
           href={botLink}
           target="_blank"
