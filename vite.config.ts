@@ -7,13 +7,5 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
-  server: {
-    proxy: {
-      '/api-happy': {
-        target: 'http://api.happy-ti.com:2028',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api-happy/, ''),
-      }
-    }
-  }
+
 });
