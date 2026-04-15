@@ -1,6 +1,9 @@
 {
   "rewrites": [
-    
+    {
+      "source": "/api-happy/:path*",
+      "destination": "https://api.happy-ti.com/:path*"
+    },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
