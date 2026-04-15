@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api-happy/:path*",
-      "destination": "https://api.happy-ti.com/:path*"
+      "destination": "http://api.happy-ti.com:2028/:path*"
     },
     { "source": "/(.*)", "destination": "/index.html" }
   ]

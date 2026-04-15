@@ -10,7 +10,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api-happy': {
-        target: 'https://api.happy-ti.com',
+        target: 'http://api.happy-ti.com:2028',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api-happy/, ''),
       }
