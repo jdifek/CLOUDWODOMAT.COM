@@ -174,7 +174,7 @@ function MiniCalendar({ selected, onSelect, onClose, language, maxDate, minDate 
   const cells: (number | null)[] = [...Array(startOffset).fill(null), ...Array.from({ length: daysInMonth }, (_, i) => i + 1)];
 
   return (
-    <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-xl z-50 p-3 w-64" onClick={e => e.stopPropagation()}>
+    <div className="absolute top-full left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-xl z-50 p-3 w-64" onClick={e => e.stopPropagation()}>
       <div className="flex items-center justify-between mb-2">
         <button onClick={prevMonth} className="p-1 hover:bg-gray-100 rounded transition-colors"><ChevronLeft className="w-4 h-4 text-gray-500" /></button>
         <span className="text-sm font-semibold text-gray-700 capitalize">{monthNames[viewMonth]} {viewYear}</span>
@@ -252,59 +252,60 @@ function DateRangePicker({ from, to, onChange, language }: {
   const maxTo = new Date(Date.UTC(fy, fm - 1, fd + (MAX_DAYS - 1))).toISOString().slice(0, 10);
 
   return (
-    <div className="flex items-center gap-2 flex-wrap">
-      {/* Preset buttons */}
-      <div className="flex gap-1">
+    <div className="flex flex-col gap-2 w-full sm:w-auto">
+      {/* Row 1: presets + day badge */}
+      <div className="flex items-center gap-1.5">
         {presets.map(({ label, days }) => (
           <button key={label} onClick={() => applyPreset(days)}
-            className="px-2 py-1 text-xs font-medium rounded-lg border border-gray-200 text-gray-600 hover:border-[#4A90E2] hover:text-[#4A90E2] transition-colors">
+            className="flex-1 sm:flex-none px-2 py-1.5 text-xs font-medium rounded-lg border border-gray-200 text-gray-600 hover:border-[#4A90E2] hover:text-[#4A90E2] transition-colors">
             {label}
           </button>
         ))}
+        <span className="ml-auto text-xs text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 whitespace-nowrap">
+          {daysBetween(from, to)}d
+        </span>
       </div>
 
-      {/* "From" picker */}
-      <div className="relative" onClick={e => e.stopPropagation()}>
-        <button onClick={() => setOpenCal(openCal === "from" ? null : "from")}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:border-[#4A90E2] transition-colors shadow-sm">
-          <Calendar className="w-3.5 h-3.5 text-[#4A90E2]" />{fmt(from)}
-        </button>
-        {openCal === "from" && (
-          <MiniCalendar
-            selected={from}
-            minDate={minFrom}
-            maxDate={to}
-            onSelect={d => { onChange(d, to < d ? d : to); }}
-            onClose={() => setOpenCal(null)}
-            language={language}
-          />
-        )}
+      {/* Row 2: from — to pickers */}
+      <div className="flex items-center gap-2">
+        {/* "From" picker */}
+        <div className="relative flex-1" onClick={e => e.stopPropagation()}>
+          <button onClick={() => setOpenCal(openCal === "from" ? null : "from")}
+            className="w-full flex items-center justify-center gap-1.5 px-2 py-1.5 bg-white border border-gray-200 rounded-lg text-xs text-gray-700 hover:border-[#4A90E2] transition-colors shadow-sm">
+            <Calendar className="w-3 h-3 text-[#4A90E2] flex-shrink-0" />{fmt(from)}
+          </button>
+          {openCal === "from" && (
+            <MiniCalendar
+              selected={from}
+              minDate={minFrom}
+              maxDate={to}
+              onSelect={d => { onChange(d, to < d ? d : to); }}
+              onClose={() => setOpenCal(null)}
+              language={language}
+            />
+          )}
+        </div>
+
+        <span className="text-gray-400 text-sm flex-shrink-0">—</span>
+
+        {/* "To" picker */}
+        <div className="relative flex-1" onClick={e => e.stopPropagation()}>
+          <button onClick={() => setOpenCal(openCal === "to" ? null : "to")}
+            className="w-full flex items-center justify-center gap-1.5 px-2 py-1.5 bg-white border border-gray-200 rounded-lg text-xs text-gray-700 hover:border-[#4A90E2] transition-colors shadow-sm">
+            <Calendar className="w-3 h-3 text-[#4A90E2] flex-shrink-0" />{fmt(to)}
+          </button>
+          {openCal === "to" && (
+            <MiniCalendar
+              selected={to}
+              minDate={from}
+              maxDate={maxTo < todayWarsaw() ? maxTo : todayWarsaw()}
+              onSelect={d => { onChange(from > d ? d : from, d); }}
+              onClose={() => setOpenCal(null)}
+              language={language}
+            />
+          )}
+        </div>
       </div>
-
-      <span className="text-gray-400 text-sm">—</span>
-
-      {/* "To" picker */}
-      <div className="relative" onClick={e => e.stopPropagation()}>
-        <button onClick={() => setOpenCal(openCal === "to" ? null : "to")}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:border-[#4A90E2] transition-colors shadow-sm">
-          <Calendar className="w-3.5 h-3.5 text-[#4A90E2]" />{fmt(to)}
-        </button>
-        {openCal === "to" && (
-          <MiniCalendar
-            selected={to}
-            minDate={from}
-            maxDate={maxTo < todayWarsaw() ? maxTo : todayWarsaw()}
-            onSelect={d => { onChange(from > d ? d : from, d); }}
-            onClose={() => setOpenCal(null)}
-            language={language}
-          />
-        )}
-      </div>
-
-      {/* Day count badge */}
-      <span className="text-xs text-gray-400 bg-gray-100 rounded-full px-2 py-0.5">
-        {daysBetween(from, to)}d
-      </span>
     </div>
   );
 }
@@ -319,6 +320,7 @@ export function Dashboard() {
   const [chartMode, setChartMode] = useState<ChartMode>("hourly");
 
   const initTo = todayWarsaw();
+  // Default: today only (1 day)
   const initFrom = initTo;
 
   const [dateFrom, setDateFrom] = useState(initFrom);
@@ -513,31 +515,29 @@ export function Dashboard() {
       <div className="bg-white rounded-lg p-4 md:p-6 shadow-sm">
 
         {/* Header */}
-        <div className="flex flex-col gap-3 mb-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h2 className="text-lg md:text-xl font-semibold text-gray-900">
-              {t("dashboard.subscriptionData")}
-            </h2>
-            {/* Max-days warning */}
-            <p className="text-xs text-gray-400 mt-0.5">
-              Max {MAX_DAYS} {t("common.days") ?? "days"} — {recordCount} {t("common.records") ?? "records"}
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:flex-wrap">
-            <DateRangePicker from={dateFrom} to={dateTo} onChange={handleDateChange} language={language} />
+        <div className="flex flex-col gap-3 mb-4">
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <h2 className="text-base md:text-xl font-semibold text-gray-900">
+                {t("dashboard.subscriptionData")}
+              </h2>
+              <p className="text-xs text-gray-400 mt-0.5">
+                Max {MAX_DAYS} {t("common.days") ?? "days"} — {recordCount} {t("common.records") ?? "records"}
+              </p>
+            </div>
             <button
               onClick={() => loadRecords(dateFrom, dateTo, chartMode)}
               disabled={recordsLoading}
-              className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
+              className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50 flex-shrink-0 mt-0.5"
             >
               <RefreshCw className={`w-4 h-4 text-gray-400 ${recordsLoading ? "animate-spin" : ""}`} />
             </button>
           </div>
+          <DateRangePicker from={dateFrom} to={dateTo} onChange={handleDateChange} language={language} />
         </div>
 
         {/* Chart mode toggle */}
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-3">
           <div className="flex rounded-lg border border-gray-200 overflow-hidden text-xs">
             {(["hourly", "daily"] as ChartMode[]).map(mode => (
               <button
@@ -551,20 +551,21 @@ export function Dashboard() {
                     : "text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed",
                 ].join(" ")}
               >
-                {mode === "hourly" ? (t("dashboard.hourly") ?? "Hourly") : (t("dashboard.daily") ?? "Daily")}
+                {mode === "hourly" ? (t("dashboard.hourly") ?? "По часам") : (t("dashboard.daily") ?? "По дням")}
               </button>
             ))}
           </div>
           {recordsLoading && (
             <div className="flex items-center gap-1.5 text-xs text-gray-400">
               <div className="w-3 h-3 border-2 border-gray-200 border-t-blue-400 rounded-full animate-spin" />
-              {t("vendingMachines.analyticsLoadingData") ?? "Loading…"}
+              <span className="hidden sm:inline">{t("vendingMachines.analyticsLoadingData") ?? "Loading…"}</span>
             </div>
           )}
         </div>
 
-        {/* Chart */}
-        <ResponsiveContainer width="100%" height={260}>
+        {/* Chart — shorter on mobile */}
+        <div className="h-[200px] sm:h-[260px]">
+        <ResponsiveContainer width="100%" height="100%">
           {chartMode === "hourly" ? (
             <BarChart data={chartData} barGap={1} barCategoryGap={numDays > 1 ? "5%" : "15%"}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -576,9 +577,9 @@ export function Dashboard() {
                 textAnchor={numDays > 1 ? "end" : "middle"}
                 height={numDays > 1 ? 40 : 20}
               />
-              <YAxis tick={{ fontSize: 10 }} width={35} />
-              <Tooltip />
-              <Legend wrapperStyle={{ fontSize: 11 }} />
+              <YAxis tick={{ fontSize: 10 }} width={30} />
+              <Tooltip contentStyle={{ fontSize: 11 }} />
+              <Legend wrapperStyle={{ fontSize: 10 }} />
               <Bar dataKey="sales" fill="#5CB85C" name={t("dashboard.sales")} radius={[2, 2, 0, 0]} />
               <Bar dataKey="revenue" fill="#F0AD4E" name={t("dashboard.revenue")} radius={[2, 2, 0, 0]} />
               <Bar dataKey="liters" fill="#4A90E2" name={t("common.liter") ?? "L"} radius={[2, 2, 0, 0]} />
@@ -586,16 +587,17 @@ export function Dashboard() {
           ) : (
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 10 }} />
-              <Tooltip />
-              <Legend wrapperStyle={{ fontSize: 12 }} />
+              <XAxis dataKey="date" tick={{ fontSize: 10 }} />
+              <YAxis tick={{ fontSize: 10 }} width={30} />
+              <Tooltip contentStyle={{ fontSize: 11 }} />
+              <Legend wrapperStyle={{ fontSize: 10 }} />
               <Line type="monotone" dataKey="sales" stroke="#5CB85C" name={t("dashboard.sales")} dot />
               <Line type="monotone" dataKey="revenue" stroke="#F0AD4E" name={t("dashboard.revenue")} dot />
               <Line type="monotone" dataKey="liters" stroke="#4A90E2" name={t("common.liter") ?? "L"} dot />
             </LineChart>
           )}
         </ResponsiveContainer>
+        </div>
       </div>
 
       {/* ── Metric cards ── */}
