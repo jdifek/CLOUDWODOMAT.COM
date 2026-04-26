@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import { apiHappy as $api } from "./api";
 
@@ -1075,3 +1076,4 @@ export const HappyTiService = {
     });
   },
 };
+
