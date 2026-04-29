@@ -1,52 +1,47 @@
-
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import { apiHappy as $api } from "./api";
+import { apiHappy as $api, apiHappyUser as $apiUser } from "./api";
 
 // ============================================
 // БАЗОВЫЕ ПАРАМЕТРЫ
 // ============================================
-interface BaseParams {
-  
-}
+interface BaseParams {}
 
 // ============================================
 // 3.1 МОДУЛЬ ЧЛЕНСКИХ КАРТ
 // ============================================
 
-// 3.1.1 Пополнение членской карты
 interface CardRechargeRequest extends BaseParams {
-  card: string; // Номер членской карты
-  value: number; // Сумма пополнения (отрицательное значение = списание)
-  income: number; // Реальная сумма оплаты (value - income = подарочная сумма)
-  password?: string; // Пароль аккаунта продавца
-  recharge_secret?: string; // Секретный ключ пополнения (альтернатива паролю)
-  trad_id: string; // Уникальный ID транзакции
-  type?: "addvalue" | "policy"; // Тип пополнения: обычное или по тарифу
-  id?: string; // ID тарифа (если type указан)
+  card: string;
+  value: number;
+  income: number;
+  password?: string;
+  recharge_secret?: string;
+  trad_id: string;
+  type?: "addvalue" | "policy";
+  id?: string;
 }
 
 interface CardRechargeResponse {
-  error: string; // "0" = успех
-  addvalue: string; // Сумма пополнения
-  value: string; // Баланс после пополнения
-  cash: string; // Реальный баланс (без подарков)
-  number: string; // Номер карты
+  error: string;
+  addvalue: string;
+  value: string;
+  cash: string;
+  number: string;
 }
 
-// 3.1.2 Получить историю потребления карты
 interface CardConsumeHistoryRequest extends BaseParams {
-  card: string; // Номер членской карты
+  card: string;
 }
 
 interface ConsumeRecord {
-  card_num: string; // Номер карты
-  after_value: string; // Баланс после потребления
-  saler: string; // Аккаунт продавца
-  value: string; // Сумма потребления
-  location: string; // Адрес устройства
-  time: string; // Время загрузки
-  device: string; // ID устройства
-  cost_value: string; // Фактически списанная сумма
+  card_num: string;
+  after_value: string;
+  saler: string;
+  value: string;
+  location: string;
+  time: string;
+  device: string;
+  cost_value: string;
 }
 
 interface CardConsumeHistoryResponse {
@@ -54,28 +49,26 @@ interface CardConsumeHistoryResponse {
   data: ConsumeRecord[];
 }
 
-// 3.1.3 Получить детали карты
 interface CardInfoRequest extends BaseParams {
-  card: string; // Номер членской карты
+  card: string;
 }
 
 interface CardInfoResponse {
   error: string;
   data: {
-    status: "normal" | "lost" | "cancel"; // Статус: нормальный/утерян/отменён
-    shopname: string; // ID последнего использованного устройства
-    saler: string; // Аккаунт продавца
-    number: string; // Номер карты
-    value: number; // Баланс карты
-    cash: number; // Реальный баланс (без подарков)
-    last_day: string | null; // Дата окончания тарифа
-    owner: string; // Владелец карты (телефон)
-    owner_name: string; // Имя владельца
-    card_policy: string | null; // ID тарифа
+    status: "normal" | "lost" | "cancel";
+    shopname: string;
+    saler: string;
+    number: string;
+    value: number;
+    cash: number;
+    last_day: string | null;
+    owner: string;
+    owner_name: string;
+    card_policy: string | null;
   };
 }
 
-// 3.1.4 Получить историю пополнений карты
 interface CardRechargeHistoryRequest extends BaseParams {
   card: string;
 }
@@ -83,10 +76,10 @@ interface CardRechargeHistoryRequest extends BaseParams {
 interface RechargeRecord {
   card_num: string;
   saler: string;
-  value: number; // Сумма пополнения
-  operater: string; // Оператор
-  time: string; // Время пополнения
-  value_afterdiscount: number; // Фактически зачисленная сумма
+  value: number;
+  operater: string;
+  time: string;
+  value_afterdiscount: number;
 }
 
 interface CardRechargeHistoryResponse {
@@ -94,27 +87,22 @@ interface CardRechargeHistoryResponse {
   data: RechargeRecord[];
 }
 
-// 3.1.5 Открыть карту
 interface CardOpenRequest extends BaseParams {
-  deviceId?: string; // ID устройства (опционально)
-  number: string; // Номер карты
-  userid: string; // Продавец, которому принадлежит карта
-  totalNumber?: number; // Количество карт для массового открытия (макс. 200)
+  deviceId?: string;
+  number: string;
+  userid: string;
+  totalNumber?: number;
 }
 
 interface CardOpenResponse {
-  code: number; // 0 = успех
+  code: number;
   msg: string;
-  data: Array<{
-    number: number;
-    err: string;
-  }>; // Только неудачные карты
+  data: Array<{ number: number; err: string }>;
 }
 
-// 3.1.6 Получить список членских карт
 interface CardListRequest extends BaseParams {
-  page: number; // Номер страницы (20 карт на страницу)
-  phone?: string; // Телефон пользователя (опционально)
+  page: number;
+  phone?: string;
 }
 
 interface PolicyData {
@@ -134,10 +122,7 @@ interface PolicyData {
   create_time: string;
   active_mode: string;
   remark: string | null;
-  extend_data: {
-    next_time: string;
-    total_amount: string;
-  };
+  extend_data: { next_time: string; total_amount: string };
   next_time: string;
   total_amount: string;
   renew: number;
@@ -145,11 +130,11 @@ interface PolicyData {
 
 interface CardListItem {
   index: string;
-  owner: string; // Владелец (телефон)
-  owner_name: string; // Имя владельца
-  number: string; // Номер карты
-  value: string; // Баланс (подарочная часть)
-  cash: string; // Баланс (реальная часть)
+  owner: string;
+  owner_name: string;
+  number: string;
+  value: string;
+  cash: string;
   status: "normal" | "lost" | "cancel";
   shopname: string | null;
   create_time: string;
@@ -165,22 +150,17 @@ interface CardListResponse {
   data: CardListItem[];
 }
 
-// 3.1.7 Получить диапазон номеров карт
 interface CardSectionRequest extends BaseParams {}
 
 interface CardSectionResponse {
   code: number;
   msg: string;
-  data: Array<{
-    card_start: string; // Начальный номер
-    card_end: string; // Конечный номер
-  }>;
+  data: Array<{ card_start: string; card_end: string }>;
 }
 
-// 3.1.8 Блокировка/разблокировка карты
 interface CardLossReportRequest extends BaseParams {
-  card: string; // Номер карты
-  action: "normal" | "lost"; // normal = разблокировать, lost = заблокировать
+  card: string;
+  action: "normal" | "lost";
 }
 
 interface CardLossReportResponse {
@@ -189,76 +169,67 @@ interface CardLossReportResponse {
   data: [];
 }
 
-// 3.1.9 Уведомление устройства для потребления без карты (удаленное считывание)
 interface CardNotifyRequest extends BaseParams {
-  card: string; // Номер карты
-  password: string; // Пароль аккаунта продавца
-  device: string; // ID устройства
+  card: string;
+  password: string;
+  device: string;
 }
 
 interface CardNotifyResponse {
-  data: string; // "通知成功" = успешно уведомлено
+  data: string;
   error: string;
 }
 
-// 3.1.10 Удаленная остановка розлива для членской карты
 interface CardStopRequest extends BaseParams {
-  deviceId: string; // ID устройства
-  number: string; // Номер карты
-  ch?: "0" | "1" | "2" | "3"; // Канал устройства (опционально)
+  deviceId: string;
+  number: string;
+  ch?: "0" | "1" | "2" | "3";
 }
 
 interface CardStopResponse {
   message: string;
-  status: string; // "1" = успех, "0" = ошибка
+  status: string;
 }
 
-// 3.1.11 Добавить ограничение на потребление для членской карты
 interface CardLimitCreateRequest extends BaseParams {
-  cardStart: string; // Начальный номер карты (макс. 200 карт)
-  cardEnd: string; // Конечный номер карты
-  deviceId: string; // ID устройства
-  remark?: string; // Примечание
-  port1?: "0" | "1"; // Порт 1: 1=можно, 0=нельзя (по умолчанию 1)
-  port2?: "0" | "1"; // Порт 2
-  port3?: "0" | "1"; // Порт 3
-  port4?: "0" | "1"; // Порт 4
+  cardStart: string;
+  cardEnd: string;
+  deviceId: string;
+  remark?: string;
+  port1?: "0" | "1";
+  port2?: "0" | "1";
+  port3?: "0" | "1";
+  port4?: "0" | "1";
 }
 
 interface CardLimitCreateResponse {
   code: number;
   msg: string;
-  data: Array<{
-    cardNum: string;
-    deviceId: string;
-    msg: string; // "成功" или причина ошибки
-  }>;
+  data: Array<{ cardNum: string; deviceId: string; msg: string }>;
 }
 
 // ============================================
 // 3.2 МОДУЛЬ ОНЛАЙН МАРКЕТИНГА
 // ============================================
 
-// 3.2.1 Создание заказа наличными
 interface QRCreateRequest extends BaseParams {
-  deviceId: string; // ID устройства
-  value: number; // Сумма платежа (юань, минимум 0.1)
-  userid: string; // Уникальный ID пользователя
-  ch?: "0" | "1" | "2" | "3"; // Канал устройства
-  location: string; // Адрес устройства
-  salerOrderId: string; // Уникальный ID заказа продавца
+  deviceId: string;
+  value: number;
+  userid: string;
+  ch?: "0" | "1" | "2" | "3";
+  location: string;
+  salerOrderId: string;
 }
 
 interface QRCreateResponse {
-  code: string; // "0" = успех, "1008" = нужно повторить
+  code: string;
   msg: string;
   data: [];
 }
 
-// 3.2.2 Запрос заказа наличными
 interface TradeQueryRequest extends BaseParams {
   deviceId: string;
-  salerOrderId: string; // ID заказа продавца
+  salerOrderId: string;
 }
 
 interface TradeQueryResponse {
@@ -273,29 +244,21 @@ interface TradeQueryResponse {
     value: string;
     value_afterdiscount: string;
     card_aftervalue: string;
-    status:
-      | "success"
-      | "finished"
-      | "refunding"
-      | "refund"
-      | "refund_p"
-      | "failed"
-      | "cancel";
+    status: "success" | "finished" | "refunding" | "refund" | "refund_p" | "failed" | "cancel";
     device: string;
     location: string;
     type: string;
     remark: string;
     time: string;
-    balance: string; // Сумма к возврату
+    balance: string;
   };
 }
 
-// 3.2.3 Получить список записей потребления
+// year здесь намеренно НЕ экспортируется наружу — он проставляется автоматически внутри сервиса
 interface RecordListRequest extends BaseParams {
-  page?: number; // Номер страницы (по умолчанию 1, 20 записей на страницу)
-  year?: number; // Год (по умолчанию текущий)
-  beginTime?: string; // Начальное время (формат: Y-m-d H:i:s)
-  endTime?: string; // Конечное время
+  page?: number;
+  beginTime?: string;
+  endTime?: string;
 }
 
 interface ConsumeRecordItem {
@@ -309,8 +272,8 @@ interface ConsumeRecordItem {
   location: string;
   after_value: string;
   cost_value: string;
-  water1: string; // Объем воды порт 1 (литры)
-  water2: string; // Объем воды порт 2 (литры)
+  water1: string;
+  water2: string;
 }
 
 interface RecordListResponse {
@@ -320,10 +283,9 @@ interface RecordListResponse {
   data: ConsumeRecordItem[];
 }
 
-// 3.2.4 Получить список записей пополнений
+// year здесь намеренно НЕ экспортируется наружу
 interface AddValueListRequest extends BaseParams {
   page?: number;
-  year?: number; // Год запроса
   beginTime?: string;
   endTime?: string;
 }
@@ -340,7 +302,7 @@ interface AddValueRecordItem {
   device: string;
   location: string;
   type: string;
-  is_openapi: number; // 0=не из Open API, 1=из Open API
+  is_openapi: number;
   time: string;
 }
 
@@ -350,7 +312,6 @@ interface AddValueListResponse {
   data: AddValueRecordItem[];
 }
 
-// 3.2.5 Получить список тарифов пополнения
 interface ProductsRequest extends BaseParams {}
 
 interface PolicyProduct {
@@ -382,19 +343,18 @@ interface RechargeProduct {
 
 interface ProductsResponse {
   error: string;
-  policy: PolicyProduct[]; // Тарифы с временным ограничением
-  recharge: RechargeProduct[]; // Обычные тарифы пополнения
+  policy: PolicyProduct[];
+  recharge: RechargeProduct[];
 }
 
 // ============================================
 // 3.3 МОДУЛЬ УСТРОЙСТВ
 // ============================================
 
-// 3.3.1 Добавить устройство
 interface AddDeviceRequest extends BaseParams {
-  deviceId: string; // ID устройства
-  location: string; // Адрес устройства
-  type: "shop" | "shop_liquid" | "shop_happyfu" | "shop_water"; // Тип устройства
+  deviceId: string;
+  location: string;
+  type: "shop" | "shop_liquid" | "shop_happyfu" | "shop_water";
 }
 
 interface AddDeviceResponse {
@@ -403,7 +363,6 @@ interface AddDeviceResponse {
   data: [];
 }
 
-// 3.3.2 Удалить устройство
 interface DelDeviceRequest extends BaseParams {
   deviceId: string;
 }
@@ -414,21 +373,20 @@ interface DelDeviceResponse {
   data: [];
 }
 
-// 3.3.3 Получить список устройств
 interface DeviceListRequest extends BaseParams {
   type: "shop" | "shop_liquid" | "shop_happyfu" | "shop_water";
-  page: number; // Номер страницы (20 устройств на страницу)
+  page: number;
 }
 
 interface DeviceListItem {
-  id: string; // ID устройства
-  location: string; // Адрес
-  water_time?: string; // Параметр для HappyFu
-  price_time?: string; // Параметр для HappyFu
-  port2_pricetime?: number; // Параметр для HappyFu
+  id: string;
+  location: string;
+  water_time?: string;
+  price_time?: string;
+  port2_pricetime?: number;
   create_time: string;
-  is_online?: string; // Статус онлайн (устарело)
-  is_onlie?: string; // Статус онлайн (устарело)
+  is_online?: string;
+  is_onlie?: string;
 }
 
 interface DeviceListResponse {
@@ -437,17 +395,16 @@ interface DeviceListResponse {
   data: DeviceListItem[];
 }
 
-// 3.3.4 Получить детали устройства (новая версия)
 interface DeviceDetailRequest extends BaseParams {
   deviceId: string;
 }
 
 interface DeviceExtraData {
-  support_dual_port: string; // "0" или "1"
-  latitude: string; // Широта (gcj02)
-  longitude: string; // Долгота (gcj02)
-  device_latitude: string; // Широта от устройства (WGS84)
-  device_longitude: string; // Долгота от устройства (WGS84)
+  support_dual_port: string;
+  latitude: string;
+  longitude: string;
+  device_latitude: string;
+  device_longitude: string;
 }
 
 interface DeviceDetailResponse {
@@ -459,16 +416,16 @@ interface DeviceDetailResponse {
     lastconnect: string | null;
     day_limit: string;
     flow_para: string;
-    water_time: number; // Базовое время для 1 литра воды (порт 1)
-    port2_waterlen: number; // Базовое время для 1 литра воды (порт 2)
-    port2_water: number; // Базовое время (водоконтроль)
+    water_time: number;
+    port2_waterlen: number;
+    port2_water: number;
     location: string;
     status: string | null;
-    status_cn: string; // Статус на китайском
+    status_cn: string;
     pay_status: string;
     version: string | null;
-    limit: string; // Лимит на одну транзакцию (порт 1)
-    limit2: string; // Лимит на одну транзакцию (порт 2)
+    limit: string;
+    limit2: string;
     tds: string;
     signal: string;
     price_time: string;
@@ -476,21 +433,20 @@ interface DeviceDetailResponse {
     water_1: string;
     price_2: string;
     water_2: string;
-    temp: number; // Температура устройства
-    port_1_price: string; // Цена за литр (порт 1)
-    port_2_price: string; // Цена за литр (порт 2)
+    temp: number;
+    port_1_price: string;
+    port_2_price: string;
     create_time: string;
     extra: DeviceExtraData | string;
   };
 }
 
-// 3.3.5 Изменить параметры устройства HappyFu
 interface EditHappyFuParamsRequest extends BaseParams {
   type: "shop_happyfu";
   deviceId: string;
-  water_time: "1" | "2"; // Количество импульсов на юань
-  price_time: string; // Ширина импульса (мс)
-  port2_pricetime: string; // Время открытия клапана на импульс (сек)
+  water_time: "1" | "2";
+  price_time: string;
+  port2_pricetime: string;
 }
 
 interface EditParamsResponse {
@@ -499,19 +455,18 @@ interface EditParamsResponse {
   data: [];
 }
 
-// 3.3.6 Изменить параметры автомата по продаже воды/жидкости
 interface EditShopParamsRequest extends BaseParams {
   deviceId: string;
   location: string;
-  light_on_time: string; // Время включения подсветки (HH:mm:ss)
-  light_off_time: string; // Время выключения подсветки
-  O3_on_time: number; // Время работы озона (сек)
-  O3_off_time: number; // Цикл озона (сек)
-  temp_low: number; // Температура запуска терморегулятора (°C)
-  temp_high: number; // Температура остановки терморегулятора (°C)
-  day_limit: number; // Дневной лимит потребления (юань)
-  limit: number; // Лимит на одну транзакцию (юань)
-  temp_alert: number; // Температура предупреждения
+  light_on_time: string;
+  light_off_time: string;
+  O3_on_time: number;
+  O3_off_time: number;
+  temp_low: number;
+  temp_high: number;
+  day_limit: number;
+  limit: number;
+  temp_alert: number;
   high_level_delaytime?: number;
   first_clean?: number;
   full_clean?: number;
@@ -526,27 +481,24 @@ interface EditShopParamsRequest extends BaseParams {
   clean_time?: number;
 }
 
-// 3.3.7 Изменить параметры водоконтроля
 interface EditWaterParamsRequest extends BaseParams {
   deviceId: string;
   location: string;
-  day_limit: number; // Дневной лимит (юань)
-  limit: number; // Лимит на одну транзакцию (юань)
+  day_limit: number;
+  limit: number;
 }
 
-// 3.3.8 Калибровка цены автомата по продаже воды
 interface CheckShopPriceRequest extends BaseParams {
   deviceId: string;
   flow_mode: "计时模式" | "流量计参数设置" | "流量计校准";
-  price_1: string; // Цена воды порт 1 (юань)
-  water_1: string; // Объем воды порт 1 (литры)
-  flow_para: string; // Параметр расходомера
-  price_2: string; // Цена воды порт 2
-  water_2: string; // Объем воды порт 2
+  price_1: string;
+  water_1: string;
+  flow_para: string;
+  price_2: string;
+  water_2: string;
   status: "calibrate_timer" | "calibrate" | "calibrate_flow";
 }
 
-// 3.3.9 Калибровка цены водоконтроля
 interface CheckWaterPriceRequest extends BaseParams {
   deviceId: string;
   flow_mode: "计时模式" | "流量计参数设置" | "流量计校准";
@@ -559,10 +511,9 @@ interface CheckWaterPriceRequest extends BaseParams {
   flow_params_2: string;
 }
 
-// 3.3.10 Удаленное включение/выключение устройства
 interface PowerControlRequest extends BaseParams {
   deviceId: string;
-  action: "on" | "off"; // on = включить, off = выключить
+  action: "on" | "off";
 }
 
 interface PowerControlResponse {
@@ -571,59 +522,53 @@ interface PowerControlResponse {
   data: [];
 }
 
-// 3.3.11 Настройка голоса
 interface VoiceSetRequest extends BaseParams {
   deviceId: string;
-  welcome?: string; // Приветствие (по умолчанию: "欢迎光临")
-  moneyEmpty?: string; // Сообщение о недостатке средств
-  thanks?: string; // Прощание (по умолчанию: "谢谢使用欢迎下次光临")
-  isAnnounceBalance: 0 | 1; // Озвучивать баланс
-  isAnnounceConsume: 0 | 1; // Озвучивать сумму потребления
-  isPlayMusic: 0 | 1; // Воспроизводить музыку
+  welcome?: string;
+  moneyEmpty?: string;
+  thanks?: string;
+  isAnnounceBalance: 0 | 1;
+  isAnnounceConsume: 0 | 1;
+  isPlayMusic: 0 | 1;
 }
 
-// 3.3.12 Настройка громкости голоса
 interface VolSetRequest extends BaseParams {
   deviceId: string;
-  vol: "静音" | "低" | "中" | "高"; // Громкость: тихо/низкая/средняя/высокая
+  vol: "静音" | "低" | "中" | "高";
 }
 
-// 3.3.13 Удаленное открытие замка
 interface UnlockRequest extends BaseParams {
   deviceId: string;
 }
 
-// 3.3.14 Тонкая настройка цены автомата по продаже воды
 interface ShopPriceAdjustRequest extends BaseParams {
   deviceId: string;
-  one?: number; // Процент корректировки порт 1 (-100 до 100)
-  two?: number; // Процент корректировки порт 2 (-100 до 100)
+  one?: number;
+  two?: number;
 }
 
-// 3.3.15 Тонкая настройка цены водоконтроля
 interface WaterPriceAdjustRequest extends BaseParams {
   deviceId: string;
   one?: number;
   two?: number;
 }
 
-// 3.3.16 Получить записи инспекции устройства
 interface DeviceCheckupRequest extends BaseParams {
   deviceId: string;
-  page?: number; // Номер страницы (по умолчанию 1, 20 записей на страницу)
+  page?: number;
 }
 
 interface CheckupRecord {
-  water_meter: string; // Показание счетчика воды
-  raw_water: string; // Расход исходной воды (литры)
-  sale_water: string; // Очищенная вода (литры)
-  recovery_rate: string; // Коэффициент восстановления
-  ele_meter: string; // Показание счетчика электроэнергии
-  use_ele: string; // Потребление электроэнергии (кВт·ч)
-  days: string; // Интервал дней
-  day_use_ele: string; // Дневное потребление электроэнергии
-  operator: string; // Инспектор
-  remark: string; // Примечание
+  water_meter: string;
+  raw_water: string;
+  sale_water: string;
+  recovery_rate: string;
+  ele_meter: string;
+  use_ele: string;
+  days: string;
+  day_use_ele: string;
+  operator: string;
+  remark: string;
   create_time: string;
 }
 
@@ -634,7 +579,6 @@ interface DeviceCheckupResponse {
   data: CheckupRecord[];
 }
 
-// 3.3.17 Статистика проблемных устройств
 interface ExceptionStatusCountRequest extends BaseParams {
   type: "shop" | "shop_liquid" | "shop_water";
 }
@@ -642,16 +586,13 @@ interface ExceptionStatusCountRequest extends BaseParams {
 interface ExceptionStatusCountResponse {
   code: number;
   msg: string;
-  data: {
-    total: string; // Общее количество проблемных устройств
-  };
+  data: { total: string };
 }
 
-// 3.3.18 Запрос списка проблемных устройств
 interface ExceptionStatusQueryRequest extends BaseParams {
   type: "shop" | "shop_liquid" | "shop_water";
   page?: number;
-  num?: number; // Количество на страницу (по умолчанию 10)
+  num?: number;
 }
 
 interface ExceptionDevice {
@@ -662,36 +603,32 @@ interface ExceptionDevice {
   lastConnect: string;
   statusMsg: string;
   waterLevel: string;
-  waterPressure: string; // Только для автоматов по продаже воды
+  waterPressure: string;
 }
 
 interface ExceptionStatusQueryResponse {
   code: number;
   msg: string;
-  data: {
-    total: string;
-    items: ExceptionDevice[];
-  };
+  data: { total: string; items: ExceptionDevice[] };
 }
 
 // ============================================
 // 3.4 МОДУЛЬ SIM-КАРТ
 // ============================================
 
-// 3.4.1 Получить список SIM-карт
 interface SimCardListRequest extends BaseParams {
   page: number;
 }
 
 interface SimCardItem {
-  iccid: string; // Номер SIM-карты
-  imei: string; // ID устройства
-  vendor: string; // Оператор
-  status: string; // Статус SIM-карты
-  valid_date: string; // Дата истечения
-  location: string; // Адрес устройства
+  iccid: string;
+  imei: string;
+  vendor: string;
+  status: string;
+  valid_date: string;
+  location: string;
   precharge_effect_date: string | null;
-  used: string; // Использованный трафик (МБ)
+  used: string;
 }
 
 interface SimCardListResponse {
@@ -700,7 +637,6 @@ interface SimCardListResponse {
   data: SimCardItem[];
 }
 
-// 3.4.2 Получить ссылку на пополнение SIM-карты (только WeChat)
 interface SimCardChargeLinkRequest extends BaseParams {
   iccid: string;
 }
@@ -708,41 +644,38 @@ interface SimCardChargeLinkRequest extends BaseParams {
 interface SimCardChargeLinkResponse {
   code: number;
   msg: string;
-  data: {
-    link: string; // Ссылка на пополнение
-  };
+  data: { link: string };
 }
 
 // ============================================
 // 3.5 МОДУЛЬ ЗАРЯДНЫХ СТАНЦИЙ
 // ============================================
 
-// 3.5.1 Получить детали устройства (зарядная станция)
 interface ChargerDetailRequest extends BaseParams {
   deviceId: string;
 }
 
 interface ConsumeStandard {
-  unit_price: number; // Цена (фэнь/час)
-  power: string; // Максимальная мощность текущего уровня
-  gear: string; // Уровень
-  time: number; // В час (секунды)
-  origin_time: number; // Исходное время (секунды)
-  origin_price: number; // Исходная цена (фэнь)
-  min_power: number; // Минимальная мощность текущего уровня
+  unit_price: number;
+  power: string;
+  gear: string;
+  time: number;
+  origin_time: number;
+  origin_price: number;
+  min_power: number;
 }
 
 interface ChargePolicyInfo {
   id: string;
   name: string;
-  model: "power" | "time"; // Режим: по мощности или по времени
+  model: "power" | "time";
   consume_standard: ConsumeStandard[];
-  show_content: string; // JSON массив сумм для отображения (фэнь)
-  full_stop: "on" | "off"; // Автоостановка при полной зарядке
-  basis: string; // Базовая стоимость (в час/фэнь)
-  time_max: string; // Максимальное время зарядки (минуты)
-  min_power: string; // Минимальная мощность для остановки
-  float_time: string; // Время подзарядки (минуты)
+  show_content: string;
+  full_stop: "on" | "off";
+  basis: string;
+  time_max: string;
+  min_power: string;
+  float_time: string;
 }
 
 interface ChargerDetailResponse {
@@ -754,26 +687,23 @@ interface ChargerDetailResponse {
     lastconnect: string;
     charge_policy_info: ChargePolicyInfo;
     location: string;
-    status: string; // Формат: "0_0.00_2_0.00"
+    status: string;
     status_cn: string;
     pay_status: string;
     version: string;
     create_time: string;
     signal: number;
-    extra: {
-      support_dual_port: string;
-    };
+    extra: { support_dual_port: string };
     mode: string;
   };
 }
 
-// 3.5.2 Создание заказа зарядной станции
 interface ChargeCreateRequest extends BaseParams {
   deviceId: string;
-  userid: string; // ID пользователя
-  ch: string; // Канал
-  price: number; // Сумма платежа (юань)
-  salerOrderId: string; // Уникальный ID заказа продавца
+  userid: string;
+  ch: string;
+  price: number;
+  salerOrderId: string;
 }
 
 interface ChargeCreateResponse {
@@ -782,18 +712,16 @@ interface ChargeCreateResponse {
   data: [];
 }
 
-// 3.5.3 Оплата картой на зарядной станции
 interface ChargeCardPayRequest extends BaseParams {
   deviceId: string;
   userid: string;
   ch: string;
   price: number;
-  cardNumber: string; // Номер членской карты
-  type: "qrcode_charge_c"; // Фиксированное значение
+  cardNumber: string;
+  type: "qrcode_charge_c";
   salerOrderId: string;
 }
 
-// 3.5.4 Запрос заказа зарядной станции
 interface ChargeTradeQueryRequest extends BaseParams {
   deviceId: string;
   salerOrderId: string;
@@ -811,14 +739,30 @@ interface ChargeTradeQueryResponse {
     value: string;
     value_afterdiscount: string;
     card_aftervalue: string;
-    status: "start" | "overload" | "overtime" | "pullout" | "finished"; // Статус зарядки
+    status: "start" | "overload" | "overtime" | "pullout" | "finished";
     device: string;
     location: string;
     type: "qrcode_charge" | "qrcode_charge_c";
     remark: string;
     time: string;
-    balance: number; // Сумма к возврату
+    balance: number;
   };
+}
+
+// ============================================
+// УТИЛИТЫ
+// ============================================
+
+/**
+ * Извлекает год из строки beginTime ("YYYY-MM-DD HH:mm:ss" или "YYYY-MM-DD").
+ * Если beginTime не передан — возвращает текущий год.
+ */
+function yearFromTime(beginTime?: string): number {
+  if (beginTime && beginTime.length >= 4) {
+    const y = Number(beginTime.slice(0, 4));
+    if (!isNaN(y)) return y;
+  }
+  return new Date().getFullYear();
 }
 
 // ============================================
@@ -827,37 +771,34 @@ interface ChargeTradeQueryResponse {
 
 export const HappyTiService = {
   // ====== 3.1 ЧЛЕНСКИЕ КАРТЫ ======
+  // Эти эндпоинты требуют параметр user= (не saler=)
 
-  /** 3.1.1 Пополнение членской карты (поддерживает списание отрицательными значениями) */
+  /** 3.1.1 Пополнение членской карты */
   cardRecharge(data: CardRechargeRequest) {
-    return $api.post<CardRechargeResponse>("/addvalue", data);
+    return $apiUser.post<CardRechargeResponse>("/addvalue", data);
   },
 
   /** 3.1.2 Получить историю потребления по карте */
   cardConsumeHistory(data: CardConsumeHistoryRequest) {
-    return $api.get<CardConsumeHistoryResponse>("/getconsume", {
-      params: data,
-    });
+    return $apiUser.get<CardConsumeHistoryResponse>("/getconsume", { params: data });
   },
 
   /** 3.1.3 Получить детальную информацию о карте */
   cardInfo(data: CardInfoRequest) {
-    return $api.get<CardInfoResponse>("/cardinfo", { params: data });
+    return $apiUser.get<CardInfoResponse>("/cardinfo", { params: data });
   },
 
   /** 3.1.4 Получить историю пополнений карты */
   cardRechargeHistory(data: CardRechargeHistoryRequest) {
-    return $api.get<CardRechargeHistoryResponse>("/getaddvalue", {
-      params: data,
-    });
+    return $apiUser.get<CardRechargeHistoryResponse>("/getaddvalue", { params: data });
   },
 
-  /** 3.1.5 Открыть карту (поддерживает массовое открытие до 200 карт) */
+  /** 3.1.5 Открыть карту */
   cardOpen(data: CardOpenRequest) {
     return $api.get<CardOpenResponse>("/card/opencards", { params: data });
   },
 
-  /** 3.1.6 Получить список членских карт (20 карт на страницу) */
+  /** 3.1.6 Получить список членских карт */
   cardList(data: CardListRequest) {
     return $api.get<CardListResponse>("/card/getlist", { params: data });
   },
@@ -869,29 +810,27 @@ export const HappyTiService = {
 
   /** 3.1.8 Блокировка или разблокировка карты */
   cardLossReport(data: CardLossReportRequest) {
-    return $api.get<CardLossReportResponse>("/card/lossreport", {
-      params: data,
-    });
+    return $api.get<CardLossReportResponse>("/card/lossreport", { params: data });
   },
 
-  /** 3.1.9 Уведомление устройства для потребления без карты (эквивалент считывания карты) */
+  /** 3.1.9 Уведомление устройства (удаленное считывание карты) */
   cardNotify(data: CardNotifyRequest) {
-    return $api.post<CardNotifyResponse>("/notify", data);
+    return $apiUser.post<CardNotifyResponse>("/notify", data);
   },
 
-  /** 3.1.10 Удаленная остановка розлива для членской карты */
+  /** 3.1.10 Удаленная остановка розлива */
   cardStop(data: CardStopRequest) {
     return $api.get<CardStopResponse>("/card/stop", { params: data });
   },
 
-  /** 3.1.11 Добавить ограничение на потребление для карт (только на указанных устройствах) */
+  /** 3.1.11 Добавить ограничение на потребление */
   cardLimitCreate(data: CardLimitCreateRequest) {
     return $api.post<CardLimitCreateResponse>("/card/limit-create", data);
   },
 
   // ====== 3.2 ОНЛАЙН МАРКЕТИНГ ======
 
-  /** 3.2.1 Создать заказ наличными (уведомляет устройство о платеже) */
+  /** 3.2.1 Создать заказ наличными */
   qrCreate(data: QRCreateRequest) {
     return $api.get<QRCreateResponse>("/trade/v2/qrcreate", { params: data });
   },
@@ -901,21 +840,29 @@ export const HappyTiService = {
     return $api.get<TradeQueryResponse>("/trade/query", { params: data });
   },
 
-  /** 3.2.3 Получить список записей потребления (20 записей на страницу) */
+  /**
+   * 3.2.3 Получить список записей потребления.
+   * year проставляется автоматически из beginTime — снаружи передавать не нужно.
+   */
   recordList(data: RecordListRequest) {
-    return $api.get<RecordListResponse>("/record/getlist", { params: data });
-  },
-
-  /** 3.2.4 Получить список записей пополнений (20 записей на страницу) */
-  addValueList(data: AddValueListRequest) {
-    return $api.get<AddValueListResponse>("/addvalue/getlist", {
-      params: data,
+    return $api.get<RecordListResponse>("/record/getlist", {
+      params: { ...data, year: yearFromTime(data.beginTime) },
     });
   },
 
-  /** 3.2.5 Получить список тарифов пополнения и временных тарифов */
+  /**
+   * 3.2.4 Получить список записей пополнений.
+   * year проставляется автоматически из beginTime — снаружи передавать не нужно.
+   */
+  addValueList(data: AddValueListRequest) {
+    return $api.get<AddValueListResponse>("/addvalue/getlist", {
+      params: { ...data, year: yearFromTime(data.beginTime) },
+    });
+  },
+
+  /** 3.2.5 Получить список тарифов */
   getProducts(data: ProductsRequest) {
-    return $api.get<ProductsResponse>("/getproducts", { params: data });
+    return $apiUser.get<ProductsResponse>("/getproducts", { params: data });
   },
 
   // ====== 3.3 УСТРОЙСТВА ======
@@ -930,133 +877,103 @@ export const HappyTiService = {
     return $api.get<DelDeviceResponse>("/deldevice", { params: data });
   },
 
-  /** 3.3.3 Получить список устройств (20 устройств на страницу) */
+  /** 3.3.3 Получить список устройств */
   deviceList(data: DeviceListRequest) {
     return $api.get<DeviceListResponse>("/getdevicelist", { params: data });
   },
 
-  /** 3.3.4 Получить детальную информацию об устройстве (включая температуру) */
+  /** 3.3.4 Получить детали устройства */
   deviceDetail(data: DeviceDetailRequest) {
-    return $api.get<DeviceDetailResponse>("/device/getdetail", {
-      params: data,
-    });
+    return $api.get<DeviceDetailResponse>("/device/getdetail", { params: data });
   },
 
-  /** 3.3.5 Изменить параметры устройства HappyFu */
+  /** 3.3.5 Изменить параметры HappyFu */
   editHappyFuParams(data: EditHappyFuParamsRequest) {
     return $api.get<EditParamsResponse>("/editparams", { params: data });
   },
 
-  /** 3.3.6 Изменить параметры автомата по продаже воды/жидкости */
+  /** 3.3.6 Изменить параметры售水机/售液机 */
   editShopParams(data: EditShopParamsRequest) {
-    return $api.get<EditParamsResponse>("/device/editshopparams", {
-      params: data,
-    });
+    return $api.get<EditParamsResponse>("/device/editshopparams", { params: data });
   },
 
   /** 3.3.7 Изменить параметры водоконтроля */
   editWaterParams(data: EditWaterParamsRequest) {
-    return $api.get<EditParamsResponse>("/device/editwaterparams", {
-      params: data,
-    });
+    return $api.get<EditParamsResponse>("/device/editwaterparams", { params: data });
   },
 
-  /** 3.3.8 Калибровка цены автомата по продаже воды */
+  /** 3.3.8 Калибровка цены售水机 */
   checkShopPrice(data: CheckShopPriceRequest) {
-    return $api.get<EditParamsResponse>("/device/checkshopprice", {
-      params: data,
-    });
+    return $api.get<EditParamsResponse>("/device/checkshopprice", { params: data });
   },
 
   /** 3.3.9 Калибровка цены водоконтроля */
   checkWaterPrice(data: CheckWaterPriceRequest) {
-    return $api.get<EditParamsResponse>("/device/checkwaterprice", {
-      params: data,
-    });
+    return $api.get<EditParamsResponse>("/device/checkwaterprice", { params: data });
   },
 
-  /** 3.3.10 Удаленное включение/выключение устройства */
+  /** 3.3.10 Удаленное включение/выключение */
   powerControl(data: PowerControlRequest) {
-    return $api.get<PowerControlResponse>("/device/powercontrol", {
-      params: data,
-    });
+    return $api.get<PowerControlResponse>("/device/powercontrol", { params: data });
   },
 
-  /** 3.3.11 Настройка голосовых сообщений устройства */
+  /** 3.3.11 Настройка голоса */
   voiceSet(data: VoiceSetRequest) {
-    return $api.get<PowerControlResponse>("/device/voice/set", {
-      params: data,
-    });
+    return $api.get<PowerControlResponse>("/device/voice/set", { params: data });
   },
 
-  /** 3.3.12 Настройка громкости голоса устройства */
+  /** 3.3.12 Настройка громкости */
   volSet(data: VolSetRequest) {
     return $api.get<PowerControlResponse>("/device/vol/set", { params: data });
   },
 
-  /** 3.3.13 Удаленное открытие замка устройства */
+  /** 3.3.13 Удаленное открытие замка */
   unlock(data: UnlockRequest) {
     return $api.get<PowerControlResponse>("/device/unlock", { params: data });
   },
 
-  /** 3.3.14 Тонкая настройка цены автомата по продаже воды (±100%) */
+  /** 3.3.14 Микронастройка цены售水机 */
   shopPriceAdjust(data: ShopPriceAdjustRequest) {
-    return $api.get<PowerControlResponse>("/device/shop-price-adjust", {
-      params: data,
-    });
+    return $api.get<PowerControlResponse>("/device/shop-price-adjust", { params: data });
   },
 
-  /** 3.3.15 Тонкая настройка цены водоконтроля (±100%) */
+  /** 3.3.15 Микронастройка цены водоконтроля */
   waterPriceAdjust(data: WaterPriceAdjustRequest) {
-    return $api.get<PowerControlResponse>("/device/water-price-adjust", {
-      params: data,
-    });
+    return $api.get<PowerControlResponse>("/device/water-price-adjust", { params: data });
   },
 
-  /** 3.3.16 Получить записи инспекции устройства (20 записей на страницу) */
+  /** 3.3.16 Записи инспекции устройства */
   deviceCheckup(data: DeviceCheckupRequest) {
-    return $api.get<DeviceCheckupResponse>("/device/get-checkup", {
-      params: data,
-    });
+    return $api.get<DeviceCheckupResponse>("/device/get-checkup", { params: data });
   },
 
-  /** 3.3.17 Статистика количества проблемных устройств */
+  /** 3.3.17 Статистика проблемных устройств */
   exceptionStatusCount(data: ExceptionStatusCountRequest) {
-    return $api.get<ExceptionStatusCountResponse>(
-      "/device/exception-status-count",
-      { params: data }
-    );
+    return $api.get<ExceptionStatusCountResponse>("/device/exception-status-count", { params: data });
   },
 
-  /** 3.3.18 Получить список проблемных устройств */
+  /** 3.3.18 Список проблемных устройств */
   exceptionStatusQuery(data: ExceptionStatusQueryRequest) {
-    return $api.get<ExceptionStatusQueryResponse>(
-      "/device/exception-status-query",
-      { params: data }
-    );
+    return $api.get<ExceptionStatusQueryResponse>("/device/exception-status-query", { params: data });
   },
 
   // ====== 3.4 SIM-КАРТЫ ======
 
-  /** 3.4.1 Получить список SIM-карт (20 карт на страницу) */
+  /** 3.4.1 Список SIM-карт */
   simCardList(data: SimCardListRequest) {
     return $api.get<SimCardListResponse>("/simcard/getlist", { params: data });
   },
 
-  /** 3.4.2 Получить ссылку на пополнение SIM-карты (только для WeChat) */
+  /** 3.4.2 Ссылка на пополнение SIM-карты */
   simCardChargeLink(data: SimCardChargeLinkRequest) {
-    return $api.get<SimCardChargeLinkResponse>("/simcard/getchargelink", {
-      params: data,
-    });
+    return $api.get<SimCardChargeLinkResponse>("/simcard/getchargelink", { params: data });
   },
 
   // ====== 3.5 ЗАРЯДНЫЕ СТАНЦИИ ======
 
-  /** 3.5.1 Получить детальную информацию о зарядной станции */
+  /** 3.5.1 Детали зарядной станции */
   chargerDetail(data: ChargerDetailRequest) {
-    return $api.get<ChargerDetailResponse>("/device/getdetail", {
-      params: data,
-    });
+    return $api.get<ChargerDetailResponse>("/device/getdetail", { params: data });
   },
 
   /** 3.5.2 Создать заказ зарядной станции */
@@ -1071,9 +988,6 @@ export const HappyTiService = {
 
   /** 3.5.4 Запрос статуса заказа зарядной станции */
   chargeTradeQuery(data: ChargeTradeQueryRequest) {
-    return $api.get<ChargeTradeQueryResponse>("/charge/trade/query", {
-      params: data,
-    });
+    return $api.get<ChargeTradeQueryResponse>("/charge/trade/query", { params: data });
   },
 };
-
