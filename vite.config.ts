@@ -10,10 +10,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api-happy': {
-        target: 'https://api.happy-ti.com',
+        target: 'https://cloudwodomatcom-back-production.up.railway.app',
         changeOrigin: true,
-        secure: false, // 👈 ВОТ ЭТО КЛЮЧ
-        rewrite: (path) => path.replace(/^\/api-happy/, ''),
       }
     }
   }
