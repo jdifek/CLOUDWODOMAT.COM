@@ -16,15 +16,17 @@ interface DataTableProps {
   totalPages?: number;
   totalRecords?: number;
   onPageChange?: (page: number) => void;
-}
+  rowClassName?: (row: any) => string; // Added rowClassName property
 
+}
 export function DataTable({
   columns,
   data,
   currentPage = 1,
   totalPages = 1,
   totalRecords = 0,
-  onPageChange
+  onPageChange,
+  rowClassName
 }: DataTableProps) {
   const { t } = useLanguage();
 
@@ -53,8 +55,8 @@ export function DataTable({
               </tr>
             ) : (
               data.map((row, idx) => (
-                <tr key={idx} className="hover:bg-gray-50">
-                  {columns.map((column) => (
+<tr key={idx} className={`hover:bg-gray-50 ${rowClassName?.(row) ?? ""}`}>
+{columns.map((column) => (
                     <td key={column.key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {column.render ? column.render(row[column.key], row) : row[column.key]}
                     </td>

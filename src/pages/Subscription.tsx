@@ -20,7 +20,25 @@ export function Subscription() {
   const [vendingLoading, setVendingLoading] = useState(true);
   const [basePrice, setBasePrice] = useState<number>(1);
   const [settingsLoading, setSettingsLoading] = useState(true);
+  const [period, setPeriod] = useState<'month' | 'month6' | 'year'>('month');
 
+  const periodOptions = [
+    { value: 'month',  label: t('subscription.period1Month'),  months: 1,  discount: 0 },
+    { value: 'month6', label: t('subscription.period6Months'), months: 6,  discount: 5 },
+    { value: 'year',   label: t('subscription.period12Months'), months: 12, discount: 10 },
+  ] as const;
+  
+  const calculatePrice = () => {
+    const monthly = basePrice * vendingCount;
+    const opt = periodOptions.find(o => o.value === period)!;
+    const total = monthly * opt.months * (1 - opt.discount / 100);
+    return total;
+  };
+  
+  const calculateMonthly = () => {
+    const opt = periodOptions.find(o => o.value === period)!;
+    return calculatePrice() / opt.months;
+  };
   useEffect(() => {
     fetchSettings();
     fetchSubscription();
@@ -69,25 +87,22 @@ export function Subscription() {
 
   const handleCheckout = async () => {
     if (vendingCount === 0) {
-      alert(t("subscription.noDevicesError") || "Please add at least one device before subscribing.");
+      alert(t('subscription.noDevicesError'));
       return;
     }
-
     setLoading(true);
     try {
-      const response = await api.post("/subscription/checkout", {
+      const response = await api.post('/subscription/checkout', {
         devicesCount: vendingCount,
+        period, // передаём период
       });
       window.location.href = response.data.url;
-    } catch (error) {
-      console.error("Failed to create checkout session:", error);
-      alert(t("subscription.checkoutError") || "Failed to create checkout session");
+    } catch {
+      alert(t('subscription.checkoutError'));
     } finally {
       setLoading(false);
     }
   };
-
-  const calculatePrice = () => basePrice * vendingCount;
 
   if (settingsLoading || vendingLoading) {
     return (
@@ -203,7 +218,69 @@ export function Subscription() {
               </p>
             </div>
           )}
+{/* Period selector */}
+<div className="grid grid-cols-3 gap-3 mb-4">
+  {periodOptions.map(opt => {
+    const monthly = basePrice * vendingCount;
+    const total = monthly * opt.months * (1 - opt.discount / 100);
+    const isSelected = period === opt.value;
+    return (
+      <button
+        key={opt.value}
+        onClick={() => setPeriod(opt.value)}
+        className={`relative p-3 rounded-lg border-2 text-left transition-all ${
+          isSelected
+            ? 'border-[#4A90E2] bg-blue-50'
+            : 'border-gray-200 hover:border-gray-300'
+        }`}
+      >
+        {opt.discount > 0 && (
+          <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+            -{opt.discount}%
+          </span>
+        )}
+        <p className="text-sm font-semibold text-gray-900">{opt.label}</p>
+        <p className="text-xs text-gray-500 mt-0.5">
+          {(total / opt.months).toFixed(2)} zł/mo
+        </p>
+        <p className="text-base font-bold text-[#4A90E2] mt-1">
+          {total.toFixed(2)} zł
+        </p>
+      </button>
+    );
+  })}
+</div>
 
+{/* Updated price display */}
+<div className="p-4 bg-gray-50 rounded-lg mb-4">
+  <div className="flex justify-between items-center mb-2">
+    <span className="text-gray-600">{t('subscription.basePricePerDevice')}:</span>
+    <span className="font-semibold">{basePrice.toFixed(2)} zł</span>
+  </div>
+  <div className="flex justify-between items-center mb-2">
+    <span className="text-gray-600">{t('subscription.devicesCount')}:</span>
+    <span className="font-semibold">×{vendingCount}</span>
+  </div>
+  {periodOptions.find(o => o.value === period)!.discount > 0 && (
+    <div className="flex justify-between items-center mb-2 text-green-600">
+      <span>{t('subscription.discount')}:</span>
+      <span className="font-semibold">-{periodOptions.find(o => o.value === period)!.discount}%</span>
+    </div>
+  )}
+  <div className="border-t border-gray-300 pt-2 mt-2 flex justify-between items-center">
+    <span className="text-lg font-semibold text-gray-900">{t('subscription.totalMonthly')}:</span>
+    <div className="text-right">
+      <div className="text-2xl font-bold text-[#4A90E2]">
+        {calculatePrice().toFixed(2)} zł
+      </div>
+      {period !== 'month' && (
+        <div className="text-xs text-gray-500">
+          {calculateMonthly().toFixed(2)} zł/mo
+        </div>
+      )}
+    </div>
+  </div>
+</div>
           <button
             onClick={handleCheckout}
             disabled={loading || vendingCount === 0}

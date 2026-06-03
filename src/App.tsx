@@ -50,6 +50,7 @@ import { Subscription } from "./pages/Subscription";
 import { UsersList } from "./pages/admin/UsersList";
 import { UserDetails } from "./pages/admin/UserDetails";
 import { AdminSettings } from "./pages/AdminSettings";
+import { ISCardsPage } from "./pages/ISCardsPage";
 
 function ProtectedRoute({ 
   children, 
@@ -160,7 +161,16 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
+<Route
+  path="/is-cards"
+  element={
+    <ProtectedRoute requiresSubscription>
+      <Layout>
+        <ISCardsPage />
+      </Layout>
+    </ProtectedRoute>
+  }
+/>
             {/* Admin Routes - Always accessible for admins */}
             <Route path="/admin/settings" element={
   <ProtectedRoute adminOnly>
@@ -193,7 +203,7 @@ function App() {
 
             {/* CRM Routes - Require active subscription (except for admins) */}
             <Route
-              path="/"
+              path="/kpi"
               element={
                 <ProtectedRoute requiresSubscription>
                   <Layout>
@@ -202,8 +212,9 @@ function App() {
                 </ProtectedRoute>
               }
             />
+     
             <Route
-              path="/equipment/water-vending"
+              path="/"
               element={
                 <ProtectedRoute requiresSubscription>
                   <Layout>

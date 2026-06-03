@@ -164,6 +164,7 @@ function getPaymentType(record: ConsumeRecord, t: (key: string) => string): stri
   const path = (record.path ?? "").toLowerCase();
   if (payId.endsWith("_pos")) return t("vendingMachines.analyticsTerminal");
   if (path.includes("qr")) return t("vendingMachines.analyticsQr");
+  if (path === "shop" || path.includes("card")) return t("vendingMachines.analyticsCard");
   return t("vendingMachines.analyticsCash");
 }
 
@@ -676,11 +677,13 @@ export function AnalyticsTab({ deviceId }: AnalyticsTabProps) {
   const terminalLabel = t("vendingMachines.analyticsTerminal");
   const qrLabel = t("vendingMachines.analyticsQr");
   const cashLabel = t("vendingMachines.analyticsCash");
-  const payTypeColors: Record<string, string> = {
-    [terminalLabel]: "#4A90E2",
-    [qrLabel]: "#7ED321",
-    [cashLabel]: "#F5A623",
-  };
+  const cardLabel = t("vendingMachines.analyticsCard");
+const payTypeColors: Record<string, string> = {
+  [terminalLabel]: "#4A90E2",
+  [qrLabel]: "#7ED321",
+  [cashLabel]: "#F5A623",
+  [cardLabel]: "#9B59B6",
+};
   const donutData = Object.entries(stats.payTypes).map(([label, value]) => ({
     label,
     value,
@@ -824,9 +827,10 @@ export function AnalyticsTab({ deviceId }: AnalyticsTabProps) {
             )}
             <div className="mt-3 pt-3 border-t border-gray-100 space-y-1">
               {[
-                { label: terminalLabel, desc: t("vendingMachines.analyticsTerminalDesc") },
-                { label: qrLabel, desc: t("vendingMachines.analyticsQrDesc") },
-                { label: cashLabel, desc: t("vendingMachines.analyticsCashDesc") },
+             { label: terminalLabel, desc: t("vendingMachines.analyticsTerminalDesc") },
+             { label: qrLabel, desc: t("vendingMachines.analyticsQrDesc") },
+             { label: cashLabel, desc: t("vendingMachines.analyticsCashDesc") },
+             { label: cardLabel, desc: t("vendingMachines.analyticsCardDesc") },
               ].map(({ label, desc }) => (
                 <p key={label} className="text-xs text-gray-400">
                   <span className="font-medium text-gray-600">{label}</span> — {desc}
