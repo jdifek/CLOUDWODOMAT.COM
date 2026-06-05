@@ -9,8 +9,6 @@ import {
   RefreshCw,
   Droplets,
   CreditCard,
-  Banknote,
-  QrCode,
   ArrowUpRight,
   Minus,
 } from "lucide-react";
@@ -403,7 +401,6 @@ function MiniCalendar({
           );
         })}
       </div>
-      <p className="text-center text-[10px] text-gray-400 mt-2">Max {MAX_DAYS} days</p>
     </div>
   );
 }
@@ -441,8 +438,11 @@ function DateRangePicker({
 
   const presets = [
     { label: "1d", days: 1 },
-    { label: "2d", days: 2 },
     { label: "3d", days: 3 },
+    { label: "7d", days: 7 },
+    { label: "14d", days: 14 },
+    { label: "30d", days: 30 },
+    { label: "90d", days: 90 },
   ];
 
   const applyPreset = (days: number) => {
@@ -755,11 +755,7 @@ export function Dashboard() {
               <h2 className="text-base md:text-xl font-semibold text-gray-900">
                 {t("dashboard.subscriptionData")}
               </h2>
-              <p className="text-xs text-gray-400 mt-0.5">
-                Max {MAX_DAYS} {t("common.days") ?? "days"} —{" "}
-                <span className="font-medium text-gray-500">{recordCount}</span>{" "}
-                {t("common.records") ?? "records"}
-              </p>
+          
             </div>
             <button
               onClick={() => loadRecords(dateFrom, dateTo, chartMode)}

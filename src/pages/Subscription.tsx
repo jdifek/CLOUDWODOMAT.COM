@@ -21,7 +21,7 @@ export function Subscription() {
   const [basePrice, setBasePrice] = useState<number>(1);
   const [settingsLoading, setSettingsLoading] = useState(true);
   const [period, setPeriod] = useState<'month' | 'month6' | 'year'>('month');
-
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const periodOptions = [
     { value: 'month',  label: t('subscription.period1Month'),  months: 1,  discount: 0 },
     { value: 'month6', label: t('subscription.period6Months'), months: 6,  discount: 5 },
@@ -86,6 +86,10 @@ export function Subscription() {
   };
 
   const handleCheckout = async () => {
+    if (!acceptedTerms) {
+      alert("Musisz zaakceptować Regulamin.");
+      return;
+    }
     if (vendingCount === 0) {
       alert(t('subscription.noDevicesError'));
       return;
@@ -281,10 +285,37 @@ export function Subscription() {
     </div>
   </div>
 </div>
+<div className="flex items-start gap-3 mb-4">
+  <input
+    id="terms"
+    type="checkbox"
+    checked={acceptedTerms}
+    onChange={(e) => setAcceptedTerms(e.target.checked)}
+    className="mt-1 h-4 w-4"
+  />
+
+  <label htmlFor="terms" className="text-sm text-gray-600">
+    Oświadczam, że zapoznałem się z
+    {" "}
+    <a
+      href="/REGULAMIN ŚWIADCZENIA USŁUG SERWISOWYCH „WODOMAT”.docx"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-600 underline"
+    >
+      Regulaminem świadczenia usług
+    </a>
+    {" "}
+    i akceptuję jego warunki.
+  </label>
+</div>
           <button
             onClick={handleCheckout}
-            disabled={loading || vendingCount === 0}
-            className="w-full px-6 py-3 bg-[#4A90E2] text-white rounded hover:bg-[#3A7BC8] transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={
+              loading ||
+              vendingCount === 0 ||
+              !acceptedTerms
+            }            className="w-full px-6 py-3 bg-[#4A90E2] text-white rounded hover:bg-[#3A7BC8] transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <CreditCard className="w-5 h-5" />
             {loading

@@ -568,7 +568,7 @@ export function AnalyticsTab({ deviceId }: AnalyticsTabProps) {
 
   // Date range — default: last 7 days
   const initTo = todayWarsaw();
-  const initFrom = addDays(initTo, -6);
+  const initFrom = addDays(initTo, -0);
   const [dateFrom, setDateFrom] = useState(initFrom);
   const [dateTo, setDateTo] = useState(initTo);
 

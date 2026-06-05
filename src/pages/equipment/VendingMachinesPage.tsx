@@ -401,14 +401,8 @@ function QuickMetrics({
           <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-0.5">
             {t("dashboard.today") ?? "Сегодня"}
           </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            <KpiCard
-              icon={<ShoppingCart className="w-4 h-4 text-green-600" />}
-              label={t("dashboard.todaySales") ?? "Продажи (сег.)"}
-              value={stats.todaySales.toString()}
-              color="bg-green-50"
-              trend={stats.todaySales > 0 ? "up" : "flat"}
-            />
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          
             <KpiCard
               icon={<TrendingUp className="w-4 h-4 text-blue-600" />}
               label={t("dashboard.todayRevenue") ?? "Выручка (сег.)"}
@@ -1068,8 +1062,8 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
         const minutes = getOfflineMinutes(row.lastconnect);
         const isStale = row.networkStatus === "offline" && minutes > 60;
         const timeStr = !row.lastconnect ? "—"
-          : minutes < 60 ? `${Math.round(minutes)}м назад`
-          : `${Math.floor(minutes / 60)}ч ${Math.round(minutes % 60)}м назад`;
+        : minutes < 60 ? `${Math.round(minutes)} ${t("common.minAgo")}`
+: `${Math.floor(minutes / 60)} ${t("common.hAgo")} ${Math.round(minutes % 60)} ${t("common.minAgo")}`;
         return (
           <span className={`text-xs px-2 py-0.5 rounded-full font-medium inline-flex items-center gap-1 ${isStale ? "bg-orange-100 text-orange-700 border border-orange-300" : "text-gray-500"}`}>
             {isStale && <WifiOff className="w-3 h-3" />}
@@ -1164,8 +1158,8 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
                 icon={<Signal className="w-4 h-4" />} label={t("vendingMachines.details")} />
               <TabBtn active={activeTab === "recharges"} onClick={() => handleTabChange("recharges")}
                 icon={<Receipt className="w-4 h-4" />} label={t("vendingMachines.recharges")} />
-              <TabBtn active={activeTab === "inspections"} onClick={() => handleTabChange("inspections")}
-                icon={<ClipboardList className="w-4 h-4" />} label={t("vendingMachines.inspections")} />
+              {/* <TabBtn active={activeTab === "inspections"} onClick={() => handleTabChange("inspections")}
+                icon={<ClipboardList className="w-4 h-4" />} label={t("vendingMachines.inspections")} /> */}
               <TabBtn active={activeTab === "cards"} onClick={() => handleTabChange("cards")}
                 icon={<CreditCard className="w-4 h-4" />} label={t("vendingMachines.cards")} />
             </div>
@@ -1457,7 +1451,7 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
                               </div>
                               <div className="grid grid-cols-2 gap-x-6 gap-y-1">
                                 <MiniRow label={t("vendingMachines.cardBalance")} value={parseFloat(card.value ?? "0").toFixed(2)} />
-                                <MiniRow label={t("vendingMachines.cardCash")} value={`${parseFloat(card.cash ?? "0").toFixed(2)} ₽`} />
+                                <MiniRow label={t("vendingMachines.cardCash")} value={`${parseFloat(card.cash ?? "0").toFixed(2)} zł`} />
                                 <MiniRow label={t("vendingMachines.cardOwner")} value={card.owner_name || card.owner || "—"} />
                                 <MiniRow label={t("vendingMachines.cardCreated")} value={card.create_time || "—"} />
                                 {card.name && <MiniRow label={t("vendingMachines.cardPolicy")} value={card.name} />}
