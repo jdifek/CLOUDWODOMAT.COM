@@ -371,8 +371,9 @@ function QuickMetrics({
         const todayRevenue = todayRes.reduce((s, r) => s + parseFloat(r.cost_value || r.value || "0"), 0);
         const todayLiters = todayRes.reduce((s, r) => s + parseFloat(r.water1 || "0") + parseFloat(r.water2 || "0"), 0);
 
-        let todayCard = 0, todayCash = 0, todayQr = 0;
+        let todayCard = 0, todayCash = 0, todayQr = 0, todayTerminal = 0;
         for (const r of todayRes) {
+          if ((r.pay_id ?? "").endsWith("_pos")) { todayTerminal++; continue; }
           const type = classifyPath(r.path || "");
           if (type === "card") todayCard++;
           else if (type === "cash") todayCash++;
@@ -389,6 +390,7 @@ function QuickMetrics({
           todayCard,
           todayCash,
           todayQr,
+          todayTerminal,
           threeDayRevenue: Math.round(threeDayRevenue * 100) / 100,
           threeDayLiters: Math.round(threeDayLiters * 10) / 10,
         });
@@ -445,24 +447,30 @@ function QuickMetrics({
               value={`${stats.todayLiters.toFixed(1)} ${L}`}
               color="bg-cyan-50"
             />
-            <KpiCard
-              icon={<CreditCard className="w-4 h-4 text-purple-600" />}
-              label={t("dashboard.todayCard") ?? "Карта (сег.)"}
-              value={stats.todayCard.toString()}
-              color="bg-purple-50"
-            />
-            <KpiCard
-              icon={<Banknote className="w-4 h-4 text-yellow-600" />}
-              label={t("dashboard.todayCash") ?? "Наличные (сег.)"}
-              value={stats.todayCash.toString()}
-              color="bg-yellow-50"
-            />
-            <KpiCard
-              icon={<QrCode className="w-4 h-4 text-pink-600" />}
-              label={t("dashboard.todayQr") ?? "QR (сег.)"}
-              value={stats.todayQr.toString()}
-              color="bg-pink-50"
-            />
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 col-span-2 sm:col-span-3 lg:col-span-5">
+  <p className="text-xs text-gray-400 mb-2">{t("dashboard.todayPayments") ?? "Типы оплат (сег.)"}</p>
+  <div className="flex items-center gap-2 flex-wrap">
+    {(() => {
+      const total = stats.todayCard + stats.todayCash + stats.todayQr + stats.todayTerminal;
+      const items = [
+        { label: t("vendingMachines.analyticsCard"), value: stats.todayCard, color: "bg-purple-500" },
+        { label: t("vendingMachines.analyticsCash"), value: stats.todayCash, color: "bg-yellow-500" },
+        { label: t("vendingMachines.analyticsQr"), value: stats.todayQr, color: "bg-pink-500" },
+        { label: t("vendingMachines.analyticsTerminal"), value: stats.todayTerminal, color: "bg-blue-500" },
+      ];
+      return items.map(({ label, value, color }) => (
+        <div key={label} className="flex items-center gap-1.5 text-xs">
+          <div className={`w-2 h-2 rounded-full ${color}`} />
+          <span className="text-gray-600 font-medium">{label}</span>
+          <span className="text-gray-400">{value}</span>
+          {total > 0 && (
+            <span className="text-gray-300">({((value / total) * 100).toFixed(0)}%)</span>
+          )}
+        </div>
+      ));
+    })()}
+  </div>
+</div>
           </div>
 
           {/* Last 3 days */}

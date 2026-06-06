@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useLanguage } from "../contexts/LanguageContext";
 import {
   CreditCard,
   Search,
@@ -70,30 +71,13 @@ type ModalType =
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const STATUS_CONFIG: Record<
-  string,
-  { label: string; dot: string; badge: string }
-> = {
-  normal: {
-    label: "Active",
-    dot: "bg-emerald-400",
-    badge: "bg-emerald-50 text-emerald-700 border border-emerald-200",
-  },
-  lost: {
-    label: "Lost",
-    dot: "bg-amber-400",
-    badge: "bg-amber-50 text-amber-700 border border-amber-200",
-  },
-  cancel: {
-    label: "Cancelled",
-    dot: "bg-red-400",
-    badge: "bg-red-50 text-red-600 border border-red-200",
-  },
-};
+
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export function ISCardsPage() {
+  
+  const { t } = useLanguage();
   // Cards
   const [cards, setCards] = useState<CardRecord[]>([]);
   const [cardsLoading, setCardsLoading] = useState(false);
@@ -109,7 +93,26 @@ export function ISCardsPage() {
   const [assignments, setAssignments] = useState<
     Record<string, CardAssignment[]>
   >({});
-
+  const STATUS_CONFIG: Record<
+  string,
+  { label: string; dot: string; badge: string }
+> = {
+  normal: {
+    label: t("isCards.active"),
+    dot: "bg-emerald-400",
+    badge: "bg-emerald-50 text-emerald-700 border border-emerald-200",
+  },
+  lost: {
+    label: t("isCards.lost"),
+    dot: "bg-amber-400",
+    badge: "bg-amber-50 text-amber-700 border border-amber-200",
+  },
+  cancel: {
+    label: t("isCards.cancelled"),
+    dot: "bg-red-400",
+    badge: "bg-red-50 text-red-600 border border-red-200",
+  },
+};
   // Search & filter
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -215,12 +218,12 @@ export function ISCardsPage() {
               <CreditCard className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">IC Cards</h1>
+              <h1 className="text-xl font-bold text-gray-900">{t("isCards.title")}</h1>
               <p className="text-sm text-gray-500 mt-0.5">
-                {cards.length} cards loaded
+                {cards.length} {t("isCards.cardsLoaded")}
                 {selected.size > 0 && (
                   <span className="ml-2 text-[#4A90E2] font-medium">
-                    · {selected.size} selected
+                    · {selected.size} {t("isCards.selected")}
                   </span>
                 )}
               </p>
@@ -258,7 +261,7 @@ export function ISCardsPage() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by card number, owner, device..."
+              placeholder={t("isCards.search")}
               className="w-full pl-9 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4A90E2] bg-white"
             />
           </div>
@@ -315,12 +318,12 @@ export function ISCardsPage() {
         {cardsLoading ? (
           <div className="flex flex-col items-center justify-center py-20 gap-3">
             <div className="w-10 h-10 border-4 border-gray-200 border-t-[#4A90E2] rounded-full animate-spin" />
-            <p className="text-sm text-gray-400">Loading cards...</p>
+            <p className="text-sm text-gray-400">{t("isCards.loading")}</p>
           </div>
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 gap-3">
             <CreditCard className="w-12 h-12 text-gray-300" />
-            <p className="text-gray-400">No cards found</p>
+            <p className="text-gray-400">{t("isCards.noCards")}</p>
           </div>
         ) : (
           <>
@@ -338,7 +341,7 @@ export function ISCardsPage() {
                 {allSelected ? "Deselect all" : "Select all"}
               </button>
               <span className="text-xs text-gray-400">
-                {filtered.length} cards
+                {filtered.length} {t("isCards.cards")}
               </span>
             </div>
 
@@ -368,6 +371,7 @@ export function ISCardsPage() {
                   }}
                   onDetail={() => setModal({ type: "detail", card })}
                   devices={devices}
+                  statusConfig={STATUS_CONFIG}
                 />
               ))}
             </div>
@@ -443,6 +447,8 @@ export function ISCardsPage() {
             setModal({ type: "limit", cards: [modal.card] });
             loadDevices();
           }}
+          statusConfig={STATUS_CONFIG}
+
           onLoss={(action) => handleLossReport(modal.card, action, loadCards)}
         />
       )}
@@ -480,6 +486,7 @@ function CardRow({
   onLimit,
   onDetail,
   devices,
+  statusConfig
 }: {
   card: CardRecord;
   isSelected: boolean;
@@ -493,14 +500,16 @@ function CardRow({
   onLimit: () => void;
   onDetail: () => void;
   devices: DeviceItem[];
+  statusConfig: Record<string, { label: string; dot: string; badge: string }>;
 }) {
-  const st = STATUS_CONFIG[card.status] ?? {
+  const st = statusConfig[card.status] ?? {
     label: card.status,
     dot: "bg-gray-400",
     badge: "bg-gray-100 text-gray-600",
   };
   const balance = parseFloat(card.value ?? "0");
   const cash = parseFloat(card.cash ?? "0");
+  const { t } = useLanguage();
 
   return (
     <div
@@ -564,39 +573,39 @@ function CardRow({
           <ActionBtn
             icon={<Eye className="w-3.5 h-3.5" />}
             onClick={onDetail}
-            title="Details"
+            title={t("isCards.details")}
             color="gray"
           />
           <ActionBtn
             icon={<RefreshCw className="w-3.5 h-3.5" />}
             onClick={onRecharge}
-            title="Recharge"
+            title={t("isCards.recharge")}
             color="green"
           />
           <ActionBtn
             icon={<Send className="w-3.5 h-3.5" />}
             onClick={onNotify}
-            title="Remote swipe (notify)"
+            title={t("isCards.remoteSwipe")}
             color="blue"
           />
           <ActionBtn
             icon={<Link2 className="w-3.5 h-3.5" />}
             onClick={onLimit}
-            title="Assign to device (limit)"
+            title={t("isCards.assignDevices")}
             color="purple"
           />
           {card.status === "normal" ? (
             <ActionBtn
               icon={<Lock className="w-3.5 h-3.5" />}
               onClick={() => onLoss("lost")}
-              title="Report lost"
+              title={t("isCards.reportLost")}
               color="orange"
             />
           ) : (
             <ActionBtn
               icon={<Unlock className="w-3.5 h-3.5" />}
               onClick={() => onLoss("normal")}
-              title="Restore"
+              title={t("isCards.restore")}
               color="blue"
             />
           )}
@@ -617,19 +626,19 @@ function CardRow({
       {isExpanded && (
         <div className="border-t border-gray-100 px-4 py-4 bg-gray-50 rounded-b-xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-4">
-            <InfoCell label="Balance (bonus)" value={balance.toFixed(2)} />
-            <InfoCell label="Balance (cash)" value={cash.toFixed(2)} />
+            <InfoCell label={t("isCards.balanceBonus")} value={balance.toFixed(2)} />
+            <InfoCell label={t("isCards.balanceCash")} value={cash.toFixed(2)} />
             <InfoCell
-              label="Owner"
+              label={t("isCards.owner")}
               value={card.owner_name || card.owner || "—"}
             />
-            <InfoCell label="Created" value={card.create_time || "—"} />
-            {card.name && <InfoCell label="Plan" value={card.name} />}
+            <InfoCell label={t("isCards.created")} value={card.create_time || "—"} />
+            {card.name && <InfoCell label={t("isCards.plan")} value={card.name} />}
             {card.last_day && (
-              <InfoCell label="Expires" value={card.last_day} />
+              <InfoCell label={t("isCards.expires")} value={card.last_day} />
             )}
             {card.shopname && (
-              <InfoCell label="Last used at" value={card.shopname} />
+              <InfoCell label={t("isCards.lastUsed")} value={card.shopname} />
             )}
           </div>
 
@@ -702,11 +711,13 @@ function OpenCardsModal({
       setLoading(false);
     }
   };
+  const { t } = useLanguage();
+
 
   return (
     <Modal title="Open Cards" onClose={onClose} maxWidth="max-w-md">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Field label="Start Card Number" required>
+        <Field label={t("isCards.startNumber")} required>
           <input
             required
             type="text"
@@ -717,7 +728,7 @@ function OpenCardsModal({
           />
         </Field>
 
-        <Field label="Count">
+        <Field label={t("isCards.count")}>
           <input
             type="number"
             min="1"
@@ -726,16 +737,16 @@ function OpenCardsModal({
             onChange={(e) => setForm({ ...form, totalNumber: e.target.value })}
             className={inputCls}
           />
-          <p className="text-xs text-gray-400 mt-1">Max 200 cards at once</p>
+          <p className="text-xs text-gray-400 mt-1">{t("isCards.maxCards")}</p>
         </Field>
 
-        <Field label="Device (optional — opening device)">
+        <Field label={t("isCards.deviceOptional")}>
           <select
             value={form.deviceId}
             onChange={(e) => setForm({ ...form, deviceId: e.target.value })}
             className={inputCls}
           >
-            <option value="">No device</option>
+            <option value="">{t("isCards.noDevice")}</option>
             {devicesLoading ? (
               <option disabled>Loading...</option>
             ) : (
@@ -801,6 +812,7 @@ function RechargeModal({
       setLoading(false);
     }
   };
+  const { t } = useLanguage();
 
   return (
     <Modal
@@ -810,7 +822,7 @@ function RechargeModal({
     >
       <div className="mb-4 flex items-center gap-3 bg-gray-50 rounded-lg px-3 py-2.5">
         <div>
-          <p className="text-xs text-gray-500">Current balance</p>
+          <p className="text-xs text-gray-500">{t("isCards.currentBalance")}</p>
           <p className="text-lg font-bold text-gray-900">
             {parseFloat(card.value ?? "0").toFixed(2)}
           </p>
@@ -824,7 +836,7 @@ function RechargeModal({
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Field label="Total amount (including bonus)">
+        <Field label={t("isCards.totalAmount")}>
           <input
             required
             type="number"
@@ -835,9 +847,9 @@ function RechargeModal({
             placeholder="10.00"
             className={inputCls}
           />
-          <p className="text-xs text-gray-400 mt-1">Negative = deduction</p>
+          <p className="text-xs text-gray-400 mt-1">{t("isCards.negativeDeduction")}</p>
         </Field>
-        <Field label="Actual cash received">
+        <Field label={t("isCards.actualCash")}>
           <input
             required
             type="number"
@@ -927,7 +939,8 @@ function NotifyModal({
     } finally {
       setStopLoading(false);
     }
-  };
+  };  const { t } = useLanguage();
+
 
   return (
     <Modal
@@ -936,26 +949,26 @@ function NotifyModal({
       maxWidth="max-w-md"
     >
       <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
-        <strong>How it works:</strong> Sends the card balance to the device —
+        <strong>{t("isCards.howItWorks")}:</strong> Sends the card balance to the device —
         equivalent to physically swiping the card. Water dispensed = auto
         deducted.
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Field label="Card">
+        <Field label={t("isCards.card")}>
           <div className={`${inputCls} bg-gray-50 text-gray-600 font-mono`}>
             {card.number}
           </div>
         </Field>
 
-        <Field label="Device" required>
+        <Field label={t("isCards.device")} required>
           <select
             value={deviceId}
             onChange={(e) => setDeviceId(e.target.value)}
             className={inputCls}
             required
           >
-            <option value="">Select device</option>
+            <option value="">{t("isCards.selectDevice")}</option>
             {devicesLoading ? (
               <option disabled>Loading...</option>
             ) : (
@@ -1044,6 +1057,7 @@ function LimitModal({
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<any[]>([]);
   const [deviceSearch, setDeviceSearch] = useState("");
+  const { t } = useLanguage();
 
   const isSingleCard = cards.length === 1;
 
@@ -1178,7 +1192,7 @@ function LimitModal({
         {/* All devices toggle */}
         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
           <div>
-            <p className="text-sm font-semibold text-gray-700">All devices</p>
+            <p className="text-sm font-semibold text-gray-700">{t("isCards.allDevices")}</p>
             <p className="text-xs text-gray-500">
               Assign to all {devices.length} devices
             </p>
@@ -1219,7 +1233,7 @@ function LimitModal({
               <input
                 value={deviceSearch}
                 onChange={(e) => setDeviceSearch(e.target.value)}
-                placeholder="Search devices..."
+                placeholder={t("isCards.searchDevices")}
                 className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4A90E2]"
               />
             </div>
@@ -1347,6 +1361,7 @@ function CardDetailModal({
   onNotify,
   onLimit,
   onLoss,
+  statusConfig
 }: {
   card: CardRecord;
   assignments: CardAssignment[];
@@ -1355,12 +1370,15 @@ function CardDetailModal({
   onNotify: () => void;
   onLimit: () => void;
   onLoss: (action: "normal" | "lost") => void;
+  statusConfig: Record<string, { label: string; dot: string; badge: string }>;
+
 }) {
-  const st = STATUS_CONFIG[card.status] ?? {
+  const st = statusConfig[card.status] ?? {
     label: card.status,
     dot: "bg-gray-400",
     badge: "bg-gray-100 text-gray-600",
   };
+  const { t } = useLanguage();
 
   return (
     <Modal title="Card Details" onClose={onClose} maxWidth="max-w-md">
@@ -1380,21 +1398,21 @@ function CardDetailModal({
       {/* Info grid */}
       <div className="grid grid-cols-2 gap-3 mb-5">
         <InfoCell
-          label="Total balance"
+          label={t("isCards.balanceBonus")}
           value={parseFloat(card.value ?? "0").toFixed(2)}
           big
         />
         <InfoCell
-          label="Cash balance"
+          label={t("isCards.balanceCash")}
           value={parseFloat(card.cash ?? "0").toFixed(2)}
           big
         />
-        <InfoCell label="Owner" value={card.owner_name || card.owner || "—"} />
-        <InfoCell label="Created" value={card.create_time || "—"} />
-        {card.name && <InfoCell label="Plan" value={card.name} />}
-        {card.last_day && <InfoCell label="Expires" value={card.last_day} />}
+        <InfoCell label={t("isCards.owner")} value={card.owner_name || card.owner || "—"} />
+        <InfoCell label={t("isCards.created")} value={card.create_time || "—"} />
+        {card.name && <InfoCell label={t("isCards.plan")} value={card.name} />}
+        {card.last_day && <InfoCell label={t("isCards.expires")} value={card.last_day} />}
         {card.shopname && (
-          <InfoCell label="Last device" value={card.shopname} />
+          <InfoCell label={t("isCards.lastUsed")} value={card.shopname} />
         )}
       </div>
 
@@ -1431,8 +1449,8 @@ function CardDetailModal({
       <div className="grid grid-cols-2 gap-2 pt-4 border-t border-gray-100">
         <ActionCard
           icon={<RefreshCw className="w-4 h-4" />}
-          label="Recharge"
-          desc="Add/deduct balance"
+          label={t("isCards.recharge")}
+          desc={t("isCards.addDeductBalance")}
           color="green"
           onClick={() => {
             onClose();
@@ -1441,8 +1459,8 @@ function CardDetailModal({
         />
         <ActionCard
           icon={<Send className="w-4 h-4" />}
-          label="Remote Swipe"
-          desc="Notify device (3.1.9)"
+          label={t("isCards.remoteSwipe")}
+          desc={t("isCards.remoteSwipeDesc")}
           color="blue"
           onClick={() => {
             onClose();
@@ -1451,8 +1469,8 @@ function CardDetailModal({
         />
         <ActionCard
           icon={<Link2 className="w-4 h-4" />}
-          label="Assign Devices"
-          desc="limit-create (3.1.11)"
+          label={t("isCards.assignDevices")}
+          desc={t("isCards.limitCreateDesc")}
           color="purple"
           onClick={() => {
             onClose();
@@ -1462,8 +1480,8 @@ function CardDetailModal({
         {card.status === "normal" ? (
           <ActionCard
             icon={<Lock className="w-4 h-4" />}
-            label="Report Lost"
-            desc="Block card"
+            label={t("isCards.reportLost")}
+            desc={t("isCards.blockCard")}
             color="orange"
             onClick={() => {
               onLoss("lost");
@@ -1473,8 +1491,8 @@ function CardDetailModal({
         ) : (
           <ActionCard
             icon={<Unlock className="w-4 h-4" />}
-            label="Restore"
-            desc="Unblock card"
+            label={t("isCards.restore")}
+            desc={t("isCards.unblockCard")}
             color="blue"
             onClick={() => {
               onLoss("normal");
