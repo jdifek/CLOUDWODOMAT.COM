@@ -210,6 +210,35 @@ function getWarsawOffsetMs(date: Date): number {
   const warsawMs = Date.UTC(get("year"), get("month") - 1, get("day"), get("hour"), get("minute"), get("second"));
   return warsawMs - date.getTime();
 }
+// Convert time string "HH:mm:ss" from UTC+8 to Warsaw
+function timeUtc8ToWarsaw(timeStr: string): string {
+  if (!timeStr) return timeStr;
+  const [h, m, s] = timeStr.split(":").map(Number);
+  const now = new Date();
+  const utc8Date = new Date(Date.UTC(
+    now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
+    h - 8, m, s ?? 0  // convert UTC+8 → UTC
+  ));
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Warsaw",
+    hour: "2-digit", minute: "2-digit", second: "2-digit",
+    hour12: false,
+  }).formatToParts(utc8Date);
+  const get = (type: string) => parts.find(p => p.type === type)?.value ?? "00";
+  return `${get("hour")}:${get("minute")}:${get("second")}`;
+}
+
+// Convert time string "HH:mm:ss" from Warsaw to UTC+8
+function timeWarsawToUtc8(timeStr: string): string {
+  if (!timeStr) return timeStr;
+  const [h, m, s] = timeStr.split(":").map(Number);
+  const now = new Date();
+  // Approximate Warsaw offset
+  const warsawOffset = getWarsawOffsetMs(now) / 3600000; // hours
+  const utc8H = ((h - warsawOffset + 8) % 24 + 24) % 24;
+  const pad = (n: number) => String(Math.round(n)).padStart(2, "0");
+  return `${pad(utc8H)}:${pad(m)}:${pad(s ?? 0)}`;
+}
 
 function dayStart(dateStr: string): Date {
   const [y, m, d] = dateStr.split("-").map(Number);
@@ -808,8 +837,8 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
           temp_low: String(d.temp_low ?? ""),
           temp_high: String(d.temp_high ?? ""),
           temp_alert: String(d.temp_alert ?? ""),
-          light_on_time: d.light_on_time ?? "",
-          light_off_time: d.light_off_time ?? "",
+          light_on_time: timeUtc8ToWarsaw(d.light_on_time ?? ""),
+          light_off_time: timeUtc8ToWarsaw(d.light_off_time ?? ""),
           O3ON_time: String(d.O3ON_time ?? ""),
           O3OFF_time: String(d.O3OFF_time ?? ""),
         });
@@ -876,8 +905,8 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
       await HappyTiService.editShopParams({
         deviceId: selectedDetail.id,
         location: editForm.location ?? selectedDetail.location,
-        light_on_time: editForm.light_on_time ?? selectedDetail.light_on_time,
-        light_off_time: editForm.light_off_time ?? selectedDetail.light_off_time,
+        light_on_time: timeWarsawToUtc8(editForm.light_on_time ?? selectedDetail.light_on_time),
+        light_off_time: timeWarsawToUtc8(editForm.light_off_time ?? selectedDetail.light_off_time),
         O3_on_time: Number(editForm.O3ON_time ?? selectedDetail.O3ON_time),
         O3_off_time: Number(editForm.O3OFF_time ?? selectedDetail.O3OFF_time),
         temp_low: Number(editForm.temp_low ?? selectedDetail.temp_low),

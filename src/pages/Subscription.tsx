@@ -298,7 +298,7 @@ export function Subscription() {
     Oświadczam, że zapoznałem się z
     {" "}
     <a
-      href="/REGULAMIN ŚWIADCZENIA USŁUG SERWISOWYCH „WODOMAT”.docx"
+      href="/doc.pdf"
       target="_blank"
       rel="noopener noreferrer"
       className="text-blue-600 underline"

@@ -56,8 +56,7 @@ interface DeviceItem {
 
 type ChartMode = "hourly" | "daily";
 
-const MAX_DAYS = 3;
-
+const MAX_DAYS = 90;
 // ─── Date/Time Utilities ────────────────────────────────────────────────────
 
 function todayWarsaw(): string {
