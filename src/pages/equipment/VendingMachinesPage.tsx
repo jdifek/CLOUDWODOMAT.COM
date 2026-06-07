@@ -453,10 +453,10 @@ function QuickMetrics({
     {(() => {
       const total = stats.todayCard + stats.todayCash + stats.todayQr + stats.todayTerminal;
       const items = [
-        { label: t("vendingMachines.analyticsCard"), value: stats.todayCard, color: "bg-purple-500" },
         { label: t("vendingMachines.analyticsCash"), value: stats.todayCash, color: "bg-yellow-500" },
-        { label: t("vendingMachines.analyticsQr"), value: stats.todayQr, color: "bg-pink-500" },
         { label: t("vendingMachines.analyticsTerminal"), value: stats.todayTerminal, color: "bg-blue-500" },
+        { label: t("vendingMachines.analyticsCard"), value: stats.todayCard, color: "bg-purple-500" },
+        { label: t("vendingMachines.analyticsQr"), value: stats.todayQr, color: "bg-pink-500" },
       ];
       return items.map(({ label, value, color }) => (
         <div key={label} className="flex items-center gap-1.5 text-xs">
@@ -1192,7 +1192,7 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
               <TabBtn active={activeTab === "consumes"} onClick={() => handleTabChange("consumes")}
                 icon={<Droplets className="w-4 h-4" />} label={t("vendingMachines.consumption")} />
               <TabBtn active={activeTab === "details"} onClick={() => handleTabChange("details")}
-                icon={<Signal className="w-4 h-4" />} label={t("vendingMachines.details")} />
+                icon={<Signal className="w-4 h-4" />} label={t("vendingMachines.detail")} />
               <TabBtn active={activeTab === "recharges"} onClick={() => handleTabChange("recharges")}
                 icon={<Receipt className="w-4 h-4" />} label={t("vendingMachines.recharges")} />
               {/* <TabBtn active={activeTab === "inspections"} onClick={() => handleTabChange("inspections")}
