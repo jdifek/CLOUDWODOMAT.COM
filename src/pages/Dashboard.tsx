@@ -189,12 +189,17 @@ async function fetchAllRecords(
   return all;
 }
 
-function classifyPath(path: string): "card" | "cash" | "qr" {
+function classifyPath(path: string, cardNum?: string): "card" | "cash" | "qr" {
   if (!path) return "qr";
   const p = path.toLowerCase();
+  
+  // IC карта: path = "shop" и card_num — реальный номер карты
+  if (p === "shop" && cardNum && cardNum !== "coin" && cardNum !== "qrcode") return "card";
+  
   if (p.includes("card") || p.includes("卡")) return "card";
-  if (p.includes("cash") || p.includes("coin") || p.includes("现金") || p.includes("投币"))
-    return "cash";
+  if (p === "coin" || p.includes("cash") || p.includes("现金") || p.includes("投币")) return "cash";
+  if (p === "qrcode" || p.includes("qr")) return "qr";
+  
   return "qr";
 }
 
@@ -547,6 +552,8 @@ export function Dashboard() {
     periodLiters: 0,
     periodCard: 0,
     periodCash: 0,
+    periodTerminal: 0,
+
     periodQr: 0,
     activeDevices: 0,
   });
@@ -656,14 +663,16 @@ export function Dashboard() {
       0
     );
 
-    let periodCard = 0, periodCash = 0, periodQr = 0;
+    let periodCard = 0, periodCash = 0, periodQr = 0, periodTerminal = 0;
     for (const r of allRecords) {
-      const type = classifyPath(r.path || "");
+      console.log("PAY:", JSON.stringify({ pay_id: r.pay_id, path: r.path, card_num: r.card_num }));
+      if ((r.pay_id ?? "").endsWith("_pos")) { periodTerminal++; continue; }
+      const type = classifyPath(r.path || "", r.card_num);
       if (type === "card") periodCard++;
       else if (type === "cash") periodCash++;
       else periodQr++;
     }
-
+    
     setStats((prev) => ({
       ...prev,
       periodSales,
@@ -672,6 +681,7 @@ export function Dashboard() {
       periodCard,
       periodCash,
       periodQr,
+      periodTerminal,
     }));
   };
 
@@ -736,10 +746,11 @@ export function Dashboard() {
 
   // Payment donut data
   const donutData = [
-    { label: t("dashboard.periodCard") ?? "IC Card", value: stats.periodCard, color: "#9B59B6" },
-    { label: t("dashboard.periodCash") ?? "Cash", value: stats.periodCash, color: "#F5A623" },
-    { label: t("dashboard.periodQr") ?? "QR", value: stats.periodQr, color: "#7ED321" },
-  ].filter((d) => d.value > 0);
+    { label: t("dashboard.periodCard") ?? "IC Card",    value: stats.periodCard,     color: "#9B59B6" },
+    { label: t("dashboard.periodCash") ?? "Cash",       value: stats.periodCash,     color: "#F5A623" },
+    { label: t("dashboard.periodQr") ?? "QR",           value: stats.periodQr,       color: "#7ED321" },
+    { label: t("vendingMachines.analyticsTerminal") ?? "Terminal", value: stats.periodTerminal, color: "#4A90E2" },
+  ];
 
   return (
     <div className="space-y-4 md:space-y-6">
@@ -884,7 +895,7 @@ export function Dashboard() {
           data={donutData}
           noDataLabel={t("vendingMachines.analyticsNoData") ?? "Нет данных"}
         />
-        <div className="mt-3 pt-3 border-t border-gray-100 space-y-1">
+        {/* <div className="mt-3 pt-3 border-t border-gray-100 space-y-1">
           {[
             { label: t("dashboard.periodCard") ?? "IC Card", desc: t("vendingMachines.analyticsCardDesc") ?? "path = shop / card" },
             { label: t("dashboard.periodCash") ?? "Cash", desc: t("vendingMachines.analyticsCashDesc") ?? "coins / other" },
@@ -894,7 +905,7 @@ export function Dashboard() {
               <span className="font-medium text-gray-600">{label}</span> — {desc}
             </p>
           ))}
-        </div>
+        </div> */}
       </SectionCard>
 
       {/* ── Devices summary ── */}

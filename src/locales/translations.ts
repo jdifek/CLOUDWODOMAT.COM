@@ -1,6 +1,8 @@
 export const translations = {
   en: {
     vendingMachines: {
+      detail: "Parameters",
+
       // Analytics
       analytics: "Analytics",
       analyticsTerminal: "Terminal",
@@ -1157,6 +1159,7 @@ analyticsCardDesc: "path = shop / оплата картой",
       createOrderStatusWaiting: "⏳ Ожидаем ответ устройства...",
       createOrderOrderId: "ID заказа",
       details: "Детали",
+      detail: "Параметры",
       inspections: "Инспекции",
       consumption: "Чеки",
       recharges: "Баланс водомата",
@@ -2132,6 +2135,8 @@ hAgo: "ч",
       addDeductBalance: "Dodaj/odlicz saldo",
     },
     vendingMachines: {
+      detail: "Parametry",
+
       analyticsCard: "Karta IC",
 analyticsCardDesc: "path = shop / płatność kartą",
       analyticsTerminal: "Terminal",
@@ -2251,8 +2256,7 @@ analyticsCardDesc: "path = shop / płatność kartą",
       viaOpenApi: "Przez Open API",
       paymentNumber: "Numer płatności",
       loadMore: "Załaduj więcej",
-      // Zakładka Karty IS
-      cards: "Karty IS",
+      cards: "Karty IC",
       openCards: "Otwórz karty",
       openCardsSubmit: "Otwórz",
       cardStartNumber: "Numer początkowy",
