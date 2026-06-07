@@ -1865,6 +1865,7 @@ discount: "Скидка",
       roleConfig: "Настройка ролей",
     },
     dashboard: {
+      todayPayments: "Типы оплат (сегодня)",
       threeDayRevenue: "Выручка за 3 дня",
 threeDayLiters: "Литры за 3 дня",
 last3days: "Последние 3 дня",
@@ -2900,6 +2901,8 @@ discount: "Zniżka",
       roleConfig: "Konfiguracja ról",
     },
     dashboard: {
+      todayPayments: "Typy płatności (dziś)",
+
       threeDayRevenue: "Przychód za 3 dni",
 threeDayLiters: "Litry za 3 dni",
 last3days: "Ostatnie 3 dni",
