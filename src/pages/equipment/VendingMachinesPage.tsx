@@ -1081,7 +1081,7 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
         const status = getTempStatus(row.temp);
         const styles = {
           hot: "bg-red-100 text-red-700 border border-red-300",
-          cold: "bg-blue-100 text-blue-700 border border-blue-200",
+          cold: "bg-red-100 text-red-700 border border-red-300",
           normal: "text-gray-600",
         };
         return row.temp ? (
