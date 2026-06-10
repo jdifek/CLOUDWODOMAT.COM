@@ -63,7 +63,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       path: "/",
       icon: Droplets,
     },
-    { label: "IC Cards", path: "/is-cards", icon: CreditCard },
+    { label: t("nav.icCards"), path: "/is-cards", icon: CreditCard },
     { label: t("nav.dashboard"), path: "/kpi", icon: PieChartIcon },
   ];
 

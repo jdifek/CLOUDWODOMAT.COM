@@ -681,6 +681,8 @@ discount: "Discount",
       south: "South",
     },
     nav: {
+      
+      icCards: "Karty IC",
       menu: "WODOMAT",
       language: "Language",
 
@@ -754,6 +756,8 @@ discount: "Discount",
       roleConfig: "Role Configuration",
     },
     dashboard: {
+      periodLiters: "Liters for the period",
+
       threeDayRevenue: "3-Day Revenue",
 threeDayLiters: "3-Day Liters",
 last3days: "Last 3 days",
@@ -1793,11 +1797,12 @@ discount: "Скидка",
       south: "Юг",
     },
     nav: {
+      icCards: "IC Cards",
       menu: "ВОДОМАТ",
       language: "Язык",
 
       // Dashboard
-      dashboard: "KPI",
+      dashboard: "KPI показатели",
 
       // Equipment
       equipment: "Оборудование",
@@ -1870,7 +1875,7 @@ discount: "Скидка",
 threeDayLiters: "Литры за 3 дня",
 last3days: "Последние 3 дня",
 today: "Сегодня",
-      
+      periodLiters: "Литры за период",
       periodStats: "Статистика за период",
       todayCard: "IC Карта (сег.)",
       todayCash: "Наличные (сег.)",
@@ -2828,6 +2833,8 @@ discount: "Zniżka",
       south: "Południe",
     },
     nav: {
+      icCards: "IC Карты",
+
       menu: "WODOMAT",
       language: "Język",
 
@@ -2901,6 +2908,8 @@ discount: "Zniżka",
       roleConfig: "Konfiguracja ról",
     },
     dashboard: {
+periodLiters: "Litry za okres",
+
       todayPayments: "Typy płatności (dziś)",
 
       threeDayRevenue: "Przychód za 3 dni",

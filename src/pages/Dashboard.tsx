@@ -879,7 +879,7 @@ export function Dashboard() {
           />
           <KpiCard
             icon={<Droplets className="w-4 h-4 text-cyan-600" />}
-            label={t("dashboard.periodLiters") ?? "Литры"}
+            label={t("dashboard.periodLiters") ?? "Литры за период"}
             value={`${stats.periodLiters.toFixed(1)} ${L}`}
             color="bg-cyan-50"
           />

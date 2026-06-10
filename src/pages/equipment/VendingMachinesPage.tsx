@@ -1136,9 +1136,9 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
               const minutes = getOfflineMinutes(row.lastconnect);
               const stale = row.networkStatus === "offline" && minutes > 60;
               const tempStatus = getTempStatus(row.temp);
-              if (stale) return "bg-orange-50 border-l-4 border-l-orange-400";
+              if (stale) return "bg-red-50 border-l-4 border-l-red-400";
               if (tempStatus === "hot") return "bg-red-50 border-l-4 border-l-red-400";
-              if (tempStatus === "cold") return "bg-blue-50 border-l-4 border-l-blue-300";
+              if (tempStatus === "cold") return "bg-red-50 border-l-4 border-l-red-400";
               return "";
             }}
             columns={columns}
