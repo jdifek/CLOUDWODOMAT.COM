@@ -682,7 +682,7 @@ discount: "Discount",
     },
     nav: {
       
-      icCards: "Karty IC",
+      icCards: "IC Cards",
       menu: "WODOMAT",
       language: "Language",
 
@@ -1025,7 +1025,15 @@ todayQr: "QR (today)",
         limitCreateDesc: "limit-create (3.1.11)",
         remoteSwipeDesc: "Notify device (3.1.9)",
         addDeductBalance: "Add/deduct balance",
-      },
+      
+        isCardsNoDeviceRestrictionsWorksOnAllDevices: 'No device restrictions — works on all devices',
+
+        isCardsCardActiveOnDevice: 'Card active on device',
+        isCardsOrSelectSpecificDevices: 'Or select specific devices:',
+        isCardsNoDevices: 'No devices',
+        isCardsAllowedPorts: 'Allowed ports:',
+        isCardsLoading: 'Loading...',
+        isCardsCardsToAssign: 'Cards to assign:',},
   },
   ru: {
     isCards: {
@@ -1103,7 +1111,15 @@ todayQr: "QR (today)",
       limitCreateDesc: "limit-create (3.1.11)",
       remoteSwipeDesc: "Notify device (3.1.9)",
       addDeductBalance: "Добавить/списать баланс",
-    },
+    
+        isCardsNoDeviceRestrictionsWorksOnAllDevices: 'Нет ограничений по устройствам — работает на всех устройствах',
+
+        isCardsCardActiveOnDevice: 'Карта активна на устройстве',
+        isCardsOrSelectSpecificDevices: 'Или выберите конкретные устройства:',
+        isCardsNoDevices: 'Нет устройств',
+        isCardsAllowedPorts: 'Разрешённые порты:',
+        isCardsLoading: 'Загрузка...',
+        isCardsCardsToAssign: 'Карты для назначения:',},
     vendingMachines: {
       analyticsCard: "IC Карта",
 analyticsCardDesc: "path = shop / оплата картой",
@@ -1797,7 +1813,7 @@ discount: "Скидка",
       south: "Юг",
     },
     nav: {
-      icCards: "IC Cards",
+      icCards: "IC Карты",
       menu: "ВОДОМАТ",
       language: "Язык",
 
@@ -2139,7 +2155,15 @@ hAgo: "ч",
       limitCreateDesc: "limit-create (3.1.11)",
       remoteSwipeDesc: "Notify device (3.1.9)",
       addDeductBalance: "Dodaj/odlicz saldo",
-    },
+    
+        isCardsNoDeviceRestrictionsWorksOnAllDevices: 'Brak ograniczeń urządzeń — działa na wszystkich urządzeniach',
+
+        isCardsCardActiveOnDevice: 'Karta aktywna na urządzeniu',
+        isCardsOrSelectSpecificDevices: 'Lub wybierz konkretne urządzenia:',
+        isCardsNoDevices: 'Brak urządzeń',
+        isCardsAllowedPorts: 'Dozwolone porty:',
+        isCardsLoading: 'Ładowanie...',
+        isCardsCardsToAssign: 'Karty do przypisania:',},
     vendingMachines: {
       detail: "Parametry",
 
@@ -2833,7 +2857,7 @@ discount: "Zniżka",
       south: "Południe",
     },
     nav: {
-      icCards: "IC Карты",
+      icCards: "Karty IC",
 
       menu: "WODOMAT",
       language: "Język",

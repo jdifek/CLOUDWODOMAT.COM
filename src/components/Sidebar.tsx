@@ -230,7 +230,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               <div className="border-t border-gray-200 my-4"></div>
               <div className="mb-4">
                 <div className="px-4 py-2 text-xs font-bold text-gray-500 uppercase bg-green-50 rounded">
-                  CRM System
+                  CRM 
                 </div>
                 <ul className="mt-2 space-y-1">
                   {crmMenuItems.map((item, index) =>
