@@ -54,7 +54,7 @@ function TempBadge({ temp }: { temp: string }) {
 
 function OfflineBadge({ lastconnect }: { lastconnect: string }) {
   const minutes = getOfflineMinutes(lastconnect);
-  const isStale = minutes > 60;
+  const isStale = minutes > 15;
 
   const timeStr = (() => {
     if (minutes < 60) return `${Math.round(minutes)}м назад`;
@@ -84,7 +84,7 @@ function OfflineBadge({ lastconnect }: { lastconnect: string }) {
 function getRowAlert(device: Device): "stale" | "hot" | "cold" | null {
   const offlineMinutes = getOfflineMinutes(device.lastconnect);
   const tempStatus = getTempStatus(device.temp);
-  if (offlineMinutes > 60) return "stale";
+  if (offlineMinutes > 15) return "stale";
   if (tempStatus === "hot") return "hot";
   if (tempStatus === "cold") return "cold";
   return null;
@@ -186,7 +186,7 @@ export function Devices() {
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap gap-3 text-xs text-gray-500">
+      {/* <div className="flex flex-wrap gap-3 text-xs text-gray-500">
         <span className="flex items-center gap-1.5">
           <span className="w-3 h-3 rounded-sm bg-orange-200 border border-orange-400 inline-block" />
           Офлайн &gt; 1 часа
@@ -199,7 +199,7 @@ export function Devices() {
           <span className="w-3 h-3 rounded-sm bg-blue-200 border border-blue-300 inline-block" />
           Низкая температура (≤5°C)
         </span>
-      </div>
+      </div> */}
 
       <div className="bg-white rounded-lg shadow-sm overflow-hidden">
         {devices.length === 0 ? (
