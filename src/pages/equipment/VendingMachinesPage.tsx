@@ -1248,18 +1248,53 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
                         <EditableRow label={t("vendingMachines.txLimitPort1")} value={editForm.limit ?? ""} onChange={v => setEditForm(f => ({ ...f, limit: v }))} type="number" />
                       </div>
                       <div className="grid grid-cols-3 gap-3">
-                        <EditableRow label="Temp min (°C)" value={editForm.temp_low ?? ""} onChange={v => setEditForm(f => ({ ...f, temp_low: v }))} type="number" />
-                        <EditableRow label="Temp max (°C)" value={editForm.temp_high ?? ""} onChange={v => setEditForm(f => ({ ...f, temp_high: v }))} type="number" />
-                        <EditableRow label="Temp alert" value={editForm.temp_alert ?? ""} onChange={v => setEditForm(f => ({ ...f, temp_alert: v }))} type="number" />
-                      </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        <EditableRow label="Light ON" value={editForm.light_on_time ?? ""} onChange={v => setEditForm(f => ({ ...f, light_on_time: v }))} placeholder="11:00:00" />
-                        <EditableRow label="Light OFF" value={editForm.light_off_time ?? ""} onChange={v => setEditForm(f => ({ ...f, light_off_time: v }))} placeholder="07:00:00" />
-                      </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        <EditableRow label="O3 ON (сек)" value={editForm.O3ON_time ?? ""} onChange={v => setEditForm(f => ({ ...f, O3ON_time: v }))} type="number" />
-                        <EditableRow label="O3 OFF (сек)" value={editForm.O3OFF_time ?? ""} onChange={v => setEditForm(f => ({ ...f, O3OFF_time: v }))} type="number" />
-                      </div>
+  <EditableRow
+    label={t("vendingMachines.tempMin")}
+    value={editForm.temp_low ?? ""}
+    onChange={(v) => setEditForm((f) => ({ ...f, temp_low: v }))}
+    type="number"
+  />
+  <EditableRow
+    label={t("vendingMachines.tempMax")}
+    value={editForm.temp_high ?? ""}
+    onChange={(v) => setEditForm((f) => ({ ...f, temp_high: v }))}
+    type="number"
+  />
+  <EditableRow
+    label={t("vendingMachines.tempAlert")}
+    value={editForm.temp_alert ?? ""}
+    onChange={(v) => setEditForm((f) => ({ ...f, temp_alert: v }))}
+    type="number"
+  />
+</div>
+<div className="grid grid-cols-2 gap-3">
+  <EditableRow
+    label={t("vendingMachines.lightOn")}
+    value={editForm.light_on_time ?? ""}
+    onChange={(v) => setEditForm((f) => ({ ...f, light_on_time: v }))}
+    placeholder="11:00:00"
+  />
+  <EditableRow
+    label={t("vendingMachines.lightOff")}
+    value={editForm.light_off_time ?? ""}
+    onChange={(v) => setEditForm((f) => ({ ...f, light_off_time: v }))}
+    placeholder="07:00:00"
+  />
+</div>
+<div className="grid grid-cols-2 gap-3">
+  <EditableRow
+    label={t("vendingMachines.o3OnSec")}
+    value={editForm.O3ON_time ?? ""}
+    onChange={(v) => setEditForm((f) => ({ ...f, O3ON_time: v }))}
+    type="number"
+  />
+  <EditableRow
+    label={t("vendingMachines.o3OffSec")}
+    value={editForm.O3OFF_time ?? ""}
+    onChange={(v) => setEditForm((f) => ({ ...f, O3OFF_time: v }))}
+    type="number"
+  />
+</div>
                       <div className="flex items-center gap-3 pt-1">
                         <button onClick={saveDeviceParams} disabled={editSaving}
                           className="flex items-center gap-2 px-4 py-2 bg-[#4A90E2] text-white text-sm font-medium rounded-lg hover:bg-[#3a7bc8] transition-colors disabled:opacity-50">
