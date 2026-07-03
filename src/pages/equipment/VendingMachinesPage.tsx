@@ -1283,13 +1283,13 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
 </div>
 <div className="grid grid-cols-2 gap-3">
   <EditableRow
-    label={t("vendingMachines.o3OnSec")}
+    label={t("vendingMachines.o3OnDesc")}
     value={editForm.O3ON_time ?? ""}
     onChange={(v) => setEditForm((f) => ({ ...f, O3ON_time: v }))}
     type="number"
   />
   <EditableRow
-    label={t("vendingMachines.o3OffSec")}
+    label={t("vendingMachines.o3OffDesc")}
     value={editForm.O3OFF_time ?? ""}
     onChange={(v) => setEditForm((f) => ({ ...f, O3OFF_time: v }))}
     type="number"
