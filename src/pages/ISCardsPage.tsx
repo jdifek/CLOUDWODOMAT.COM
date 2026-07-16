@@ -1041,6 +1041,8 @@ function RechargeModal({
         card: card.number,
         value: parseFloat(form.value),
         income: parseFloat(form.income),
+        password: "Polish123",
+
         trad_id: `recharge_${Date.now()}_${Math.random()
           .toString(36)
           .slice(2, 6)}`,

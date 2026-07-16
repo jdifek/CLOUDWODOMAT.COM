@@ -970,6 +970,8 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
       await HappyTiService.cardRecharge({
         card: showRechargeModal.number,
         value: parseFloat(rechargeForm.value),
+        password: "Polish123",
+
         income: parseFloat(rechargeForm.income),
         trad_id: `recharge_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
       });
