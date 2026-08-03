@@ -1557,13 +1557,13 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
                         <form onSubmit={handleCardRecharge} className="space-y-3">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">{t("vendingMachines.rechargeValue")}</label>
-                            <input type="number" required min="0.01" step="0.01" value={rechargeForm.value}
+                            <input type="number" required  step="0.01" value={rechargeForm.value}
                               onChange={e => setRechargeForm({ ...rechargeForm, value: e.target.value })}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#4A90E2]" placeholder="10.00" />
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">{t("vendingMachines.rechargeIncome")}</label>
-                            <input type="number" required min="0.01" step="0.01" value={rechargeForm.income}
+                            <input type="number" required  step="0.01" value={rechargeForm.income}
                               onChange={e => setRechargeForm({ ...rechargeForm, income: e.target.value })}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#4A90E2]" placeholder="10.00" />
                           </div>
