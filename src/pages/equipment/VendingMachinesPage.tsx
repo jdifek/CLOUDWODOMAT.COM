@@ -31,6 +31,8 @@ import {
   QrCode,
   ArrowUpRight,
   Minus,
+  Power,
+  Sliders,
 } from "lucide-react";
 import { AnalyticsTab } from "../../components/AnalyticsTab";
 import { HappyTiService } from "../../services/happyTiService";
@@ -178,7 +180,12 @@ type DeviceType = "shop" | "shop_liquid" | "shop_happyfu" | "shop_water";
 function todayWarsaw(): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Warsaw" }).format(new Date());
 }
-
+function formatCalibValue(raw: string | number): string {
+  const n = typeof raw === "string" ? parseFloat(raw) : raw;
+  if (isNaN(n)) return "";
+  const real = n / 10;
+  return Number(real.toFixed(2)).toString();
+}
 function subtractDays(dateStr: string, n: number): string {
   const [y, m, d] = dateStr.split("-").map(Number);
   return new Date(Date.UTC(y, m - 1, d - n)).toISOString().slice(0, 10);
@@ -279,7 +286,7 @@ function getOfflineMinutes(lastconnect?: string): number {
 function getTempStatus(temp?: string): "hot" | "cold" | "normal" {
   const t = parseFloat(temp ?? "");
   if (isNaN(t)) return "normal";
-  if (t >= 30) return "hot";
+  if (t >= 10000) return "hot";
   if (t <= 5) return "cold";
   return "normal";
 }
@@ -738,6 +745,10 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
   const [editForm, setEditForm] = useState<Record<string, string>>({});
   const [editSaving, setEditSaving] = useState(false);
   const [editSuccess, setEditSuccess] = useState(false);
+  const [powerLoading, setPowerLoading] = useState<"on" | "off" | null>(null);
+  const [calibForm, setCalibForm] = useState({ price_1: "", water_1: "" });
+  const [calibLoading, setCalibLoading] = useState(false);
+  const [calibSuccess, setCalibSuccess] = useState(false);
   const [consumesHasMore, setConsumesHasMore] = useState(false);
   const [consumesLoadingMore, setConsumesLoadingMore] = useState(false);
 
@@ -838,6 +849,10 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
       if (res.data.code === 0) {
         const d = res.data.data as any;
         setSelectedDetail(d);
+        setCalibForm({
+          price_1: formatCalibValue(d.price_1),
+          water_1: formatCalibValue(d.water_1),
+        });
         setEditForm({
           location: d.location ?? "",
           day_limit: String(d.day_limit ?? ""),
@@ -942,6 +957,62 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
       console.error("Save params failed:", err);
     } finally {
       setEditSaving(false);
+    }
+  };
+  const handlePowerControl = async (action: "on" | "off") => {
+    if (!selectedDetail) return;
+    setPowerLoading(action);
+    try {
+      await HappyTiService.powerControl({ deviceId: selectedDetail.id, action });
+      setSelectedDetail((prev) =>
+        prev ? { ...prev, status: action === "off" ? "poweroff" : "normal" } : prev
+      );
+    } catch (err) {
+      console.error("Power control failed:", err);
+    } finally {
+      setPowerLoading(null);
+    }
+  };
+
+  const handleCalibrate = async () => {
+    if (!selectedDetail || !calibForm.price_1 || !calibForm.water_1) return;
+    setCalibLoading(true);
+    setCalibSuccess(false);
+    try {
+      await HappyTiService.checkShopPrice({
+        deviceId: selectedDetail.id,
+        flow_mode: "计时模式",
+        price_1: calibForm.price_1,
+        water_1: calibForm.water_1,
+        flow_para: "",
+        price_2: "",
+        water_2: "",
+        status: "calibrate_timer",
+      });
+      const newPrice = parseFloat(calibForm.price_1);
+      const newWater = parseFloat(calibForm.water_1);
+      const rawPrice1 = (newPrice * 10).toFixed(2);
+      const rawWater1 = (newWater * 10).toFixed(2);
+      setSelectedDetail((prev) =>
+        prev
+          ? {
+              ...prev,
+              price_1: rawPrice1,
+              water_1: rawWater1,
+              port_1_price: (newPrice / newWater).toFixed(2),
+            }
+          : prev
+      );
+      setCalibForm({
+        price_1: formatCalibValue(rawPrice1),
+        water_1: formatCalibValue(rawWater1),
+      });
+      setCalibSuccess(true);
+      setTimeout(() => setCalibSuccess(false), 3000);
+    } catch (err) {
+      console.error("Calibration failed:", err);
+    } finally {
+      setCalibLoading(false);
     }
   };
 
@@ -1118,7 +1189,7 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
   const extra = selectedDetail?.extra && typeof selectedDetail.extra !== "string"
     ? (selectedDetail.extra as DeviceExtra)
     : null;
-
+const isPoweredOff = selectedDetail?.status === "poweroff";
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
@@ -1220,7 +1291,71 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
                     <DetailRow label={t("vendingMachines.seller")} value={selectedDetail.saler} />
                     <DetailRow label={t("equipment.lastConnection")} value={formatDate(selectedDetail.lastconnect, language)} />
                   </Section>
+                  <Section title={t("vendingMachines.control")} icon={<Power className="w-4 h-4 text-red-500" />}>
+                    <div className="py-2 space-y-3">
+                    <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => handlePowerControl("on")}
+                          disabled={powerLoading !== null || !isPoweredOff}
+                          className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                          {powerLoading === "on" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Power className="w-4 h-4" />}
+                          {t("vendingMachines.powerOn")}
+                        </button>
+                        <button
+                          onClick={() => handlePowerControl("off")}
+                          disabled={powerLoading !== null || isPoweredOff}
+                          className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                          {powerLoading === "off" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Power className="w-4 h-4" />}
+                          {t("vendingMachines.powerOff")}
+                        </button>
+                        <span
+                          className={`text-xs px-2 py-1 rounded-full font-medium ${
+                            isPoweredOff ? "bg-red-100 text-red-600 border border-red-300" : "bg-green-100 text-green-700 border border-green-300"
+                          }`}
+                        >
+                          {isPoweredOff ? t("vendingMachines.statusOff") : t("vendingMachines.statusOn")}
+                        </span>
+                      </div>
 
+                      <div className="pt-2 border-t border-gray-200">
+                        <p className="text-xs font-medium text-gray-500 mb-2">{t("vendingMachines.calibrationTitle")}</p>
+                      
+                        <div className="grid grid-cols-2 gap-3 mb-2">
+                          <EditableRow
+                            label={t("vendingMachines.calibPrice")}
+                            value={calibForm.price_1}
+                            onChange={(v) => setCalibForm((f) => ({ ...f, price_1: v }))}
+                            type="number"
+                            placeholder="0.8"
+                          />
+                          <EditableRow
+                            label={t("vendingMachines.calibWater")}
+                            value={calibForm.water_1}
+                            onChange={(v) => setCalibForm((f) => ({ ...f, water_1: v }))}
+                            type="number"
+                            placeholder="2"
+                          />
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={handleCalibrate}
+                            disabled={calibLoading}
+                            className="flex items-center gap-2 px-4 py-2 bg-[#4A90E2] text-white text-sm font-medium rounded-lg hover:bg-[#3a7bc8] transition-colors disabled:opacity-50"
+                          >
+                            {calibLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sliders className="w-4 h-4" />}
+                            {t("vendingMachines.calibrateSubmit")}
+                          </button>
+                          {calibSuccess && (
+                            <span className="text-sm text-green-600 flex items-center gap-1">
+                              <CheckCircle2 className="w-4 h-4" /> {t("common.confirm")}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </Section>
                   <Section title={t("vendingMachines.sensors")} icon={<Thermometer className="w-4 h-4 text-orange-500" />}>
                     <DetailRow label={t("equipment.temperature")} value={selectedDetail.temp != null ? (
                       <span className="flex items-center gap-1"><Thermometer className="w-4 h-4 text-blue-500" />{selectedDetail.temp}°C</span>

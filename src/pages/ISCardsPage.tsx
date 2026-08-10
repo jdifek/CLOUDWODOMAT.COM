@@ -1092,7 +1092,6 @@ function RechargeModal({
           <input
             required
             type="number"
-       
             step="0.01"
             value={form.income}
             onChange={(e) => setForm({ ...form, income: e.target.value })}
