@@ -902,11 +902,16 @@ export const HappyTiService = {
     return $api.get<EditParamsResponse>("/device/editwaterparams", { params: data });
   },
 
-  /** 3.3.8 Калибровка цены售水机 */
-  checkShopPrice(data: CheckShopPriceRequest) {
-    return $api.get<EditParamsResponse>("/device/checkshopprice", { params: data });
-  },
-
+/** 3.3.8 Калибровка цены售水机 */
+checkShopPrice(data: CheckShopPriceRequest) {
+  const cleaned: Record<string, string> = {};
+  Object.entries(data).forEach(([key, value]) => {
+    if (value !== "" && value !== undefined && value !== null) {
+      cleaned[key] = String(value);
+    }
+  });
+  return $api.get<EditParamsResponse>("/device/checkshopprice", { params: cleaned });
+},
   /** 3.3.9 Калибровка цены водоконтроля */
   checkWaterPrice(data: CheckWaterPriceRequest) {
     return $api.get<EditParamsResponse>("/device/checkwaterprice", { params: data });
