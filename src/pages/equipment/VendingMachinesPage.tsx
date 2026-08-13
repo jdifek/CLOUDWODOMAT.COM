@@ -891,13 +891,26 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
     setConsumesLoading(true);
     setConsumesPage(1);
     try {
-      const res = await HappyTiService.recordList({ page: 1 });
-      if (res.data.code === 0) {
+      const today = todayWarsaw();
+      const weekAgo = subtractDays(today, 7);
+      const begin = fmtApiDate(dayStart(weekAgo));
+      const end = fmtApiDate(dayEnd(today));
+  
+      // проходим все страницы за неделю и собираем записи нужного устройства
+      let all: ConsumeRecord[] = [];
+      let p = 1;
+      let more = true;
+      while (more) {
+        const res = await HappyTiService.recordList({ page: p, beginTime: begin, endTime: end });
+        if (res.data.code !== 0) break;
         const batch = res.data.data ?? [];
-        const filtered = batch.filter((r) => r.shop_num === deviceId);
-        setConsumes(filtered);
-        setConsumesHasMore(batch.length === 20);
+        all = all.concat(batch.filter((r) => r.shop_num === deviceId));
+        more = batch.length === 20;
+        p++;
       }
+  
+      setConsumes(all);
+      setConsumesHasMore(false); // за неделю выгребли всё целиком, догрузка не нужна
     } catch (err) {
       console.error("Consumes fetch failed:", err);
     } finally {
