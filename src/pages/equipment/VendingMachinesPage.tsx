@@ -759,22 +759,22 @@ const CALIBRATION_INSTRUCTIONS = {
       {
         title: "Przygotowanie",
         items: [
-          "Ustaw naczynie o dokładnej objętości pod „dyszą nalewania" (np. 5 litrów).",
-          "Po lewej stronie w „okienku" wpisz cenę, po prawej — liczbę litrów Twojego naczynia.",
+          "Ustaw naczynie o dokładnej objętości pod „dyszą nalewania” (np. 5 litrów).",
+          "Po lewej stronie w „okienku” wpisz cenę, po prawej — liczbę litrów Twojego naczynia.",
         ],
       },
       {
         title: "Rozpoczęcie kalibracji",
         items: [
-          "Naciśnij przycisk „Rozpocznij kalibrację".",
+          "Naciśnij przycisk „Rozpocznij kalibrację”.",
           "Gdy na wyświetlaczu wodomatu pojawi się CCCC — wodomat przeszedł w tryb kalibracji.",
         ],
       },
       {
         title: "Przeprowadzenie kalibracji",
         items: [
-          "W trybie kalibracji naciśnij przycisk „START".",
-          "Gdy naczynie napełni się do wymaganej objętości, naciśnij przycisk „STOP".",
+          "W trybie kalibracji naciśnij przycisk „START”.",
+          "Gdy naczynie napełni się do wymaganej objętości, naciśnij przycisk „STOP”.",
           "Kalibracja zakończona.",
         ],
       },
