@@ -363,7 +363,7 @@ function QuickMetrics({
       setLoading(true);
       try {
         const today = todayWarsaw();
-        const threeDayStart = subtractDays(today, 2);
+        const threeDayStart = subtractDays(today, 3);
 
         const beginToday = dayStart(today);
         const endToday = dayEnd(today);
@@ -716,7 +716,169 @@ function CreateOrderForm({
     </div>
   );
 }
+import { Info, ChevronDown, ChevronUp } from "lucide-react"; // добавьте эти иконки к существующему импорту lucide-react
 
+const CALIBRATION_INSTRUCTIONS = {
+  ru: {
+    title: "Калибровка водомата — режим таймера",
+    steps: [
+      {
+        title: "Подготовка",
+        items: [
+          "Поставьте ёмкость точного объёма под «носик розлива» (например, 5 литров).",
+          "Слева в «окне» укажите стоимость, справа в «окне» — количество литров вашей ёмкости.",
+        ],
+      },
+      {
+        title: "Запуск калибровки",
+        items: [
+          "Нажмите кнопку «Начать калибровку».",
+          "Когда на дисплее водомата отобразится CCCC — водомат перешёл в режим калибровки.",
+        ],
+      },
+      {
+        title: "Выполнение калибровки",
+        items: [
+          "В режиме калибровки нажмите кнопку «СТАРТ».",
+          "Когда ёмкость наполнится до нужного объёма, нажмите кнопку «СТОП».",
+          "Калибровка завершена.",
+        ],
+      },
+      {
+        title: "Проверка",
+        items: [
+          "Протестируйте той же ёмкостью, оплатив монетами или картой, чтобы убедиться в точности объёма и цены.",
+        ],
+      },
+    ],
+    note: "Для калибровки другого выхода сначала завершите калибровку текущего, затем повторите все шаги заново.",
+  },
+  pl: {
+    title: "Kalibracja wodomatu — tryb timera",
+    steps: [
+      {
+        title: "Przygotowanie",
+        items: [
+          "Ustaw naczynie o dokładnej objętości pod „dyszą nalewania" (np. 5 litrów).",
+          "Po lewej stronie w „okienku" wpisz cenę, po prawej — liczbę litrów Twojego naczynia.",
+        ],
+      },
+      {
+        title: "Rozpoczęcie kalibracji",
+        items: [
+          "Naciśnij przycisk „Rozpocznij kalibrację".",
+          "Gdy na wyświetlaczu wodomatu pojawi się CCCC — wodomat przeszedł w tryb kalibracji.",
+        ],
+      },
+      {
+        title: "Przeprowadzenie kalibracji",
+        items: [
+          "W trybie kalibracji naciśnij przycisk „START".",
+          "Gdy naczynie napełni się do wymaganej objętości, naciśnij przycisk „STOP".",
+          "Kalibracja zakończona.",
+        ],
+      },
+      {
+        title: "Weryfikacja",
+        items: [
+          "Przetestuj tym samym naczyniem, płacąc monetami lub kartą, aby upewnić się co do dokładności objętości i ceny.",
+        ],
+      },
+    ],
+    note: "Aby skalibrować inne wyjście, najpierw zakończ kalibrację bieżącego, następnie powtórz wszystkie kroki od nowa.",
+  },
+  en: {
+    title: "Water dispenser calibration — timer mode",
+    steps: [
+      {
+        title: "Preparation",
+        items: [
+          "Place a container of exact volume under the 'dispensing nozzle' (e.g. 5 liters).",
+          "On the left 'window' enter the price, on the right 'window' enter the number of liters of your container.",
+        ],
+      },
+      {
+        title: "Starting calibration",
+        items: [
+          "Press the 'Start calibration' button.",
+          "When CCCC appears on the water meter display — the device has entered calibration mode.",
+        ],
+      },
+      {
+        title: "Performing calibration",
+        items: [
+          "In calibration mode, press the 'START' button.",
+          "When the container fills to the required volume, press the 'STOP' button.",
+          "Calibration is complete.",
+        ],
+      },
+      {
+        title: "Verification",
+        items: [
+          "Test with the same container, paying with coins or card, to confirm volume and price accuracy.",
+        ],
+      },
+    ],
+    note: "To calibrate another outlet, first finish calibrating the current one, then repeat all steps from the beginning.",
+  },
+};
+
+function CalibrationInstructions({ language }: { language: string }) {
+  const [expanded, setExpanded] = useState(false);
+  const lang = language === "pl" ? "pl" : language === "en" ? "en" : "ru";
+  const data = CALIBRATION_INSTRUCTIONS[lang];
+
+  return (
+    <div className="rounded-xl border border-blue-200 bg-blue-50/50 overflow-hidden mb-3">
+      <button
+        onClick={() => setExpanded((v) => !v)}
+        className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-blue-50 transition-colors"
+      >
+        <span className="flex items-center gap-2 text-sm font-medium text-blue-700">
+          <Info className="w-4 h-4" />
+          {data.title}
+        </span>
+        {expanded ? (
+          <ChevronUp className="w-4 h-4 text-blue-400" />
+        ) : (
+          <ChevronDown className="w-4 h-4 text-blue-400" />
+        )}
+      </button>
+
+      {expanded && (
+        <div className="px-4 pb-4 pt-1 space-y-3">
+          {data.steps.map((step, i) => (
+            <div key={i} className="flex gap-3">
+              <div className="shrink-0 w-6 h-6 rounded-full bg-[#4A90E2] text-white text-xs font-bold flex items-center justify-center mt-0.5">
+                {i + 1}
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-gray-800 mb-1">
+                  {step.title}
+                </p>
+                <ul className="space-y-1">
+                  {step.items.map((item, j) => (
+                    <li
+                      key={j}
+                      className="text-xs text-gray-600 flex items-start gap-1.5"
+                    >
+                      <span className="text-[#4A90E2] mt-0.5">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+          <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mt-2">
+            <Info className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+            <p className="text-xs text-amber-700">{data.note}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 function EditableRow({
   label, value, onChange, type = "text", placeholder,
 }: {
@@ -892,7 +1054,7 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
     setConsumesPage(1);
     try {
       const today = todayWarsaw();
-      const weekAgo = subtractDays(today, 7);
+      const weekAgo = subtractDays(today, 2);
       const begin = fmtApiDate(dayStart(weekAgo));
       const end = fmtApiDate(dayEnd(today));
   
@@ -1334,7 +1496,8 @@ const isPoweredOff = selectedDetail?.status === "poweroff";
 
                       <div className="pt-2 border-t border-gray-200">
                         <p className="text-xs font-medium text-gray-500 mb-2">{t("vendingMachines.calibrationTitle")}</p>
-                      
+                        <CalibrationInstructions language={language} />
+
                         <div className="grid grid-cols-2 gap-3 mb-2">
                           <EditableRow
                             label={t("vendingMachines.calibPrice")}
