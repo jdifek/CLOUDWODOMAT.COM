@@ -732,7 +732,7 @@ const CALIBRATION_INSTRUCTIONS = {
       {
         title: "Запуск калибровки",
         items: [
-          "Нажмите кнопку «Начать калибровку».",
+          "Нажмите кнопку «Откалибровать».",
           "Когда на дисплее водомата отобразится CCCC — водомат перешёл в режим калибровки.",
         ],
       },
@@ -766,7 +766,7 @@ const CALIBRATION_INSTRUCTIONS = {
       {
         title: "Rozpoczęcie kalibracji",
         items: [
-          "Naciśnij przycisk „Rozpocznij kalibrację”.",
+          "Naciśnij przycisk „Kalibruj”.",
           "Gdy na wyświetlaczu wodomatu pojawi się CCCC — wodomat przeszedł w tryb kalibracji.",
         ],
       },
@@ -800,7 +800,7 @@ const CALIBRATION_INSTRUCTIONS = {
       {
         title: "Starting calibration",
         items: [
-          "Press the 'Start calibration' button.",
+          "Press the 'Calibrate' button.",
           "When CCCC appears on the water meter display — the device has entered calibration mode.",
         ],
       },
