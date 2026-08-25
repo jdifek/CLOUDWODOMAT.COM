@@ -915,16 +915,21 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
   const [consumesLoadingMore, setConsumesLoadingMore] = useState(false);
 
   const loadMoreConsumes = async (deviceId: string) => {
+    if (!consumesOldestDate) return;
     setConsumesLoadingMore(true);
-    const nextPage = consumesPage + 1;
     try {
-      const res = await HappyTiService.recordList({ page: nextPage });
-      if (res.data.code === 0) {
-        const batch = res.data.data ?? [];
-        const filtered = batch.filter((r) => r.shop_num === deviceId);
-        setConsumes((prev) => [...prev, ...filtered]);
-        setConsumesPage(nextPage);
-        setConsumesHasMore(batch.length === 20);
+      // новый диапазон: от (oldest - STEP) до (oldest - 1 день), старое не трогаем
+      const newTo = subtractDays(consumesOldestDate, 1);
+      const newFrom = subtractDays(consumesOldestDate, CONSUMES_STEP_DAYS);
+  
+      const older = await fetchConsumesRange(deviceId, newFrom, newTo);
+  
+      setConsumes((prev) => [...prev, ...older]);
+      setConsumesOldestDate(newFrom);
+  
+      // если новый кусок пустой — истории больше нет, скрываем кнопку
+      if (older.length === 0) {
+        setConsumesHasMore(false);
       }
     } catch (err) {
       console.error("Load more consumes failed:", err);
@@ -953,9 +958,29 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
   const [openCardForm, setOpenCardForm] = useState({ number: "", totalNumber: "1" });
   const [showOpenCardForm, setShowOpenCardForm] = useState(false);
   const [openCardLoading, setOpenCardLoading] = useState(false);
-
+  const [consumesOldestDate, setConsumesOldestDate] = useState<string | null>(null);
   // ─── Data Fetching ──────────────────────────────────────────────────────────
-
+  async function fetchConsumesRange(
+    deviceId: string,
+    fromDate: string,
+    toDate: string
+  ): Promise<ConsumeRecord[]> {
+    const begin = fmtApiDate(dayStart(fromDate));
+    const end = fmtApiDate(dayEnd(toDate));
+  
+    let all: ConsumeRecord[] = [];
+    let p = 1;
+    let more = true;
+    while (more) {
+      const res = await HappyTiService.recordList({ page: p, beginTime: begin, endTime: end });
+      if (res.data.code !== 0) break;
+      const batch = res.data.data ?? [];
+      all = all.concat(batch.filter((r: any) => r.shop_num === deviceId));
+      more = batch.length === 20;
+      p++;
+    }
+    return all;
+  }
   const fetchDevices = useCallback(
     async (pageNum: number, append = false) => {
       try {
@@ -1048,31 +1073,21 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
     }
   };
 
+  const CONSUMES_INITIAL_DAYS = 2;
+  const CONSUMES_STEP_DAYS = 3;
+  
   const loadConsumes = async (deviceId: string) => {
     if (consumes.length > 0) return;
     setConsumesLoading(true);
-    setConsumesPage(1);
     try {
       const today = todayWarsaw();
-      const weekAgo = subtractDays(today, 2);
-      const begin = fmtApiDate(dayStart(weekAgo));
-      const end = fmtApiDate(dayEnd(today));
+      const from = subtractDays(today, CONSUMES_INITIAL_DAYS);
   
-      // проходим все страницы за неделю и собираем записи нужного устройства
-      let all: ConsumeRecord[] = [];
-      let p = 1;
-      let more = true;
-      while (more) {
-        const res = await HappyTiService.recordList({ page: p, beginTime: begin, endTime: end });
-        if (res.data.code !== 0) break;
-        const batch = res.data.data ?? [];
-        all = all.concat(batch.filter((r) => r.shop_num === deviceId));
-        more = batch.length === 20;
-        p++;
-      }
+      const all = await fetchConsumesRange(deviceId, from, today);
   
       setConsumes(all);
-      setConsumesHasMore(false); // за неделю выгребли всё целиком, догрузка не нужна
+      setConsumesOldestDate(from);
+      setConsumesHasMore(true); // всегда можно копнуть глубже
     } catch (err) {
       console.error("Consumes fetch failed:", err);
     } finally {
@@ -1292,6 +1307,7 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
     setConsumesHasMore(false);
     setShowRechargeModal(null);
     setShowOpenCardForm(false);
+    setConsumesOldestDate(null);
   };
 
   // ─── Table Data ─────────────────────────────────────────────────────────────
