@@ -291,14 +291,25 @@ function getTempStatus(temp?: string): "hot" | "cold" | "normal" {
   return "normal";
 }
 
-function classifyPath(path: string): "card" | "cash" | "qr" {
+function classifyPath(path: string, cardNum?: string): "card" | "cash" | "qr" {
   if (!path) return "qr";
   const p = path.toLowerCase();
+
+  if (p === "shop" && cardNum && cardNum !== "coin" && cardNum !== "qrcode")
+    return "card";
+
   if (p.includes("card") || p.includes("卡")) return "card";
-  if (p.includes("cash") || p.includes("coin") || p.includes("现金") || p.includes("投币")) return "cash";
+  if (
+    p === "coin" ||
+    p.includes("cash") ||
+    p.includes("现金") ||
+    p.includes("投币")
+  )
+    return "cash";
+  if (p === "qrcode" || p.includes("qr")) return "qr";
+
   return "qr";
 }
-
 // ─── Quick Metrics ────────────────────────────────────────────────────────────
 
 interface QuickStats {
@@ -380,8 +391,11 @@ function QuickMetrics({
 
         let todayCard = 0, todayCash = 0, todayQr = 0, todayTerminal = 0;
         for (const r of todayRes) {
-          if ((r.pay_id ?? "").endsWith("_pos")) { todayTerminal++; continue; }
-          const type = classifyPath(r.path || "");
+          if ((r.pay_id ?? "").endsWith("_pos")) {
+            todayTerminal++;
+            continue;
+          }
+          const type = classifyPath(r.path || "", r.card_num); // ← было без r.card_num
           if (type === "card") todayCard++;
           else if (type === "cash") todayCash++;
           else todayQr++;

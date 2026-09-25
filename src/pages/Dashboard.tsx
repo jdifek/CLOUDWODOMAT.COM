@@ -188,21 +188,25 @@ async function fetchAllRecords(
   }
   return all;
 }
-
 function classifyPath(path: string, cardNum?: string): "card" | "cash" | "qr" {
   if (!path) return "qr";
   const p = path.toLowerCase();
-  
-  // IC карта: path = "shop" и card_num — реальный номер карты
-  if (p === "shop" && cardNum && cardNum !== "coin" && cardNum !== "qrcode") return "card";
-  
+
+  if (p === "shop" && cardNum && cardNum !== "coin" && cardNum !== "qrcode")
+    return "card";
+
   if (p.includes("card") || p.includes("卡")) return "card";
-  if (p === "coin" || p.includes("cash") || p.includes("现金") || p.includes("投币")) return "cash";
+  if (
+    p === "coin" ||
+    p.includes("cash") ||
+    p.includes("现金") ||
+    p.includes("投币")
+  )
+    return "cash";
   if (p === "qrcode" || p.includes("qr")) return "qr";
-  
+
   return "qr";
 }
-
 // ─── KPI Card ──────────────────────────────────────────────────────────────
 
 function KpiCard({
