@@ -25,8 +25,14 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useState, useEffect, useCallback, useRef } from "react";
+// Стало
 import { HappyTiService } from "../services/happyTiService";
-
+import {
+  StatsService,
+  type StatsOverview,
+  type HourBucket,
+} from "../services/statsService";
+import { StatsCoverageBanner } from "../components/StatsCoverageBanner";
 // ─── Types ─────────────────────────────────────────────────────────────────
 
 interface DashboardStats {
@@ -36,6 +42,7 @@ interface DashboardStats {
   periodCard: number;
   periodCash: number;
   periodQr: number;
+  periodTerminal: number;
   activeDevices: number;
 }
 
@@ -51,7 +58,7 @@ interface DeviceItem {
   is_online?: string;
   is_onlie?: string;
   create_time: string;
-  lastconnect?: string;     // ← Добавь эту строку
+  lastconnect?: string; // ← Добавь эту строку
 }
 
 type ChartMode = "hourly" | "daily";
@@ -60,7 +67,9 @@ const MAX_DAYS = 90;
 // ─── Date/Time Utilities ────────────────────────────────────────────────────
 
 function todayWarsaw(): string {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Warsaw" }).format(new Date());
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Warsaw" }).format(
+    new Date()
+  );
 }
 
 function getWarsawOffsetMs(date: Date): number {
@@ -74,7 +83,8 @@ function getWarsawOffsetMs(date: Date): number {
     second: "2-digit",
     hour12: false,
   }).formatToParts(date);
-  const get = (type: string) => Number(parts.find((p) => p.type === type)?.value ?? 0);
+  const get = (type: string) =>
+    Number(parts.find((p) => p.type === type)?.value ?? 0);
   const warsawMs = Date.UTC(
     get("year"),
     get("month") - 1,
@@ -115,9 +125,11 @@ function toApiDate(d: Date): string {
   const utc8Ms = d.getTime() + 8 * 60 * 60 * 1000;
   const u = new Date(utc8Ms);
   const pad = (n: number) => String(n).padStart(2, "0");
-  return `${u.getUTCFullYear()}-${pad(u.getUTCMonth() + 1)}-${pad(u.getUTCDate())} ${pad(
-    u.getUTCHours()
-  )}:${pad(u.getUTCMinutes())}:${pad(u.getUTCSeconds())}`;
+  return `${u.getUTCFullYear()}-${pad(u.getUTCMonth() + 1)}-${pad(
+    u.getUTCDate()
+  )} ${pad(u.getUTCHours())}:${pad(u.getUTCMinutes())}:${pad(
+    u.getUTCSeconds()
+  )}`;
 }
 
 function apiTimeToWarsawDate(apiTime: string): string {
@@ -126,20 +138,27 @@ function apiTimeToWarsawDate(apiTime: string): string {
   const [datePart, timePart] = parts;
   const [year, month, day] = datePart.split("-").map(Number);
   const [hour, minute, second = 0] = timePart.split(":").map(Number);
-  const utcMs = Date.UTC(year, month - 1, day, hour, minute, second) - 8 * 60 * 60 * 1000;
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Warsaw" }).format(new Date(utcMs));
+  const utcMs =
+    Date.UTC(year, month - 1, day, hour, minute, second) - 8 * 60 * 60 * 1000;
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Warsaw" }).format(
+    new Date(utcMs)
+  );
 }
 
-function apiTimeToWarsawDayHour(apiTime: string): { date: string; hour: number } {
+function apiTimeToWarsawDayHour(apiTime: string): {
+  date: string;
+  hour: number;
+} {
   const parts = apiTime.split(" ");
   if (parts.length < 2) return { date: apiTime.slice(0, 10), hour: 0 };
   const [datePart, timePart] = parts;
   const [year, month, day] = datePart.split("-").map(Number);
   const [hour, minute, second = 0] = timePart.split(":").map(Number);
-  const utcMs = Date.UTC(year, month - 1, day, hour, minute, second) - 8 * 60 * 60 * 1000;
-  const date = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Warsaw" }).format(
-    new Date(utcMs)
-  );
+  const utcMs =
+    Date.UTC(year, month - 1, day, hour, minute, second) - 8 * 60 * 60 * 1000;
+  const date = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Warsaw",
+  }).format(new Date(utcMs));
   const h = parseInt(
     new Intl.DateTimeFormat("en-GB", {
       timeZone: "Europe/Warsaw",
@@ -167,7 +186,11 @@ function clampFrom(from: string, to: string): string {
 function daysBetween(from: string, to: string): number {
   const [fy, fm, fd] = from.split("-").map(Number);
   const [ty, tm, td] = to.split("-").map(Number);
-  return Math.round((Date.UTC(ty, tm - 1, td) - Date.UTC(fy, fm - 1, fd)) / 86_400_000) + 1;
+  return (
+    Math.round(
+      (Date.UTC(ty, tm - 1, td) - Date.UTC(fy, fm - 1, fd)) / 86_400_000
+    ) + 1
+  );
 }
 
 // ─── Fetch helpers ──────────────────────────────────────────────────────────
@@ -227,7 +250,11 @@ function KpiCard({
   return (
     <div className="bg-white rounded-xl border border-gray-100 p-4 flex flex-col gap-2 shadow-sm">
       <div className="flex items-center justify-between">
-        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${color}`}>{icon}</div>
+        <div
+          className={`w-8 h-8 rounded-lg flex items-center justify-center ${color}`}
+        >
+          {icon}
+        </div>
         {trend === "up" && <ArrowUpRight className="w-4 h-4 text-green-500" />}
         {trend === "flat" && <Minus className="w-4 h-4 text-gray-400" />}
       </div>
@@ -258,13 +285,26 @@ function DonutChart({
     );
 
   let cumulative = 0;
-  const radius = 40, cx = 60, cy = 60;
+  const radius = 40,
+    cx = 60,
+    cy = 60;
 
-  function polarToCartesian(cx: number, cy: number, r: number, angleDeg: number) {
+  function polarToCartesian(
+    cx: number,
+    cy: number,
+    r: number,
+    angleDeg: number
+  ) {
     const rad = ((angleDeg - 90) * Math.PI) / 180;
     return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
   }
-  function arcPath(cx: number, cy: number, r: number, startAngle: number, endAngle: number) {
+  function arcPath(
+    cx: number,
+    cy: number,
+    r: number,
+    startAngle: number,
+    endAngle: number
+  ) {
     const start = polarToCartesian(cx, cy, r, endAngle);
     const end = polarToCartesian(cx, cy, r, startAngle);
     const largeArc = endAngle - startAngle <= 180 ? "0" : "1";
@@ -279,18 +319,34 @@ function DonutChart({
           cumulative += d.value;
           const endAngle = (cumulative / total) * 360;
           return (
-            <path key={i} d={arcPath(cx, cy, radius, startAngle, endAngle)} fill={d.color} opacity={0.9} />
+            <path
+              key={i}
+              d={arcPath(cx, cy, radius, startAngle, endAngle)}
+              fill={d.color}
+              opacity={0.9}
+            />
           );
         })}
         <circle cx={cx} cy={cy} r={24} fill="white" />
-        <text x={cx} y={cy} textAnchor="middle" dominantBaseline="central" fontSize={10} fontWeight="600" fill="#374151">
+        <text
+          x={cx}
+          y={cy}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fontSize={10}
+          fontWeight="600"
+          fill="#374151"
+        >
           {total}
         </text>
       </svg>
       <div className="flex flex-col gap-1.5 flex-1 min-w-0">
         {data.map((d, i) => (
           <div key={i} className="flex items-center gap-2 text-xs min-w-0">
-            <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: d.color }} />
+            <div
+              className="w-2.5 h-2.5 rounded-full shrink-0"
+              style={{ backgroundColor: d.color }}
+            />
             <span className="text-gray-500 truncate">{d.label}</span>
             <span className="ml-auto font-semibold text-gray-700 shrink-0">
               {d.value} ({((d.value / total) * 100).toFixed(0)}%)
@@ -304,7 +360,15 @@ function DonutChart({
 
 // ─── Section Card ──────────────────────────────────────────────────────────
 
-function SectionCard({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
+function SectionCard({
+  title,
+  icon,
+  children,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
       <div className="flex items-center gap-2 mb-3">
@@ -334,25 +398,38 @@ function MiniCalendar({
   minDate?: string;
 }) {
   const today = todayWarsaw();
-  const [viewYear, setViewYear] = useState(() => parseInt(selected.split("-")[0]));
-  const [viewMonth, setViewMonth] = useState(() => parseInt(selected.split("-")[1]) - 1);
-  const locale = language === "pl" ? "pl-PL" : language === "ru" ? "ru-RU" : "en-GB";
+  const [viewYear, setViewYear] = useState(() =>
+    parseInt(selected.split("-")[0])
+  );
+  const [viewMonth, setViewMonth] = useState(
+    () => parseInt(selected.split("-")[1]) - 1
+  );
+  const locale =
+    language === "pl" ? "pl-PL" : language === "ru" ? "ru-RU" : "en-GB";
   const monthNames = Array.from({ length: 12 }, (_, i) =>
-    new Intl.DateTimeFormat(locale, { month: "long" }).format(new Date(2000, i, 1))
+    new Intl.DateTimeFormat(locale, { month: "long" }).format(
+      new Date(2000, i, 1)
+    )
   );
   const dayNames = Array.from({ length: 7 }, (_, i) =>
-    new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(2000, 0, 3 + i))
+    new Intl.DateTimeFormat(locale, { weekday: "short" }).format(
+      new Date(2000, 0, 3 + i)
+    )
   );
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
   const firstDow = new Date(viewYear, viewMonth, 1).getDay();
   const startOffset = (firstDow + 6) % 7;
   const prevMonth = () => {
-    if (viewMonth === 0) { setViewMonth(11); setViewYear((y) => y - 1); }
-    else setViewMonth((m) => m - 1);
+    if (viewMonth === 0) {
+      setViewMonth(11);
+      setViewYear((y) => y - 1);
+    } else setViewMonth((m) => m - 1);
   };
   const nextMonth = () => {
-    if (viewMonth === 11) { setViewMonth(0); setViewYear((y) => y + 1); }
-    else setViewMonth((m) => m + 1);
+    if (viewMonth === 11) {
+      setViewMonth(0);
+      setViewYear((y) => y + 1);
+    } else setViewMonth((m) => m + 1);
   };
   const pad2 = (n: number) => String(n).padStart(2, "0");
   const cells: (number | null)[] = [
@@ -366,19 +443,27 @@ function MiniCalendar({
       onClick={(e) => e.stopPropagation()}
     >
       <div className="flex items-center justify-between mb-2">
-        <button onClick={prevMonth} className="p-1 hover:bg-gray-100 rounded transition-colors">
+        <button
+          onClick={prevMonth}
+          className="p-1 hover:bg-gray-100 rounded transition-colors"
+        >
           <ChevronLeft className="w-4 h-4 text-gray-500" />
         </button>
         <span className="text-sm font-semibold text-gray-700 capitalize">
           {monthNames[viewMonth]} {viewYear}
         </span>
-        <button onClick={nextMonth} className="p-1 hover:bg-gray-100 rounded transition-colors">
+        <button
+          onClick={nextMonth}
+          className="p-1 hover:bg-gray-100 rounded transition-colors"
+        >
           <ChevronRight className="w-4 h-4 text-gray-500" />
         </button>
       </div>
       <div className="grid grid-cols-7 mb-1">
         {dayNames.map((d) => (
-          <div key={d} className="text-center text-xs text-gray-400 py-1">{d}</div>
+          <div key={d} className="text-center text-xs text-gray-400 py-1">
+            {d}
+          </div>
         ))}
       </div>
       <div className="grid grid-cols-7 gap-0.5">
@@ -395,12 +480,19 @@ function MiniCalendar({
             <button
               key={i}
               disabled={disabled}
-              onClick={() => { onSelect(dateStr); onClose(); }}
+              onClick={() => {
+                onSelect(dateStr);
+                onClose();
+              }}
               className={[
                 "text-xs rounded-lg py-1.5 transition-colors font-medium w-full",
                 isSelected ? "bg-[#4A90E2] text-white" : "",
-                isToday && !isSelected ? "border border-[#4A90E2] text-[#4A90E2]" : "",
-                !isSelected && !isToday && !disabled ? "text-gray-700 hover:bg-gray-100" : "",
+                isToday && !isSelected
+                  ? "border border-[#4A90E2] text-[#4A90E2]"
+                  : "",
+                !isSelected && !isToday && !disabled
+                  ? "text-gray-700 hover:bg-gray-100"
+                  : "",
                 disabled ? "text-gray-300 cursor-not-allowed" : "",
               ].join(" ")}
             >
@@ -427,7 +519,8 @@ function DateRangePicker({
   language: string;
 }) {
   const [openCal, setOpenCal] = useState<"from" | "to" | null>(null);
-  const locale = language === "pl" ? "pl-PL" : language === "ru" ? "ru-RU" : "en-GB";
+  const locale =
+    language === "pl" ? "pl-PL" : language === "ru" ? "ru-RU" : "en-GB";
   const fmt = (dateStr: string) => {
     const [y, m, d] = dateStr.split("-");
     return new Intl.DateTimeFormat(locale, {
@@ -456,16 +549,22 @@ function DateRangePicker({
   const applyPreset = (days: number) => {
     const today = todayWarsaw();
     const [y, m, d] = today.split("-").map(Number);
-    const newFrom = new Date(Date.UTC(y, m - 1, d - days + 1)).toISOString().slice(0, 10);
+    const newFrom = new Date(Date.UTC(y, m - 1, d - days + 1))
+      .toISOString()
+      .slice(0, 10);
     onChange(newFrom, today);
   };
 
   const activeDays = daysBetween(from, to);
 
   const [ty, tm, td] = to.split("-").map(Number);
-  const minFrom = new Date(Date.UTC(ty, tm - 1, td - (MAX_DAYS - 1))).toISOString().slice(0, 10);
+  const minFrom = new Date(Date.UTC(ty, tm - 1, td - (MAX_DAYS - 1)))
+    .toISOString()
+    .slice(0, 10);
   const [fy, fm, fd] = from.split("-").map(Number);
-  const maxTo = new Date(Date.UTC(fy, fm - 1, fd + (MAX_DAYS - 1))).toISOString().slice(0, 10);
+  const maxTo = new Date(Date.UTC(fy, fm - 1, fd + (MAX_DAYS - 1)))
+    .toISOString()
+    .slice(0, 10);
 
   return (
     <div className="flex flex-col gap-2 w-full sm:w-auto">
@@ -503,7 +602,9 @@ function DateRangePicker({
               selected={from}
               minDate={minFrom}
               maxDate={to}
-              onSelect={(d) => { onChange(d, to < d ? d : to); }}
+              onSelect={(d) => {
+                onChange(d, to < d ? d : to);
+              }}
               onClose={() => setOpenCal(null)}
               language={language}
             />
@@ -525,7 +626,9 @@ function DateRangePicker({
               selected={to}
               minDate={from}
               maxDate={maxTo < todayWarsaw() ? maxTo : todayWarsaw()}
-              onSelect={(d) => { onChange(from > d ? d : from, d); }}
+              onSelect={(d) => {
+                onChange(from > d ? d : from, d);
+              }}
               onClose={() => setOpenCal(null)}
               language={language}
             />
@@ -569,7 +672,11 @@ export function Dashboard() {
   const [chartData, setChartData] = useState<any[]>([]);
   const [recordCount, setRecordCount] = useState(0);
 
-  const rawRecordsRef = useRef<any[]>([]);
+// Стало
+const overviewRef = useRef<StatsOverview | null>(null);
+const hourlyRef = useRef<HourBucket[]>([]);
+const [coverage, setCoverage] = useState<StatsOverview["coverage"] | null>(null);
+const [loadError, setLoadError] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   const loadDevices = async () => {
@@ -583,112 +690,84 @@ export function Dashboard() {
         if (batch.length < 20) break;
       }
       const online = allDevices.filter(isDeviceOnline).length;
-      setDeviceStats({ online, offline: allDevices.length - online, total: allDevices.length });
+      setDeviceStats({
+        online,
+        offline: allDevices.length - online,
+        total: allDevices.length,
+      });
       setStats((prev) => ({ ...prev, activeDevices: online }));
     } catch (err) {
       console.error(err);
     }
   };
 
-  const prepareChartData = (records: any[], from: string, to: string, mode: ChartMode) => {
-    const days: string[] = [];
-    const [fy, fm, fd] = from.split("-").map(Number);
-    const [ty2, tm2, td2] = to.split("-").map(Number);
-    const start = new Date(Date.UTC(fy, fm - 1, fd));
-    const end = new Date(Date.UTC(ty2, tm2 - 1, td2));
-    for (let cur = new Date(start); cur <= end; cur.setUTCDate(cur.getUTCDate() + 1))
-      days.push(cur.toISOString().slice(0, 10));
+  const prepareChartData = (
+    overview: StatsOverview | null,
+    hourly: HourBucket[],
+    mode: ChartMode
+  ) => {
+    if (!overview) {
+      setChartData([]);
+      return;
+    }
 
-    if (mode === "hourly") {
-      const buckets: Record<string, { sales: number; revenue: number; liters: number }> = {};
-      for (const day of days) {
-        for (let h = 0; h < 24; h++) {
-          buckets[`${day}|${h}`] = { sales: 0, revenue: 0, liters: 0 };
-        }
-      }
-      for (const r of records) {
-        const { date, hour } = apiTimeToWarsawDayHour(r.time);
-        const key = `${date}|${hour}`;
-        if (buckets[key]) {
-          buckets[key].sales++;
-          buckets[key].revenue += parseFloat(r.cost_value || r.value || "0");
-          buckets[key].liters += parseFloat(r.water1 || "0") + parseFloat(r.water2 || "0");
-        }
-      }
-      const multiDay = days.length > 1;
+    if (mode === "daily") {
       setChartData(
-        Object.entries(buckets).map(([key, v]) => {
-          const [date, hourStr] = key.split("|");
-          const [, mm, dd] = date.split("-");
-          const label = multiDay
-            ? `${dd}.${mm} ${hourStr.padStart(2, "0")}:00`
-            : `${hourStr.padStart(2, "0")}:00`;
-          return {
-            date: label,
-            sales: v.sales,
-            revenue: Math.round(v.revenue * 100) / 100,
-            liters: Math.round(v.liters * 10) / 10,
-          };
-        })
-      );
-    } else {
-      setChartData(
-        days.map((day) => {
-          const dayRecs = records.filter((r) => apiTimeToWarsawDate(r.time) === day);
-          const [, mm, dd] = day.split("-");
+        overview.byDay.map((d) => {
+          const [, mm, dd] = d.day.split("-");
           return {
             date: `${dd}.${mm}`,
-            sales: dayRecs.length,
-            revenue:
-              Math.round(
-                dayRecs.reduce((s, r) => s + parseFloat(r.cost_value || r.value || "0"), 0) * 100
-              ) / 100,
-            liters:
-              Math.round(
-                dayRecs.reduce(
-                  (s, r) => s + parseFloat(r.water1 || "0") + parseFloat(r.water2 || "0"),
-                  0
-                ) * 10
-              ) / 10,
+            sales: d.txCount,
+            revenue: Math.round(d.amount * 100) / 100,
+            liters: Math.round(d.liters * 10) / 10,
           };
         })
       );
+      return;
     }
+
+    // По часам: сетка "день × 24 часа", пустые часы = 0
+    const buckets: Record<string, { sales: number; revenue: number; liters: number }> = {};
+    for (const d of overview.byDay) {
+      for (let h = 0; h < 24; h++) {
+        buckets[`${d.day}|${h}`] = { sales: 0, revenue: 0, liters: 0 };
+      }
+    }
+    for (const b of hourly) {
+      const key = `${b.day}|${b.hour}`;
+      if (buckets[key]) {
+        buckets[key] = { sales: b.sales, revenue: b.revenue, liters: b.liters };
+      }
+    }
+    const multiDay = overview.byDay.length > 1;
+    setChartData(
+      Object.entries(buckets).map(([key, v]) => {
+        const [date, hourStr] = key.split("|");
+        const [, mm, dd] = date.split("-");
+        const label = multiDay
+          ? `${dd}.${mm} ${hourStr.padStart(2, "0")}:00`
+          : `${hourStr.padStart(2, "0")}:00`;
+        return {
+          date: label,
+          sales: v.sales,
+          revenue: Math.round(v.revenue * 100) / 100,
+          liters: Math.round(v.liters * 10) / 10,
+        };
+      })
+    );
   };
-
-  const computeStats = (allRecords: any[]) => {
-    const periodSales = allRecords.length;
-    const periodRevenue = allRecords.reduce(
-      (s, r) => s + parseFloat(r.cost_value || r.value || "0"),
-      0
-    );
-    const periodLiters = allRecords.reduce(
-      (s, r) => s + parseFloat(r.water1 || "0") + parseFloat(r.water2 || "0"),
-      0
-    );
-
-    let periodCard = 0, periodCash = 0, periodQr = 0, periodTerminal = 0;
-    for (const r of allRecords) {
-      console.log("PAY:", JSON.stringify({ pay_id: r.pay_id, path: r.path, card_num: r.card_num }));
-      if ((r.pay_id ?? "").endsWith("_pos")) { periodTerminal++; continue; }
-      const type = classifyPath(r.path || "", r.card_num);
-      if (type === "card") periodCard++;
-      else if (type === "cash") periodCash++;
-      else periodQr++;
-    }
-    
+  const computeStats = (o: StatsOverview) => {
     setStats((prev) => ({
       ...prev,
-      periodSales,
-      periodRevenue: Math.round(periodRevenue * 100) / 100,
-      periodLiters: Math.round(periodLiters * 10) / 10,
-      periodCard,
-      periodCash,
-      periodQr,
-      periodTerminal,
+      periodSales: o.total.txCount,
+      periodRevenue: Math.round(o.total.amount * 100) / 100,
+      periodLiters: Math.round(o.total.liters * 10) / 10,
+      periodCard: o.total.cardCount,
+      periodCash: o.total.cashCount,
+      periodQr: o.total.qrCount,
+      periodTerminal: o.total.terminalCount,
     }));
   };
-
   const loadRecords = useCallback(
     async (from: string, to: string, mode: ChartMode) => {
       if (abortRef.current) abortRef.current.abort();
@@ -696,33 +775,43 @@ export function Dashboard() {
       abortRef.current = controller;
 
       setRecordsLoading(true);
+      setLoadError(null);
       try {
-        const beginTime = toApiDate(dayStartWarsaw(from));
-        const endTime = toApiDate(dayEndWarsaw(to));
-        const allRecords = await fetchAllRecords(beginTime, endTime, controller.signal);
-
-        rawRecordsRef.current = allRecords;
-        setRecordCount(allRecords.length);
-        computeStats(allRecords);
-        prepareChartData(allRecords, from, to, mode);
+        const [ovRes, hrRes] = await Promise.all([
+          StatsService.overview(from, to, controller.signal),
+          StatsService.hourly(from, to, undefined, controller.signal),
+        ]);
+        overviewRef.current = ovRes.data;
+        hourlyRef.current = hrRes.data;
+        setCoverage(ovRes.data.coverage);
+        setRecordCount(ovRes.data.total.txCount);
+        computeStats(ovRes.data);
+        prepareChartData(ovRes.data, hrRes.data, mode);
       } catch (err: any) {
-        if (err?.name === "AbortError") return;
+        if (err?.code === "ERR_CANCELED" || err?.name === "CanceledError") return;
         console.error(err);
+        setLoadError(
+          err?.response?.data?.error ?? "Не удалось загрузить статистику. Попробуйте ещё раз."
+        );
       } finally {
         setRecordsLoading(false);
       }
     },
-    [] // eslint-disable-line react-hooks/exhaustive-deps
+    []
   );
-
   useEffect(() => {
     const init = async () => {
       setLoading(true);
-      await Promise.all([loadDevices(), loadRecords(initFrom, initTo, chartMode)]);
+      await Promise.all([
+        loadDevices(),
+        loadRecords(initFrom, initTo, chartMode),
+      ]);
       setLoading(false);
     };
     init();
-    return () => { abortRef.current?.abort(); };
+    return () => {
+      abortRef.current?.abort();
+    };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleDateChange = (from: string, to: string) => {
@@ -734,8 +823,8 @@ export function Dashboard() {
 
   const handleChartModeChange = (mode: ChartMode) => {
     setChartMode(mode);
-    prepareChartData(rawRecordsRef.current, dateFrom, dateTo, mode);
-  };
+    prepareChartData(overviewRef.current, hourlyRef.current, mode);
+    };
 
   if (loading) {
     return (
@@ -750,18 +839,32 @@ export function Dashboard() {
 
   // Payment donut data
   const donutData = [
-    { label: t("dashboard.periodCard") ?? "IC Card",    value: stats.periodCard,     color: "#9B59B6" },
-    { label: t("dashboard.periodCash") ?? "Cash",       value: stats.periodCash,     color: "#F5A623" },
-    { label: t("dashboard.periodQr") ?? "QR",           value: stats.periodQr,       color: "#7ED321" },
-    { label: t("vendingMachines.analyticsTerminal") ?? "Terminal", value: stats.periodTerminal, color: "#4A90E2" },
+    {
+      label: t("dashboard.periodCard") ?? "IC Card",
+      value: stats.periodCard,
+      color: "#9B59B6",
+    },
+    {
+      label: t("dashboard.periodCash") ?? "Cash",
+      value: stats.periodCash,
+      color: "#F5A623",
+    },
+    {
+      label: t("dashboard.periodQr") ?? "QR",
+      value: stats.periodQr,
+      color: "#7ED321",
+    },
+    {
+      label: t("vendingMachines.analyticsTerminal") ?? "Terminal",
+      value: stats.periodTerminal,
+      color: "#4A90E2",
+    },
   ];
 
   return (
     <div className="space-y-4 md:space-y-6">
-
       {/* ── Chart block ── */}
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 md:p-6">
-
         {/* Header row */}
         <div className="flex flex-col gap-3 mb-4">
           <div className="flex items-start justify-between gap-2">
@@ -769,7 +872,6 @@ export function Dashboard() {
               <h2 className="text-base md:text-xl font-semibold text-gray-900">
                 {t("dashboard.subscriptionData")}
               </h2>
-          
             </div>
             <button
               onClick={() => loadRecords(dateFrom, dateTo, chartMode)}
@@ -777,7 +879,9 @@ export function Dashboard() {
               className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50 flex-shrink-0 mt-0.5"
             >
               <RefreshCw
-                className={`w-4 h-4 text-gray-400 ${recordsLoading ? "animate-spin" : ""}`}
+                className={`w-4 h-4 text-gray-400 ${
+                  recordsLoading ? "animate-spin" : ""
+                }`}
               />
             </button>
           </div>
@@ -788,6 +892,13 @@ export function Dashboard() {
             language={language}
           />
         </div>
+
+        <StatsCoverageBanner
+          coverage={coverage}
+          from={dateFrom}
+          error={loadError}
+          onRetry={() => loadRecords(dateFrom, dateTo, chartMode)}
+        />
 
         {/* Chart mode toggle */}
         <div className="flex items-center gap-2 mb-3">
@@ -833,7 +944,9 @@ export function Dashboard() {
                 <XAxis
                   dataKey="date"
                   tick={{ fontSize: 9 }}
-                  interval={numDays === 1 ? 2 : Math.ceil(chartData.length / 24) * 3 - 1}
+                  interval={
+                    numDays === 1 ? 2 : Math.ceil(chartData.length / 24) * 3 - 1
+                  }
                   angle={numDays > 1 ? -30 : 0}
                   textAnchor={numDays > 1 ? "end" : "middle"}
                   height={numDays > 1 ? 40 : 20}
@@ -841,9 +954,24 @@ export function Dashboard() {
                 <YAxis tick={{ fontSize: 10 }} width={30} />
                 <Tooltip contentStyle={{ fontSize: 11 }} />
                 <Legend wrapperStyle={{ fontSize: 10 }} />
-                <Bar dataKey="sales" fill="#5CB85C" name={t("dashboard.sales")} radius={[2, 2, 0, 0]} />
-                <Bar dataKey="revenue" fill="#F0AD4E" name={t("dashboard.revenue")} radius={[2, 2, 0, 0]} />
-                <Bar dataKey="liters" fill="#4A90E2" name={L} radius={[2, 2, 0, 0]} />
+                <Bar
+                  dataKey="sales"
+                  fill="#5CB85C"
+                  name={t("dashboard.sales")}
+                  radius={[2, 2, 0, 0]}
+                />
+                <Bar
+                  dataKey="revenue"
+                  fill="#F0AD4E"
+                  name={t("dashboard.revenue")}
+                  radius={[2, 2, 0, 0]}
+                />
+                <Bar
+                  dataKey="liters"
+                  fill="#4A90E2"
+                  name={L}
+                  radius={[2, 2, 0, 0]}
+                />
               </BarChart>
             ) : (
               <LineChart data={chartData}>
@@ -852,9 +980,27 @@ export function Dashboard() {
                 <YAxis tick={{ fontSize: 10 }} width={30} />
                 <Tooltip contentStyle={{ fontSize: 11 }} />
                 <Legend wrapperStyle={{ fontSize: 10 }} />
-                <Line type="monotone" dataKey="sales" stroke="#5CB85C" name={t("dashboard.sales")} dot />
-                <Line type="monotone" dataKey="revenue" stroke="#F0AD4E" name={t("dashboard.revenue")} dot />
-                <Line type="monotone" dataKey="liters" stroke="#4A90E2" name={L} dot />
+                <Line
+                  type="monotone"
+                  dataKey="sales"
+                  stroke="#5CB85C"
+                  name={t("dashboard.sales")}
+                  dot
+                />
+                <Line
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="#F0AD4E"
+                  name={t("dashboard.revenue")}
+                  dot
+                />
+                <Line
+                  type="monotone"
+                  dataKey="liters"
+                  stroke="#4A90E2"
+                  name={L}
+                  dot
+                />
               </LineChart>
             )}
           </ResponsiveContainer>
@@ -892,7 +1038,11 @@ export function Dashboard() {
 
       {/* ── Payment breakdown donut ── */}
       <SectionCard
-        title={t("dashboard.periodPayments") ?? t("vendingMachines.analyticsPaymentTypes") ?? "Типы оплат за период"}
+        title={
+          t("dashboard.periodPayments") ??
+          t("vendingMachines.analyticsPaymentTypes") ??
+          "Типы оплат за период"
+        }
         icon={<CreditCard className="w-4 h-4 text-purple-500" />}
       >
         <DonutChart
@@ -919,20 +1069,31 @@ export function Dashboard() {
       >
         <div className="flex gap-6">
           <div className="text-center">
-            <p className="text-2xl font-bold text-green-600">{deviceStats.online}</p>
-            <p className="text-xs text-gray-400">{t("common.online") ?? "Online"}</p>
+            <p className="text-2xl font-bold text-green-600">
+              {deviceStats.online}
+            </p>
+            <p className="text-xs text-gray-400">
+              {t("common.online") ?? "Online"}
+            </p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-gray-400">{deviceStats.offline}</p>
-            <p className="text-xs text-gray-400">{t("common.offline") ?? "Offline"}</p>
+            <p className="text-2xl font-bold text-gray-400">
+              {deviceStats.offline}
+            </p>
+            <p className="text-xs text-gray-400">
+              {t("common.offline") ?? "Offline"}
+            </p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-gray-700">{deviceStats.total}</p>
-            <p className="text-xs text-gray-400">{t("common.total") ?? "Total"}</p>
+            <p className="text-2xl font-bold text-gray-700">
+              {deviceStats.total}
+            </p>
+            <p className="text-xs text-gray-400">
+              {t("common.total") ?? "Total"}
+            </p>
           </div>
         </div>
       </SectionCard>
-
     </div>
   );
 }
