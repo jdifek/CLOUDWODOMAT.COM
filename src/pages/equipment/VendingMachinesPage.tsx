@@ -5,7 +5,10 @@ import { ActionButton } from "../../components/ActionButton";
 
 import { useLanguage } from "../../contexts/LanguageContext";
 import { translateStatusCn } from "../../utils/deviceStatus";
+// Стало
 import { formatDate } from "../../utils/formatDate";
+import { StatsService, type StatsCoverage } from "../../services/statsService";
+import { StatsCoverageBanner } from "../../components/StatsCoverageBanner";
 import {
   Signal,
   X,
@@ -318,8 +321,9 @@ interface QuickStats {
   todayLiters: number;
   todayCard: number;
   todayCash: number;
-  todayQr: number;
-  threeDayRevenue: number;
+todayQr: number;
+todayTerminal: number;
+threeDayRevenue: number;
   threeDayLiters: number;
 }
 
@@ -367,56 +371,40 @@ function QuickMetrics({
 }) {
   const [stats, setStats] = useState<QuickStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [coverage, setCoverage] = useState<StatsCoverage | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const L = t("common.liter") ?? "L";
-
   useEffect(() => {
     const load = async () => {
       setLoading(true);
+      setError(null);
       try {
         const today = todayWarsaw();
         const threeDayStart = subtractDays(today, 3);
 
-        const beginToday = dayStart(today);
-        const endToday = dayEnd(today);
-        const beginThreeDay = dayStart(threeDayStart);
-
         const [todayRes, threeDayRes] = await Promise.all([
-          fetchAllRecordsLocal(fmtApiDate(beginToday), fmtApiDate(endToday)),
-          fetchAllRecordsLocal(fmtApiDate(beginThreeDay), fmtApiDate(endToday)),
+          StatsService.overview(today, today),
+          StatsService.overview(threeDayStart, today),
         ]);
 
-        const todaySales = todayRes.length;
-        const todayRevenue = todayRes.reduce((s, r) => s + parseFloat(r.cost_value || r.value || "0"), 0);
-        const todayLiters = todayRes.reduce((s, r) => s + parseFloat(r.water1 || "0") + parseFloat(r.water2 || "0"), 0);
-
-        let todayCard = 0, todayCash = 0, todayQr = 0, todayTerminal = 0;
-        for (const r of todayRes) {
-          if ((r.pay_id ?? "").endsWith("_pos")) {
-            todayTerminal++;
-            continue;
-          }
-          const type = classifyPath(r.path || "", r.card_num); // ← было без r.card_num
-          if (type === "card") todayCard++;
-          else if (type === "cash") todayCash++;
-          else todayQr++;
-        }
-
-        const threeDayRevenue = threeDayRes.reduce((s, r) => s + parseFloat(r.cost_value || r.value || "0"), 0);
-        const threeDayLiters = threeDayRes.reduce((s, r) => s + parseFloat(r.water1 || "0") + parseFloat(r.water2 || "0"), 0);
+        const td = todayRes.data.total;
+        const th = threeDayRes.data.total;
+        setCoverage(threeDayRes.data.coverage);
 
         setStats({
-          todaySales,
-          todayRevenue: Math.round(todayRevenue * 100) / 100,
-          todayLiters: Math.round(todayLiters * 10) / 10,
-          todayCard,
-          todayCash,
-          todayQr,
-          todayTerminal,
-          threeDayRevenue: Math.round(threeDayRevenue * 100) / 100,
-          threeDayLiters: Math.round(threeDayLiters * 10) / 10,
+          todaySales: td.txCount,
+          todayRevenue: Math.round(td.amount * 100) / 100,
+          todayLiters: Math.round(td.liters * 10) / 10,
+          todayCard: td.cardCount,
+          todayCash: td.cashCount,
+          todayQr: td.qrCount,
+          todayTerminal: td.terminalCount,
+          threeDayRevenue: Math.round(th.amount * 100) / 100,
+          threeDayLiters: Math.round(th.liters * 10) / 10,
         });
-      } catch (err) {
+      } catch (err: any) {
         console.error("QuickMetrics load failed:", err);
+        setError(err?.response?.data?.error ?? "Nie udało się załadować statystyk.");
       } finally {
         setLoading(false);
       }
@@ -442,6 +430,12 @@ function QuickMetrics({
           <p className="text-2xl font-bold text-gray-700">{devices.length}</p>
         </div>
       </div>
+
+      <StatsCoverageBanner
+        coverage={coverage}
+        from={subtractDays(todayWarsaw(), 3)}
+        error={error}
+      />
 
       {loading ? (
         <div className="flex justify-center py-6">
@@ -929,22 +923,13 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
   const [consumesLoadingMore, setConsumesLoadingMore] = useState(false);
 
   const loadMoreConsumes = async (deviceId: string) => {
-    if (!consumesOldestDate) return;
+    if (!consumesCursor) return;
     setConsumesLoadingMore(true);
     try {
-      // новый диапазон: от (oldest - STEP) до (oldest - 1 день), старое не трогаем
-      const newTo = subtractDays(consumesOldestDate, 1);
-      const newFrom = subtractDays(consumesOldestDate, CONSUMES_STEP_DAYS);
-  
-      const older = await fetchConsumesRange(deviceId, newFrom, newTo);
-  
-      setConsumes((prev) => [...prev, ...older]);
-      setConsumesOldestDate(newFrom);
-  
-      // если новый кусок пустой — истории больше нет, скрываем кнопку
-      if (older.length === 0) {
-        setConsumesHasMore(false);
-      }
+      const res = await StatsService.transactions(deviceId, consumesCursor);
+      setConsumes((prev) => [...prev, ...res.data.items]);
+      setConsumesCursor(res.data.nextCursor);
+      setConsumesHasMore(!!res.data.nextCursor);
     } catch (err) {
       console.error("Load more consumes failed:", err);
     } finally {
@@ -973,28 +958,11 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
   const [showOpenCardForm, setShowOpenCardForm] = useState(false);
   const [openCardLoading, setOpenCardLoading] = useState(false);
   const [consumesOldestDate, setConsumesOldestDate] = useState<string | null>(null);
+    const [consumesCursor, setConsumesCursor] = useState<string | null>(null);
+  const [consumesCoverage, setConsumesCoverage] = useState<StatsCoverage | null>(null);
+  const [consumesError, setConsumesError] = useState<string | null>(null);
   // ─── Data Fetching ──────────────────────────────────────────────────────────
-  async function fetchConsumesRange(
-    deviceId: string,
-    fromDate: string,
-    toDate: string
-  ): Promise<ConsumeRecord[]> {
-    const begin = fmtApiDate(dayStart(fromDate));
-    const end = fmtApiDate(dayEnd(toDate));
-  
-    let all: ConsumeRecord[] = [];
-    let p = 1;
-    let more = true;
-    while (more) {
-      const res = await HappyTiService.recordList({ page: p, beginTime: begin, endTime: end });
-      if (res.data.code !== 0) break;
-      const batch = res.data.data ?? [];
-      all = all.concat(batch.filter((r: any) => r.shop_num === deviceId));
-      more = batch.length === 20;
-      p++;
-    }
-    return all;
-  }
+
   const fetchDevices = useCallback(
     async (pageNum: number, append = false) => {
       try {
@@ -1087,28 +1055,23 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
     }
   };
 
-  const CONSUMES_INITIAL_DAYS = 2;
-  const CONSUMES_STEP_DAYS = 3;
-  
   const loadConsumes = async (deviceId: string) => {
     if (consumes.length > 0) return;
     setConsumesLoading(true);
+    setConsumesError(null);
     try {
-      const today = todayWarsaw();
-      const from = subtractDays(today, CONSUMES_INITIAL_DAYS);
-  
-      const all = await fetchConsumesRange(deviceId, from, today);
-  
-      setConsumes(all);
-      setConsumesOldestDate(from);
-      setConsumesHasMore(true); // всегда можно копнуть глубже
-    } catch (err) {
+      const res = await StatsService.transactions(deviceId);
+      setConsumes(res.data.items);
+      setConsumesCursor(res.data.nextCursor);
+      setConsumesHasMore(!!res.data.nextCursor);
+      setConsumesCoverage(res.data.coverage);
+    } catch (err: any) {
       console.error("Consumes fetch failed:", err);
+      setConsumesError(err?.response?.data?.error ?? "Nie udało się załadować zapisów.");
     } finally {
       setConsumesLoading(false);
     }
   };
-
   const loadRecharges = async (deviceId: string) => {
     setRechargesLoading(true);
     try {
@@ -1321,7 +1284,10 @@ export function VendingMachinesPage({ deviceType, title }: VendingMachinesPagePr
     setConsumesHasMore(false);
     setShowRechargeModal(null);
     setShowOpenCardForm(false);
-    setConsumesOldestDate(null);
+   setConsumesOldestDate(null);
+    setConsumesCursor(null);
+    setConsumesCoverage(null);
+    setConsumesError(null);
   };
 
   // ─── Table Data ─────────────────────────────────────────────────────────────
@@ -1697,8 +1663,15 @@ const isPoweredOff = selectedDetail?.status === "poweroff";
                   )}
                 </div>
 
+             // Стало
               ) : activeTab === "consumes" ? (
                 <div>
+                  <StatsCoverageBanner
+                    coverage={consumesCoverage}
+                    from={subtractDays(todayWarsaw(), 3)}
+                    error={consumesError}
+                    onRetry={() => selectedDetail && loadConsumes(selectedDetail.id)}
+                  />
                   {consumesLoading ? <LoaderSpinner /> : consumes.length === 0 ? (
                     <Empty text={t("vendingMachines.noConsumption")} />
                   ) : (
